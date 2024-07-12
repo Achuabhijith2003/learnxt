@@ -1,83 +1,206 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_signin_button/flutter_signin_button.dart';
 
-class Loginpage extends StatefulWidget {
+class Loginpage extends StatelessWidget {
   const Loginpage({super.key});
 
   @override
-  State<Loginpage> createState() => _LoginpageState();
-}
-
-class _LoginpageState extends State<Loginpage> {
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: const Center(child: Text("LearnXT")),
-      // ),
-      body: SafeArea(
-        child: Container(
-          //  height: 250,
-        // width: double.maxFinite,
-        //  margin: const EdgeInsets.all(10),
+      resizeToAvoidBottomInset: false,
+      body: Container(
+        width: double.infinity,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          image: const  DecorationImage(
-            image:  AssetImage("assets/download (2).jpeg"),
-            fit: BoxFit.cover,
-          ),
-        ),
-          child: Padding(
-            padding: const EdgeInsets.only(top: 100),
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  // Image.asset("assets/backgrondimage.jpg"),
-                  const Text(
-                    "Welcome Back",
-                    style: TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.green),
-                  ),
-                  //  const   Text("EmailID"),
-                const  Padding(
-                    padding:  EdgeInsets.only(top: 10, left: 20, right: 20),
-                    child:  TextField(
-                      decoration: InputDecoration(
-                          hintText: "Enter your EmailID",
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(20)))),
-                      keyboardType: TextInputType.emailAddress,
-                      obscureText: true,
-                      style: TextStyle(fontSize: 20),
+            gradient: LinearGradient(begin: Alignment.topCenter, colors: [
+          Colors.green.shade900,
+          Colors.green.shade800,
+          Colors.green.shade400
+        ])),
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              const SizedBox(
+                height: 50,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    FadeInUp(
+                        duration: const Duration(milliseconds: 1000),
+                        child: const Text(
+                          "Login",
+                          style: TextStyle(color: Colors.white, fontSize: 40),
+                        )),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    FadeInUp(
+                        duration: const Duration(milliseconds: 1300),
+                        child: const Text(
+                          "Welcome Back",
+                          style: TextStyle(color: Colors.white, fontSize: 18),
+                        )),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 0),
+              Expanded(
+                child: Container(
+                  decoration: const BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(60),
+                          topRight: Radius.circular(60))),
+                  child: Padding(
+                    padding: const EdgeInsets.all(30),
+                    child: Column(
+                      children: <Widget>[
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        FadeInUp(
+                            duration: const Duration(milliseconds: 1400),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                  boxShadow: const [
+                                    BoxShadow(
+                                        color: Color.fromRGBO(225, 95, 27, .3),
+                                        blurRadius: 20,
+                                        offset: Offset(0, 10))
+                                  ]),
+                              child: Column(
+                                children: <Widget>[
+                                  Container(
+                                    padding: const EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                        border: Border(
+                                            bottom: BorderSide(
+                                                color: Colors.grey.shade200))),
+                                    child: const TextField(
+                                      decoration: InputDecoration(
+                                          hintText: "Email or Phone number",
+                                          hintStyle:
+                                              TextStyle(color: Colors.grey),
+                                          border: InputBorder.none),
+                                    ),
+                                  ),
+                                  Container(
+                                    padding: const EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                        border: Border(
+                                            bottom: BorderSide(
+                                                color: Colors.grey.shade200))),
+                                    child: const TextField(
+                                      obscureText: true,
+                                      decoration: InputDecoration(
+                                          hintText: "Password",
+                                          hintStyle:
+                                              TextStyle(color: Colors.grey),
+                                          border: InputBorder.none),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )),
+                        const SizedBox(
+                          height: 0,
+                        ),
+                        FadeInUp(
+                            duration: const Duration(milliseconds: 1500),
+                            child: TextButton(
+                                onPressed: () {},
+                                child: const Text(
+                                  "Forgot Password?",
+                                  style: TextStyle(color: Colors.grey),
+                                ))),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        FadeInUp(
+                            duration: const Duration(milliseconds: 1600),
+                            child: MaterialButton(
+                              onPressed: () {},
+                              height: 50,
+                              // margin: EdgeInsets.symmetric(horizontal: 50),
+                              color: Colors.green[900],
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(50),
+                              ),
+                              // decoration: BoxDecoration(
+                              // ),
+                              child: const Center(
+                                child: Text(
+                                  "Login",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            )),
+                        const SizedBox(
+                          height: 0,
+                        ),
+                        // FadeInUp(
+                        //     duration: const Duration(milliseconds: 1700),
+                        //     child: const Text(
+                        //       "Continue with social media",
+                        //       style: TextStyle(color: Colors.grey),
+                        //     )),
+                        const SizedBox(
+                          height: 25,
+                        ),
+                        Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: FadeInUp(
+                                  duration: const Duration(milliseconds: 1800),
+                                  child: SignInButton(
+                                    Buttons.Google,
+                                    text: "Sign up with Google",
+                                    onPressed: () {},
+                                  )),
+                            ),
+                            const SizedBox(
+                              width: 0,
+                            ),
+                            // Expanded(
+                            //   child: FadeInUp(
+                            //       duration: const Duration(milliseconds: 1900),
+                            //       child: MaterialButton(
+                            //         onPressed: () {},
+                            //         height: 50,
+                            //         shape: RoundedRectangleBorder(
+                            //           borderRadius: BorderRadius.circular(50),
+                            //         ),
+                            //         color: Colors.black,
+                            //         child: const Center(
+                            //           child: Text(
+                            //             "Github",
+                            //             style: TextStyle(
+                            //                 color: Colors.white,
+                            //                 fontWeight: FontWeight.bold),
+                            //           ),
+                            //         ),
+                            //       )),
+                            // )
+                          ],
+                        )
+                      ],
                     ),
                   ),
-                  // const  Text("Password"),
-                  const Padding(
-                     padding:  EdgeInsets.only(top: 10, left: 20, right: 20),
-                     child: TextField(
-                      decoration: InputDecoration(
-                          hintText: "Enter your Password",
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(20)))),
-                      keyboardType: TextInputType.visiblePassword,
-                      obscureText: true,
-                      style: TextStyle(fontSize: 20),
-                                 ),
-                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ElevatedButton(onPressed: () {}, child: const Text("Login")),
-                  )
-                ],
-              ),
-            ),
+                ),
+              )
+            ],
           ),
         ),
       ),
     );
   }
-
-  login() {}
 }
