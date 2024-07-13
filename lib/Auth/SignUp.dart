@@ -1,10 +1,8 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_signin_button/flutter_signin_button.dart';
-import 'package:learnxt/Auth/SignUp.dart';
 
-class Loginpage extends StatelessWidget {
-  const Loginpage({super.key});
+class SignUp extends StatelessWidget {
+  const SignUp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -34,18 +32,18 @@ class Loginpage extends StatelessWidget {
                     FadeInUp(
                         duration: const Duration(milliseconds: 1000),
                         child: const Text(
-                          "Login",
+                          "Create Account",
                           style: TextStyle(color: Colors.white, fontSize: 40),
                         )),
                     const SizedBox(
                       height: 10,
                     ),
-                    FadeInUp(
-                        duration: const Duration(milliseconds: 1300),
-                        child: const Text(
-                          "Welcome Back",
-                          style: TextStyle(color: Colors.white, fontSize: 18),
-                        )),
+                    // FadeInUp(
+                    //     duration: const Duration(milliseconds: 1300),
+                    //     child: const Text(
+                    //       "Welcome Back",
+                    //       style: TextStyle(color: Colors.white, fontSize: 18),
+                    //     )),
                   ],
                 ),
               ),
@@ -86,7 +84,21 @@ class Loginpage extends StatelessWidget {
                                                 color: Colors.grey.shade200))),
                                     child: const TextField(
                                       decoration: InputDecoration(
-                                          hintText: "Email or Phone number",
+                                          hintText: "Name",
+                                          hintStyle:
+                                              TextStyle(color: Colors.grey),
+                                          border: InputBorder.none),
+                                    ),
+                                  ),
+                                  Container(
+                                    padding: const EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                        border: Border(
+                                            bottom: BorderSide(
+                                                color: Colors.grey.shade200))),
+                                    child: const TextField(
+                                      decoration: InputDecoration(
+                                          hintText: "Email",
                                           hintStyle:
                                               TextStyle(color: Colors.grey),
                                           border: InputBorder.none),
@@ -107,38 +119,26 @@ class Loginpage extends StatelessWidget {
                                           border: InputBorder.none),
                                     ),
                                   ),
+                                  Container(
+                                    padding: const EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                        border: Border(
+                                            bottom: BorderSide(
+                                                color: Colors.grey.shade200))),
+                                    child: const TextField(
+                                      obscureText: true,
+                                      decoration: InputDecoration(
+                                          hintText: "re-enter Password",
+                                          hintStyle:
+                                              TextStyle(color: Colors.grey),
+                                          border: InputBorder.none),
+                                    ),
+                                  ),
                                 ],
                               ),
                             )),
                         const SizedBox(
                           height: 0,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget> [
-                             FadeInUp(
-                                duration: const Duration(milliseconds: 1500),
-                                child: TextButton(
-                                    onPressed: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const SignUp()));
-                                    },
-                                    child: const Text(
-                                      "Create Account",
-                                      style: TextStyle(color: Colors.grey),
-                                    ))),
-                            FadeInUp(
-                                duration: const Duration(milliseconds: 1500),
-                                child: TextButton(
-                                    onPressed: () {},
-                                    child: const Text(
-                                      "Forgot Password?",
-                                      style: TextStyle(color: Colors.grey),
-                                    ))),
-                          ]
                         ),
                         const SizedBox(
                           height: 10,
@@ -157,7 +157,7 @@ class Loginpage extends StatelessWidget {
                               // ),
                               child: const Center(
                                 child: Text(
-                                  "Login",
+                                  "Signup",
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold),
@@ -167,51 +167,17 @@ class Loginpage extends StatelessWidget {
                         const SizedBox(
                           height: 0,
                         ),
-                        // FadeInUp(
-                        //     duration: const Duration(milliseconds: 1700),
-                        //     child: const Text(
-                        //       "Continue with social media",
-                        //       style: TextStyle(color: Colors.grey),
-                        //     )),
+                        FadeInUp(
+                            duration: const Duration(milliseconds: 1700),
+                            child: TextButton(onPressed: () {
+                              
+                            }, child: const Text(
+                              "Already have an account? Login",
+                              style: TextStyle(color: Colors.grey),
+                            )) ),
                         const SizedBox(
                           height: 25,
                         ),
-                        Row(
-                          children: <Widget>[
-                            Expanded(
-                              child: FadeInUp(
-                                  duration: const Duration(milliseconds: 1800),
-                                  child: SignInButton(
-                                    Buttons.Google,
-                                    text: "Sign up with Google",
-                                    onPressed: () {},
-                                  )),
-                            ),
-                            const SizedBox(
-                              width: 0,
-                            ),
-                            // Expanded(
-                            //   child: FadeInUp(
-                            //       duration: const Duration(milliseconds: 1900),
-                            //       child: MaterialButton(
-                            //         onPressed: () {},
-                            //         height: 50,
-                            //         shape: RoundedRectangleBorder(
-                            //           borderRadius: BorderRadius.circular(50),
-                            //         ),
-                            //         color: Colors.black,
-                            //         child: const Center(
-                            //           child: Text(
-                            //             "Github",
-                            //             style: TextStyle(
-                            //                 color: Colors.white,
-                            //                 fontWeight: FontWeight.bold),
-                            //           ),
-                            //         ),
-                            //       )),
-                            // )
-                          ],
-                        )
                       ],
                     ),
                   ),
@@ -221,6 +187,6 @@ class Loginpage extends StatelessWidget {
           ),
         ),
       ),
-    );
+    );;
   }
 }
