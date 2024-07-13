@@ -1,40 +1,333 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:learnxt/Auth/loginpage.dart';
 
-class Home extends StatefulWidget {
-  const Home({super.key});
-
+class home extends StatefulWidget {
   @override
-  State<Home> createState() => _HomeState();
+  _homeState createState() => _homeState();
 }
 
-class _HomeState extends State<Home> {
+class _homeState extends State<home> {
+  final GlobalKey<ScaffoldState> _globalKey = GlobalKey();
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+    return Scaffold(
+      key: _globalKey,
+      // backgroundColor: const Color(0xFF171717),
+      body: Container(
+        width: double.infinity,
+        decoration: BoxDecoration(
+            gradient: LinearGradient(begin: Alignment.topCenter, colors: [
+          Colors.green.shade900,
+          Colors.green.shade800,
+          Colors.green.shade400
+        ])),
+        child: Stack(
           children: [
-           const Text("LearnXT -HOME"),
-            ElevatedButton(onPressed: () {
-              logout();
-            }, child: const Text("Logout"))
+            Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 70, left: 5, right: 5),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      IconButton(
+                          onPressed: () {
+                            _globalKey.currentState!.openDrawer();
+                          },
+                          icon: const Icon(
+                            Icons.menu,
+                            color: Colors.white,
+                          )),
+                      const Text("LearnXT",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 40,
+                              fontWeight: FontWeight.bold)),
+                      IconButton(
+                          onPressed: () {},
+                          icon: const Icon(
+                            Icons.search,
+                            color: Colors.white,
+                          )),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  width: 35,
+                )
+              ],
+            ),
+            Positioned(
+                top: 185,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 15),
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(40),
+                        topRight: Radius.circular(40)),
+                    color: Color(0xFFEFFFFC),
+                  ),
+                  child: ListView(
+                    padding: const EdgeInsets.only(left: 25),
+                    children: [
+                      buildConversationRow(
+                          'Laura', 'Hello, how are you', 'img1.jpeg', 0),
+                      buildConversationRow(
+                          'Kalya', 'Will you visit me', 'img2.jpeg', 2),
+                      buildConversationRow(
+                          'Mary', 'I ate your ...', 'img3.jpeg', 6),
+                      buildConversationRow(
+                          'Hellen', 'Are you with Kayla again', 'img5.jpeg', 0),
+                      buildConversationRow(
+                          'Louren', 'Barrow money please', 'img6.jpeg', 3),
+                      buildConversationRow(
+                          'Tom', 'Hey, whatsup', 'img7.jpeg', 0),
+                      buildConversationRow(
+                          'Laura', 'Helle, how are you', 'img1.jpeg', 0),
+                      buildConversationRow(
+                          'Laura', 'Helle, how are you', 'img1.jpeg', 0),
+                    ],
+                  ),
+                ))
           ],
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+      floatingActionButton: SizedBox(
+        height: 65,
+        width: 65,
+        child: FloatingActionButton(
+          backgroundColor: Color.fromARGB(255, 39, 193, 42),
+          child: const Icon(
+            Icons.create,
+            color: Colors.white,
+            size: 30,
+          ),
+          onPressed: () {},
+        ),
+      ),
+      drawer: Drawer(
+        width: 275,
+        elevation: 30,
+        backgroundColor: Colors.green.shade400,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.horizontal(right: Radius.circular(40))),
+        child: Container(
+          decoration: const BoxDecoration(
+              borderRadius: BorderRadius.horizontal(right: Radius.circular(40)),
+              boxShadow: [
+                BoxShadow(
+                    color: Color(0x3D000000), spreadRadius: 30, blurRadius: 20)
+              ]),
+          child: const Padding(
+            padding:  EdgeInsets.fromLTRB(20, 50, 20, 20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  children: [
+                    Row(
+                      children: const [
+                        Icon(
+                          Icons.arrow_back_ios,
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                        SizedBox(
+                          width: 56,
+                        ),
+                        Text(
+                          'Settings',
+                          style: TextStyle(color: Colors.white, fontSize: 16),
+                        ),
+                      ],
+                    ),
+                     SizedBox(
+                      height: 30,
+                    ),
+                    Row(
+                      children:  [
+                        UserAvatar(filename: 'img3.jpeg'),
+                        SizedBox(
+                          width: 12,
+                        ),
+                        Text(
+                          'Tom Brenan',
+                          style: TextStyle(color: Colors.white),
+                        )
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 35,
+                    ),
+                    const DrawerItem(
+                      title: 'Account',
+                      icon: Icons.key,
+                    ),
+                    const DrawerItem(title: 'Chats', icon: Icons.chat_bubble),
+                    const DrawerItem(
+                        title: 'Notifications', icon: Icons.notifications),
+                    const DrawerItem(
+                        title: 'Data and Storage', icon: Icons.storage),
+                    const DrawerItem(title: 'Help', icon: Icons.help),
+                    const Divider(
+                      height: 35,
+                      color: Colors.green,
+                    ),
+                    const DrawerItem(
+                        title: 'Invite a friend', icon: Icons.people_outline),
+                  ],
+                ),
+                const DrawerItem(title: 'Log out', icon: Icons.logout)
+              ],
+            ),
+          ),
         ),
       ),
     );
   }
 
-  void logout() async {
-    //logout method
-    await FirebaseAuth.instance.signOut();
-    // ignore: use_build_context_synchronously
-    Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const Loginpage(),
-        ));
+  Column buildConversationRow(
+      String name, String message, String filename, int msgCount) {
+    return Column(
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                UserAvatar(filename: filename),
+                const SizedBox(
+                  width: 15,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      name,
+                      style: const TextStyle(color: Colors.grey),
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Text(
+                      message,
+                      style: const TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
+                    ),
+                  ],
+                )
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.only(right: 25, top: 5),
+              child: Column(
+                children: [
+                  const Text(
+                    '16:35',
+                    style: TextStyle(fontSize: 10),
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  if (msgCount > 0)
+                    CircleAvatar(
+                      radius: 7,
+                      backgroundColor: Color.fromARGB(255, 30, 177, 30),
+                      child: Text(
+                        msgCount.toString(),
+                        style:
+                            const TextStyle(fontSize: 10, color: Colors.white),
+                      ),
+                    )
+                ],
+              ),
+            )
+          ],
+        ),
+        const Divider(
+          indent: 70,
+          height: 20,
+        )
+      ],
+    );
+  }
+
+  Padding buildContactAvatar(String name, String filename) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 20.0),
+      child: Column(
+        children: [
+          UserAvatar(
+            filename: filename,
+          ),
+          const SizedBox(
+            height: 5,
+          ),
+          Text(
+            name,
+            style: const TextStyle(color: Colors.white, fontSize: 16),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class DrawerItem extends StatelessWidget {
+  final String title;
+  final IconData icon;
+  const DrawerItem({
+    super.key,
+    required this.title,
+    required this.icon,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () {},
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 25),
+        child: Row(
+          children: [
+            Icon(
+              icon,
+              color: Colors.white,
+              size: 20,
+            ),
+            const SizedBox(
+              width: 40,
+            ),
+            Text(
+              title,
+              style: const TextStyle(color: Colors.white, fontSize: 16),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class UserAvatar extends StatelessWidget {
+  final String filename;
+  const UserAvatar({
+    super.key,
+    required this.filename,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return CircleAvatar(
+      radius: 32,
+      backgroundColor: Colors.white,
+      child: CircleAvatar(
+        radius: 29,
+        backgroundImage: Image.asset('assets/images/$filename').image,
+      ),
+    );
   }
 }

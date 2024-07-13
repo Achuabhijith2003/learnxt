@@ -275,7 +275,7 @@ void login(TextEditingController emailcontroller, TextEditingController password
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => const Home(),
+                builder: (context) =>  home(),
               ));
         }
       } on FirebaseAuthException catch (e) {
@@ -289,7 +289,7 @@ void login(TextEditingController emailcontroller, TextEditingController password
             errorMessage = 'Your password is wrong.';
             break;
           default:
-            errorMessage = 'An undefined Error occurred.';
+            errorMessage = 'An undefined Error occurred. try again later';
         }
         errormessage(errorMessage);
       }

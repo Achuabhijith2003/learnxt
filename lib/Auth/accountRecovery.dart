@@ -170,27 +170,27 @@ class _RecoveryState extends State<Recovery> {
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
       print("Password reset email sent successfully!");
-      errormessage("Password reset email sent successfully!","Success");
+      errormessage("Password reset email sent successfully!", "Success");
       // ignore: use_build_context_synchronously
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const Loginpage()));
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => const Loginpage()));
     } on FirebaseAuthException catch (error) {
       if (error.code == 'user-not-found') {
         print('No user found for the provided email.');
-        errormessage("No user found for the provided email.","Error");
+        errormessage("No user found for the provided email.", "Error");
       } else {
-        errormessage(error.message.toString(),"Error");
+        errormessage(error.message.toString(), "Error");
         print(error.message);
       }
     }
   }
 
-  void errormessage(String errorMessage,String mess) {
+  void errormessage(String errorMessage, String mess) {
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title:  Text(mess),
+          title: Text(mess),
           content: Text(errorMessage),
           actions: [
             TextButton(
