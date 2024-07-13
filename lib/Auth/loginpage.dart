@@ -1,14 +1,28 @@
+import 'dart:developer';
+
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:learnxt/Auth/SignUp.dart';
 import 'package:learnxt/Auth/accountRecovery.dart';
+import 'package:learnxt/Auth/auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-class Loginpage extends StatelessWidget {
+import '../Screen/home.dart';
+
+class Loginpage extends StatefulWidget {
   const Loginpage({super.key});
 
   @override
+  State<Loginpage> createState() => _LoginpageState();
+}
+
+class _LoginpageState extends State<Loginpage> {
+  @override
   Widget build(BuildContext context) {
+    TextEditingController emailcontroller = TextEditingController();
+    TextEditingController passwordcontroller = TextEditingController();
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Container(
@@ -85,10 +99,11 @@ class Loginpage extends StatelessWidget {
                                         border: Border(
                                             bottom: BorderSide(
                                                 color: Colors.grey.shade200))),
-                                    child: const TextField(
+                                    child:  TextField(
+                                      controller: emailcontroller,
                                       keyboardType: TextInputType.emailAddress,
-                                      decoration: InputDecoration(
-                                          hintText: "Email or Phone number",
+                                      decoration: const InputDecoration(
+                                          hintText:  "Email or Phone number",
                                           hintStyle:
                                               TextStyle(color: Colors.grey),
                                           border: InputBorder.none),
@@ -100,9 +115,10 @@ class Loginpage extends StatelessWidget {
                                         border: Border(
                                             bottom: BorderSide(
                                                 color: Colors.grey.shade200))),
-                                    child: const TextField(
+                                    child:  TextField(
+                                      controller: passwordcontroller,
                                       obscureText: true,
-                                      decoration: InputDecoration(
+                                      decoration: const InputDecoration(
                                           hintText: "Password",
                                           hintStyle:
                                               TextStyle(color: Colors.grey),
@@ -154,7 +170,9 @@ class Loginpage extends StatelessWidget {
                         FadeInUp(
                             duration: const Duration(milliseconds: 1600),
                             child: MaterialButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                login(emailcontroller, passwordcontroller);
+                              },
                               height: 50,
                               // margin: EdgeInsets.symmetric(horizontal: 50),
                               color: Colors.green[900],
@@ -192,7 +210,17 @@ class Loginpage extends StatelessWidget {
                                   child: SignInButton(
                                     Buttons.Google,
                                     text: "Sign up with Google",
-                                    onPressed: () {},
+                                    onPressed: () async {
+                      final GoogleSignInProvider provider = GoogleSignInProvider();
+                      final GoogleSignInAccount? account = await provider.signInWithGoogle();
+                      if (account != null) {
+                        // Handle successful Google Sign-In
+                        print("Signed in with Google: ${account.displayName}");
+                      } else {
+                        // Handle Sign-In errors
+                        print("Google Sign-In failed.");
+                      }
+                    },
                                   )),
                             ),
                             const SizedBox(
@@ -230,5 +258,61 @@ class Loginpage extends StatelessWidget {
         ),
       ),
     );
+  } 
+  
+void login(TextEditingController emailcontroller, TextEditingController passwordcontroller) async {
+    String email = emailcontroller.text.trim();
+    String password = passwordcontroller.text.trim();
+    if (email == "" || password == "") {
+      errormessage("Both fields are required.");
+    } else {
+      try {
+        UserCredential userCredential = await FirebaseAuth.instance
+            .signInWithEmailAndPassword(email: email, password: password);
+        if (userCredential.user != null) {
+          // Access user through the instance
+          // ignore: use_build_context_synchronously
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const Home(),
+              ));
+        }
+      } on FirebaseAuthException catch (e) {
+        String errorMessage;
+        log(e.code.toString());
+        switch (e.code) {
+          case 'invalid-email':
+            errorMessage = 'Your email address is invalid.';
+            break;
+          case 'wrong-password':
+            errorMessage = 'Your password is wrong.';
+            break;
+          default:
+            errorMessage = 'An undefined Error occurred.';
+        }
+        errormessage(errorMessage);
+      }
+    }
   }
+
+  void errormessage(String errorMessage) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Error!'),
+          content: Text(errorMessage),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text('Okay'))
+          ],
+        );
+      },
+    );
+}
+
 }

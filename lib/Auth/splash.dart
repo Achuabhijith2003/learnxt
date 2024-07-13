@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:another_flutter_splash_screen/another_flutter_splash_screen.dart';
 import 'package:learnxt/Auth/loginpage.dart';
+import 'package:learnxt/Screen/home.dart';
 
 class Splash extends StatelessWidget {
   const Splash({super.key});
@@ -14,7 +16,9 @@ class Splash extends StatelessWidget {
           gifPath: 'assets/splash .gif',
            gifWidth: 269,
            gifHeight: 474,
-          nextScreen: const Loginpage(),
+          nextScreen:(FirebaseAuth.instance.currentUser != null)
+            ? const Home()
+            : const Loginpage(),
           duration: const Duration(milliseconds: 3515),
           onInit: () async {
             debugPrint("onInit");

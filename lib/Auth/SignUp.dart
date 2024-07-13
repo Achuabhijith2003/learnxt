@@ -1,12 +1,24 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:learnxt/Auth/loginpage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:developer';
 
-class SignUp extends StatelessWidget {
+class SignUp extends StatefulWidget {
   const SignUp({super.key});
 
   @override
+  State<SignUp> createState() => _SignUpState();
+}
+
+class _SignUpState extends State<SignUp> {
+  @override
   Widget build(BuildContext context) {
+    TextEditingController namecontroller = TextEditingController();
+    TextEditingController emailcontroller = TextEditingController();
+    TextEditingController passwordcontroller = TextEditingController();
+    TextEditingController rePasswordcontroller = TextEditingController();
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Container(
@@ -83,8 +95,10 @@ class SignUp extends StatelessWidget {
                                         border: Border(
                                             bottom: BorderSide(
                                                 color: Colors.grey.shade200))),
-                                    child: const TextField(
-                                      decoration: InputDecoration(
+                                    child: TextField(
+                                      controller: namecontroller,
+                                      keyboardType: TextInputType.name,
+                                      decoration: const InputDecoration(
                                           hintText: "Name",
                                           hintStyle:
                                               TextStyle(color: Colors.grey),
@@ -97,9 +111,10 @@ class SignUp extends StatelessWidget {
                                         border: Border(
                                             bottom: BorderSide(
                                                 color: Colors.grey.shade200))),
-                                    child: const TextField(
+                                    child: TextField(
+                                      controller: emailcontroller,
                                       keyboardType: TextInputType.emailAddress,
-                                      decoration: InputDecoration(
+                                      decoration: const InputDecoration(
                                           hintText: "Email",
                                           hintStyle:
                                               TextStyle(color: Colors.grey),
@@ -112,9 +127,10 @@ class SignUp extends StatelessWidget {
                                         border: Border(
                                             bottom: BorderSide(
                                                 color: Colors.grey.shade200))),
-                                    child: const TextField(
+                                    child: TextField(
+                                      controller: passwordcontroller,
                                       obscureText: true,
-                                      decoration: InputDecoration(
+                                      decoration: const InputDecoration(
                                           hintText: "Password",
                                           hintStyle:
                                               TextStyle(color: Colors.grey),
@@ -127,9 +143,10 @@ class SignUp extends StatelessWidget {
                                         border: Border(
                                             bottom: BorderSide(
                                                 color: Colors.grey.shade200))),
-                                    child: const TextField(
+                                    child: TextField(
+                                      controller: rePasswordcontroller,
                                       obscureText: true,
-                                      decoration: InputDecoration(
+                                      decoration: const InputDecoration(
                                           hintText: "re-enter Password",
                                           hintStyle:
                                               TextStyle(color: Colors.grey),
@@ -148,7 +165,13 @@ class SignUp extends StatelessWidget {
                         FadeInUp(
                             duration: const Duration(milliseconds: 1600),
                             child: MaterialButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                accountcreate(
+                                    emailcontroller,
+                                    passwordcontroller,
+                                    rePasswordcontroller,
+                                    namecontroller);
+                              },
                               height: 50,
                               // margin: EdgeInsets.symmetric(horizontal: 50),
                               color: Colors.green[900],
@@ -171,16 +194,18 @@ class SignUp extends StatelessWidget {
                         ),
                         FadeInUp(
                             duration: const Duration(milliseconds: 1700),
-                            child: TextButton(onPressed: () {
-                              Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const Loginpage()));
-                            }, child: const Text(
-                              "Already have an account? Login",
-                              style: TextStyle(color: Colors.grey),
-                            )) ),
+                            child: TextButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const Loginpage()));
+                                },
+                                child: const Text(
+                                  "Already have an account? Login",
+                                  style: TextStyle(color: Colors.grey),
+                                ))),
                         const SizedBox(
                           height: 25,
                         ),
@@ -193,6 +218,83 @@ class SignUp extends StatelessWidget {
           ),
         ),
       ),
-    );;
+    );
+  }
+
+  void accountcreate(
+      TextEditingController emailcontroller,
+      TextEditingController passwordcontroller,
+      TextEditingController rePasswordcontroller,
+      TextEditingController namecontroller) async {
+    String email = emailcontroller.text.trim();
+    String password = passwordcontroller.text.trim();
+    String repasword = rePasswordcontroller.text.trim();
+    String name = namecontroller.text.trim();
+    if (email == "" || password == "" || repasword == "") {
+      errormessage("Every fields are required.");
+    } else {
+      if (password != repasword) {
+        errormessage("Password and Re-Password are not same");
+      } else {
+        try {
+          UserCredential userCredential = await FirebaseAuth.instance
+              .createUserWithEmailAndPassword(email: email, password: password);
+          if (userCredential.user != null) {
+            createdatabase(email,name);
+            // ignore: use_build_context_synchronously
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const Loginpage()));
+          }
+        } on FirebaseAuthException catch (e) {
+          log(e.code.toString());
+          switch (e.code) {
+            case "invalid-email":
+              errormessage("Invalid Email Address");
+              break;
+            case "weak-password":
+              errormessage("Weak Password");
+              break;
+            case "email-already-in-use":
+              errormessage(
+                  "The provided email is already in use by another account.");
+              break;
+            default:
+              errormessage("An undefined Error occured.");
+          }
+        }
+      }
+    }
+  }
+
+  void errormessage(String errorMessage) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Error!'),
+          content: Text(errorMessage),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text('Okay'))
+          ],
+        );
+      },
+    );
+  }
+
+  void createdatabase(String email, String name) async {
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User? user = auth.currentUser;
+   // ignore: non_constant_identifier_names
+   final Uid = user?.uid;
+    Map<String, dynamic> newuserdata = {
+      "UID":Uid,
+      "Name": name,
+      "Email": email,
+    };
+    FirebaseFirestore.instance.collection("User").doc().set(newuserdata);
   }
 }

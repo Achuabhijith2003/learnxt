@@ -1,12 +1,19 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:learnxt/Auth/loginpage.dart';
 
-class Recovery extends StatelessWidget {
+class Recovery extends StatefulWidget {
   const Recovery({super.key});
 
   @override
+  State<Recovery> createState() => _RecoveryState();
+}
+
+class _RecoveryState extends State<Recovery> {
+  @override
   Widget build(BuildContext context) {
+    TextEditingController emailcontroller = TextEditingController();
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Container(
@@ -83,9 +90,10 @@ class Recovery extends StatelessWidget {
                                         border: Border(
                                             bottom: BorderSide(
                                                 color: Colors.grey.shade200))),
-                                    child: const TextField(
+                                    child: TextField(
+                                      controller: emailcontroller,
                                       keyboardType: TextInputType.emailAddress,
-                                      decoration: InputDecoration(
+                                      decoration: const InputDecoration(
                                           hintText: "Email",
                                           hintStyle:
                                               TextStyle(color: Colors.grey),
@@ -104,7 +112,9 @@ class Recovery extends StatelessWidget {
                         FadeInUp(
                             duration: const Duration(milliseconds: 1600),
                             child: MaterialButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                sendPasswordResetEmail(emailcontroller);
+                              },
                               height: 50,
                               // margin: EdgeInsets.symmetric(horizontal: 50),
                               color: Colors.green[900],
@@ -127,16 +137,18 @@ class Recovery extends StatelessWidget {
                         ),
                         FadeInUp(
                             duration: const Duration(milliseconds: 1700),
-                            child: TextButton(onPressed: () {
-                              Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const Loginpage()));
-                            }, child: const Text(
-                              "Already have an account? Login",
-                              style: TextStyle(color: Colors.grey),
-                            )) ),
+                            child: TextButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const Loginpage()));
+                                },
+                                child: const Text(
+                                  "Already have an account? Login",
+                                  style: TextStyle(color: Colors.grey),
+                                ))),
                         const SizedBox(
                           height: 25,
                         ),
@@ -149,6 +161,46 @@ class Recovery extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  Future<void> sendPasswordResetEmail(
+      TextEditingController emailcontroller) async {
+    String email = emailcontroller.text.trim();
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      print("Password reset email sent successfully!");
+      errormessage("Password reset email sent successfully!","Success");
+      // ignore: use_build_context_synchronously
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const Loginpage()));
+    } on FirebaseAuthException catch (error) {
+      if (error.code == 'user-not-found') {
+        print('No user found for the provided email.');
+        errormessage("No user found for the provided email.","Error");
+      } else {
+        errormessage(error.message.toString(),"Error");
+        print(error.message);
+      }
+    }
+  }
+
+  void errormessage(String errorMessage,String mess) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title:  Text(mess),
+          content: Text(errorMessage),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text('Okay'))
+          ],
+        );
+      },
     );
   }
 }

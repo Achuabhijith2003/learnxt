@@ -40,6 +40,9 @@ dependencies:
   another_flutter_splash_screen: ^1.2.1
   animate_do: ^3.3.4
   flutter_signin_button: ^2.0.0
+  google_sign_in: ^6.2.1
+  firebase_auth: ^5.1.2
+  cloud_firestore: ^5.1.0
 
 dev_dependencies:
   flutter_test:
