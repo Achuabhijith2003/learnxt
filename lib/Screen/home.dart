@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:learnxt/Screen/aichatadd.dart';
 
 class home extends StatefulWidget {
   @override
@@ -72,40 +73,31 @@ class _homeState extends State<home> {
                   child: ListView(
                     padding: const EdgeInsets.only(left: 25),
                     children: [
-                      buildConversationRow(
-                          'Laura', 'Hello, how are you', 'img1.jpeg', 0),
-                      buildConversationRow(
-                          'Kalya', 'Will you visit me', 'img2.jpeg', 2),
-                      buildConversationRow(
-                          'Mary', 'I ate your ...', 'img3.jpeg', 6),
-                      buildConversationRow(
-                          'Hellen', 'Are you with Kayla again', 'img5.jpeg', 0),
-                      buildConversationRow(
-                          'Louren', 'Barrow money please', 'img6.jpeg', 3),
-                      buildConversationRow(
-                          'Tom', 'Hey, whatsup', 'img7.jpeg', 0),
-                      buildConversationRow(
-                          'Laura', 'Helle, how are you', 'img1.jpeg', 0),
-                      buildConversationRow(
-                          'Laura', 'Helle, how are you', 'img1.jpeg', 0),
-                    ],
+                     //AI Chat section
+                     ],
                   ),
                 ))
           ],
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: SizedBox(
         height: 65,
         width: 65,
         child: FloatingActionButton(
-          backgroundColor: Color.fromARGB(255, 39, 193, 42),
+          backgroundColor: Colors.green.shade600,
           child: const Icon(
-            Icons.create,
+            Icons.create_rounded,
             color: Colors.white,
             size: 30,
           ),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>  const Chatcreate(),
+              ));
+          },
         ),
       ),
       drawer: Drawer(
@@ -129,7 +121,7 @@ class _homeState extends State<home> {
                 Column(
                   children: [
                     Row(
-                      children: const [
+                      children:  [
                         Icon(
                           Icons.arrow_back_ios,
                           color: Colors.white,
@@ -180,7 +172,7 @@ class _homeState extends State<home> {
                         title: 'Invite a friend', icon: Icons.people_outline),
                   ],
                 ),
-                const DrawerItem(title: 'Log out', icon: Icons.logout)
+                const DrawerItem(title: 'Log out', icon: Icons.logout,)
               ],
             ),
           ),
