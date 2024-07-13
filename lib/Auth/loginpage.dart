@@ -2,6 +2,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:learnxt/Auth/SignUp.dart';
+import 'package:learnxt/Auth/accountRecovery.dart';
 
 class Loginpage extends StatelessWidget {
   const Loginpage({super.key});
@@ -85,6 +86,7 @@ class Loginpage extends StatelessWidget {
                                             bottom: BorderSide(
                                                 color: Colors.grey.shade200))),
                                     child: const TextField(
+                                      keyboardType: TextInputType.emailAddress,
                                       decoration: InputDecoration(
                                           hintText: "Email or Phone number",
                                           hintStyle:
@@ -133,7 +135,13 @@ class Loginpage extends StatelessWidget {
                             FadeInUp(
                                 duration: const Duration(milliseconds: 1500),
                                 child: TextButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const Recovery()));
+                                    },
                                     child: const Text(
                                       "Forgot Password?",
                                       style: TextStyle(color: Colors.grey),

@@ -2,8 +2,8 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:learnxt/Auth/loginpage.dart';
 
-class SignUp extends StatelessWidget {
-  const SignUp({super.key});
+class Recovery extends StatelessWidget {
+  const Recovery({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +33,7 @@ class SignUp extends StatelessWidget {
                     FadeInUp(
                         duration: const Duration(milliseconds: 1000),
                         child: const Text(
-                          "Create Account",
+                          "Account Recovery",
                           style: TextStyle(color: Colors.white, fontSize: 40),
                         )),
                     const SizedBox(
@@ -84,53 +84,9 @@ class SignUp extends StatelessWidget {
                                             bottom: BorderSide(
                                                 color: Colors.grey.shade200))),
                                     child: const TextField(
-                                      decoration: InputDecoration(
-                                          hintText: "Name",
-                                          hintStyle:
-                                              TextStyle(color: Colors.grey),
-                                          border: InputBorder.none),
-                                    ),
-                                  ),
-                                  Container(
-                                    padding: const EdgeInsets.all(10),
-                                    decoration: BoxDecoration(
-                                        border: Border(
-                                            bottom: BorderSide(
-                                                color: Colors.grey.shade200))),
-                                    child: const TextField(
                                       keyboardType: TextInputType.emailAddress,
                                       decoration: InputDecoration(
                                           hintText: "Email",
-                                          hintStyle:
-                                              TextStyle(color: Colors.grey),
-                                          border: InputBorder.none),
-                                    ),
-                                  ),
-                                  Container(
-                                    padding: const EdgeInsets.all(10),
-                                    decoration: BoxDecoration(
-                                        border: Border(
-                                            bottom: BorderSide(
-                                                color: Colors.grey.shade200))),
-                                    child: const TextField(
-                                      obscureText: true,
-                                      decoration: InputDecoration(
-                                          hintText: "Password",
-                                          hintStyle:
-                                              TextStyle(color: Colors.grey),
-                                          border: InputBorder.none),
-                                    ),
-                                  ),
-                                  Container(
-                                    padding: const EdgeInsets.all(10),
-                                    decoration: BoxDecoration(
-                                        border: Border(
-                                            bottom: BorderSide(
-                                                color: Colors.grey.shade200))),
-                                    child: const TextField(
-                                      obscureText: true,
-                                      decoration: InputDecoration(
-                                          hintText: "re-enter Password",
                                           hintStyle:
                                               TextStyle(color: Colors.grey),
                                           border: InputBorder.none),
@@ -140,7 +96,7 @@ class SignUp extends StatelessWidget {
                               ),
                             )),
                         const SizedBox(
-                          height: 0,
+                          height: 16,
                         ),
                         const SizedBox(
                           height: 10,
@@ -159,7 +115,7 @@ class SignUp extends StatelessWidget {
                               // ),
                               child: const Center(
                                 child: Text(
-                                  "Signup",
+                                  "Send Email",
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold),
@@ -167,7 +123,7 @@ class SignUp extends StatelessWidget {
                               ),
                             )),
                         const SizedBox(
-                          height: 0,
+                          height: 10,
                         ),
                         FadeInUp(
                             duration: const Duration(milliseconds: 1700),
@@ -193,6 +149,6 @@ class SignUp extends StatelessWidget {
           ),
         ),
       ),
-    );;
+    );
   }
 }
