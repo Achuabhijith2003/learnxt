@@ -30,33 +30,29 @@ class _ChatcreateState extends State<Chatcreate> {
         ])),
         child: Stack(
           children: [
-            Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 70, left: 5, right: 5),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      IconButton(
-                          onPressed: () {
-                            _globalKey.currentState!.openDrawer();
-                          },
-                          icon: const Icon(
-                            Icons.menu,
-                            color: Colors.white,
-                          )),
-                      const Text("Create AI bot",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 40,
-                              fontWeight: FontWeight.bold)),
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  width: 35,
-                )
-              ],
+            Padding(
+              padding: const EdgeInsets.only(top: 70, left: 5, right: 5),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  IconButton(
+                      onPressed: () {
+                        _globalKey.currentState!.openDrawer();
+                      },
+                      icon: const Icon(
+                        Icons.menu,
+                        color: Colors.white,
+                      )),
+                  const Text("Create AI bot",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 40,
+                          fontWeight: FontWeight.bold)),
+                ],
+              ),
+            ),
+            const SizedBox(
+              width: 35,
             ),
             Positioned(
                 top: 185,
@@ -101,7 +97,9 @@ class _ChatcreateState extends State<Chatcreate> {
                                 left: 20, top: 5, right: 20),
                             child: MaterialButton(
                               onPressed: () async {
-                                uploadPdf();
+                                setState(() {
+                                  uploadPdf();
+                                });
                               },
                               height: 50,
                               // margin: EdgeInsets.symmetric(horizontal: 50),
@@ -149,14 +147,12 @@ class _ChatcreateState extends State<Chatcreate> {
                             ),
                           )),
                       const Divider(),
-                      // displaypdf()
+                      Expanded(
+                        child: displayPdf(),
+                      )
                     ],
                   ),
-                )),
-            Padding(
-              padding: EdgeInsets.only(top: 400),
-              child: displaypdf(),
-            )
+                ))
           ],
         ),
       ),
@@ -252,8 +248,7 @@ class _ChatcreateState extends State<Chatcreate> {
 
     if (result != null) {
       setState(() {
-        List<File> files = result.paths.map((path) => File(path!)).toList();
-        this.files = files;
+        files = result.paths.map((path) => File(path!)).toList();
       });
     }
   }
@@ -261,47 +256,47 @@ class _ChatcreateState extends State<Chatcreate> {
   void createBot(
       TextEditingController
           botNameController) {} // Function body needed if used
-  displaypdf() {
-    return Container(
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: Colors.green.shade400)),
-        padding: const EdgeInsets.only(left: 20, top: 5, right: 20),
-        child: ListView.builder(
-            itemCount: files.length,
-            itemBuilder: (context, index) {
-              return ListTile(
-                  leading: const Icon(Icons.picture_as_pdf_rounded),
-                  title: Text(
-                      files[index].path.split('/').last), // Extract file name
-                  trailing: Row(
-                    mainAxisSize:
-                        MainAxisSize.min, // Ensures trailing icons fit
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.delete_forever_rounded),
-                        onPressed: () {
-                          // Handle potential errors during deletion
-                          try {
-                            setState(() {
-                              files.removeAt(
-                                  index); // More efficient for large lists
-                            });
-                          } catch (error) {
-                            // Show a snackbar or other error notification
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('Error deleting file: $error'),
-                              ),
-                            );
-                          }
-                        },
-                      ),
-                    ],
-                  ),
-                  onTap: () {
-                    // Optional: Handle tap action on the entire ListTile
-                  });
-            }));
+
+  Widget displayPdf() {
+    return ListView.builder(
+      itemCount: files.length,
+      itemBuilder: (context, index) {
+        return ListTile(
+          title: Text(files[index].path.split('/').last), // Extract file name
+        );
+      },
+    );
   }
 }
+
+// child: ListView(children: [
+      //   ListTile(
+      //     leading: const Icon(Icons.picture_as_pdf_rounded),
+      //     title: Text(file.name),
+      //     trailing: Row(
+      //       mainAxisSize: MainAxisSize.min, // Ensures trailing icons fit
+      //       children: [
+      //         IconButton(
+      //           icon: const Icon(Icons.delete_forever_rounded),
+      //           onPressed: () {},
+      //         ),
+      //       ],
+      //     ),
+      //     // onTap: () {
+      //     //   // Handle optional tap on the entire ListTile
+      //     //   // If you don't want any action, remove this onTap handler
+      //     // },
+      //   ),
+      // ]
+
+
+// for (var i = 0; i < files.length;) {
+    //   PlatformFile file = result.files[i];
+
+    //   print(file.name);
+    //   i++;
+    // }
+    // print(file.bytes);
+    // print(file.size);
+    // print(file.extension);
+    // print(file.path);
