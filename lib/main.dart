@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:learnxt/Auth/splash.dart';
+import 'package:learnxt/Screen/home.dart';
 import 'package:learnxt/firebase_options.dart';
 
 Future<void> main(List<String> args) async {
@@ -15,9 +16,9 @@ class Learnxt extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return  MaterialApp(
       debugShowCheckedModeBanner: false,
-      home : Splash()
+      home : home()
     );
   }
 }

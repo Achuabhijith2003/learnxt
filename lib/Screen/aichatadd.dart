@@ -100,22 +100,7 @@ class _ChatcreateState extends State<Chatcreate> {
                             padding: const EdgeInsets.only(
                                 left: 20, top: 5, right: 20),
                             child: MaterialButton(
-                              onPressed: () async {
-                                FilePickerResult? result =
-                                    await FilePicker.platform.pickFiles(
-                                  allowMultiple: true,
-                                  type: FileType.custom,
-                                  allowedExtensions: [ 'pdf'],
-                                );
-
-                                if (result != null) {
-                                  List<File> files = result.paths
-                                      .map((path) => File(path!))
-                                      .toList();
-                                } else {
-                                  // User canceled the picker
-                                }
-                              },
+                              onPressed: () async {},
                               height: 50,
                               // margin: EdgeInsets.symmetric(horizontal: 50),
                               color: Colors.green[900],
@@ -162,11 +147,7 @@ class _ChatcreateState extends State<Chatcreate> {
                             ),
                           )),
                       const Divider(),
-                      // ListView(children: const [
-                      //   SizedBox(
-                      //     height: 10,
-                      //   ),
-                      // ],)
+                      displaypdf()
                     ],
                   ),
                 ))
@@ -256,5 +237,45 @@ class _ChatcreateState extends State<Chatcreate> {
     );
   }
 
+  List<File>? files;
+  Uploadpdf() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      allowMultiple: true,
+      type: FileType.custom,
+      allowedExtensions: ['pdf'],
+    );
+
+    if (result != null) {
+      files = result.paths.map((path) => File(path!)).toList();
+    } else {
+      // User canceled the picker
+    }
+  }
+
   createbot(TextEditingController botnamecontroller) {}
+
+  displaypdf() {
+    return Container(
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: Colors.green.shade400)),
+        padding: const EdgeInsets.only(left: 20, top: 5, right: 20),
+        child: ListTile(
+          leading: const Icon(Icons.picture_as_pdf_rounded),
+          title: const Text("Name of the PDF"),
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min, // Ensures trailing icons fit
+            children: [
+              IconButton(
+                icon: const Icon(Icons.delete_forever_rounded),
+                onPressed: () {},
+              ),
+            ],
+          ),
+          // onTap: () {
+          //   // Handle optional tap on the entire ListTile
+          //   // If you don't want any action, remove this onTap handler
+          // },
+        ));
+  }
 }
