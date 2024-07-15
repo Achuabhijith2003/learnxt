@@ -1,8 +1,13 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:animate_do/animate_do.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:learnxt/Auth/loginpage.dart';
 import 'package:learnxt/Screen/home.dart';
 
 class Chatcreate extends StatefulWidget {
@@ -173,12 +178,12 @@ class _ChatcreateState extends State<Chatcreate> {
                 BoxShadow(
                     color: Color(0x3D000000), spreadRadius: 30, blurRadius: 20)
               ]),
-          child: const Padding(
-            padding: EdgeInsets.fromLTRB(20, 50, 20, 20),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(20, 50, 20, 20),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Column(
+                const Column(
                   children: [
                     Row(
                       children: [
@@ -231,9 +236,11 @@ class _ChatcreateState extends State<Chatcreate> {
                         title: 'Invite a friend', icon: Icons.people_outline),
                   ],
                 ),
-                DrawerItem(
-                  title: 'Log out',
-                  icon: Icons.logout,
+                IconButton(
+                  onPressed: () {
+                    logout();
+                  },
+                  icon: const Icon(Icons.logout),
                 )
               ],
             ),
@@ -241,6 +248,17 @@ class _ChatcreateState extends State<Chatcreate> {
         ),
       ),
     );
+  }
+
+  void logout() async {
+    //logout method
+    await FirebaseAuth.instance.signOut();
+    // ignore: use_build_context_synchronously
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const Loginpage(),
+        ));
   }
 
   List<File> files = [];
@@ -258,9 +276,48 @@ class _ChatcreateState extends State<Chatcreate> {
     }
   }
 
-  void createBot(
-      TextEditingController
-          botNameController) {} // Function body needed if used
+  void createBot(TextEditingController botNameController) async {
+    String botName = botNameController.text.trim();
+
+    if (botName.isEmpty) {
+      return; // Handle empty bot name
+    }
+
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      // Handle case where user is not logged in
+      return;
+    }
+
+    String uid = user.uid;
+
+    final storageRef = FirebaseStorage.instance.ref();
+    final List<String> downloadUrls = [];
+
+    // Upload each file to Firebase Storage
+    for (File file in files) {
+      final fileName = file.path.split('/').last; // Extract file name
+      final uploadTask = storageRef.child('PDFs/$fileName').putFile(file);
+      final snapshot = await uploadTask.whenComplete(() => {});
+      final downloadUrl = await snapshot.ref.getDownloadURL();
+      downloadUrls.add(downloadUrl);
+    }
+
+    // Store bot data in Firestore
+    final botData = {
+      'UID': uid,
+      'Bot Name': botName,
+      'PDFs': downloadUrls,
+    };
+    await FirebaseFirestore.instance.collection('Bot').add(botData);
+    // Handle successful creation (e.g., show success message)
+    // ignore: use_build_context_synchronously
+    Navigator.pushReplacement(
+        // ignore: use_build_context_synchronously
+        context,
+        MaterialPageRoute(builder: (context) => home()));
+  }
+
   displaypdf() {
     return Container(
         decoration: BoxDecoration(

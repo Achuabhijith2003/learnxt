@@ -99,11 +99,11 @@ class _LoginpageState extends State<Loginpage> {
                                         border: Border(
                                             bottom: BorderSide(
                                                 color: Colors.grey.shade200))),
-                                    child:  TextField(
+                                    child: TextField(
                                       controller: emailcontroller,
                                       keyboardType: TextInputType.emailAddress,
                                       decoration: const InputDecoration(
-                                          hintText:  "Email or Phone number",
+                                          hintText: "Email or Phone number",
                                           hintStyle:
                                               TextStyle(color: Colors.grey),
                                           border: InputBorder.none),
@@ -115,7 +115,7 @@ class _LoginpageState extends State<Loginpage> {
                                         border: Border(
                                             bottom: BorderSide(
                                                 color: Colors.grey.shade200))),
-                                    child:  TextField(
+                                    child: TextField(
                                       controller: passwordcontroller,
                                       obscureText: true,
                                       decoration: const InputDecoration(
@@ -132,38 +132,37 @@ class _LoginpageState extends State<Loginpage> {
                           height: 0,
                         ),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget> [
-                             FadeInUp(
-                                duration: const Duration(milliseconds: 1500),
-                                child: TextButton(
-                                    onPressed: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const SignUp()));
-                                    },
-                                    child: const Text(
-                                      "Create Account",
-                                      style: TextStyle(color: Colors.grey),
-                                    ))),
-                            FadeInUp(
-                                duration: const Duration(milliseconds: 1500),
-                                child: TextButton(
-                                    onPressed: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const Recovery()));
-                                    },
-                                    child: const Text(
-                                      "Forgot Password?",
-                                      style: TextStyle(color: Colors.grey),
-                                    ))),
-                          ]
-                        ),
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              FadeInUp(
+                                  duration: const Duration(milliseconds: 1500),
+                                  child: TextButton(
+                                      onPressed: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const SignUp()));
+                                      },
+                                      child: const Text(
+                                        "Create Account",
+                                        style: TextStyle(color: Colors.grey),
+                                      ))),
+                              FadeInUp(
+                                  duration: const Duration(milliseconds: 1500),
+                                  child: TextButton(
+                                      onPressed: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const Recovery()));
+                                      },
+                                      child: const Text(
+                                        "Forgot Password?",
+                                        style: TextStyle(color: Colors.grey),
+                                      ))),
+                            ]),
                         const SizedBox(
                           height: 10,
                         ),
@@ -211,16 +210,25 @@ class _LoginpageState extends State<Loginpage> {
                                     Buttons.Google,
                                     text: "Sign up with Google",
                                     onPressed: () async {
-                      final GoogleSignInProvider provider = GoogleSignInProvider();
-                      final GoogleSignInAccount? account = await provider.signInWithGoogle();
-                      if (account != null) {
-                        // Handle successful Google Sign-In
-                        print("Signed in with Google: ${account.displayName}");
-                      } else {
-                        // Handle Sign-In errors
-                        print("Google Sign-In failed.");
-                      }
-                    },
+                                      final GoogleSignInProvider provider =
+                                          GoogleSignInProvider();
+                                      final GoogleSignInAccount? account =
+                                          await provider.signInWithGoogle();
+                                      if (account != null) {
+                                        // Handle successful Google Sign-In
+                                        print(
+                                            "Signed in with Google: ${account.displayName}");
+                                        Navigator.pushReplacement(
+                                            // ignore: use_build_context_synchronously
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => home(),
+                                            ));
+                                      } else {
+                                        // Handle Sign-In errors
+                                        print("Google Sign-In failed.");
+                                      }
+                                    },
                                   )),
                             ),
                             const SizedBox(
@@ -258,9 +266,10 @@ class _LoginpageState extends State<Loginpage> {
         ),
       ),
     );
-  } 
-  
-void login(TextEditingController emailcontroller, TextEditingController passwordcontroller) async {
+  }
+
+  void login(TextEditingController emailcontroller,
+      TextEditingController passwordcontroller) async {
     String email = emailcontroller.text.trim();
     String password = passwordcontroller.text.trim();
     if (email == "" || password == "") {
@@ -275,7 +284,7 @@ void login(TextEditingController emailcontroller, TextEditingController password
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) =>  home(),
+                builder: (context) => home(),
               ));
         }
       } on FirebaseAuthException catch (e) {
@@ -313,6 +322,5 @@ void login(TextEditingController emailcontroller, TextEditingController password
         );
       },
     );
-}
-
+  }
 }

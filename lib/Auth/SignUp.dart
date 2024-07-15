@@ -242,7 +242,7 @@ class _SignUpState extends State<SignUp> {
           if (userCredential.user != null) {
             createdatabase(email,name);
             // ignore: use_build_context_synchronously
-            Navigator.push(context,
+            Navigator.pushReplacement(context,
                 MaterialPageRoute(builder: (context) => const Loginpage()));
           }
         } on FirebaseAuthException catch (e) {
