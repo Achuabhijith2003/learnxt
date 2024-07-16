@@ -294,28 +294,59 @@ class _ChatcreateState extends State<Chatcreate> {
     final storageRef = FirebaseStorage.instance.ref();
     final List<String> downloadUrls = [];
 
-    // Upload each file to Firebase Storage
-    for (File file in files) {
-      final fileName = file.path.split('/').last; // Extract file name
-      final uploadTask = storageRef.child('PDFs/$fileName').putFile(file);
-      final snapshot = await uploadTask.whenComplete(() => {});
-      final downloadUrl = await snapshot.ref.getDownloadURL();
-      downloadUrls.add(downloadUrl);
-    }
+    // Show loading dialog
+    showDialog(
+      context: context,
+      barrierDismissible: false, // Disable user interaction while uploading
+      builder: (context) => const Center(
+        child: CircularProgressIndicator(
+          color: Colors.greenAccent,
+        ), // Simple loading indicator
+      ),
+    );
 
-    // Store bot data in Firestore
-    final botData = {
-      'UID': uid,
-      'Bot Name': botName,
-      'PDFs': downloadUrls,
-    };
-    await FirebaseFirestore.instance.collection('Bot').add(botData);
-    // Handle successful creation (e.g., show success message)
-    // ignore: use_build_context_synchronously
-    Navigator.pushReplacement(
-        // ignore: use_build_context_synchronously
+    try {
+      // Upload each file to Firebase Storage
+      for (File file in files) {
+        final fileName = file.path.split('/').last; // Extract file name
+        final uploadTask = storageRef.child('PDFs/$fileName').putFile(file);
+
+        // Track upload progress (optional)
+        final snapshot = uploadTask.snapshot;
+        double uploadProgress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+
+        while (uploadProgress < 100) {
+          // Update UI with upload progress (optional)
+          // ...
+          await Future.delayed(const Duration(milliseconds: 500));
+          uploadProgress =
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        }
+
+        final downloadUrl = await snapshot.ref.getDownloadURL();
+        downloadUrls.add(downloadUrl);
+      }
+
+      // Store bot data in Firestore after upload is complete
+      final botData = {
+        'UID': uid,
+        'Bot Name': botName,
+        'PDFs': downloadUrls,
+      };
+      await FirebaseFirestore.instance.collection('Bot').doc(uid).set(botData);
+      Navigator.pop(context); // Dismiss loading screen
+
+      // Handle successful creation (e.g., show success message)
+      Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => home()));
+        MaterialPageRoute(builder: (context) => home()),
+      );
+    } catch (error) {
+      Navigator.pop(context); // Dismiss loading screen even on error
+      print('Error creating bot: $error');
+      // Handle errors appropriately (e.g., show error message)
+    }
   }
 
   displaypdf() {

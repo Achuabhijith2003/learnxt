@@ -6,6 +6,7 @@ import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:learnxt/Auth/SignUp.dart';
 import 'package:learnxt/Auth/accountRecovery.dart';
 import 'package:learnxt/Auth/auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -19,6 +20,43 @@ class Loginpage extends StatefulWidget {
 }
 
 class _LoginpageState extends State<Loginpage> {
+  final FirebaseAuth _auth = FirebaseAuth.instance; // Create an instance
+
+  Future<void> _signInWithGoogle() async {
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      final GoogleSignInAuthentication? googleAuth =
+          await googleUser?.authentication;
+
+      final credential = GoogleAuthProvider.credential(
+        idToken: googleAuth?.idToken,
+        accessToken: googleAuth?.accessToken,
+      );
+
+      final UserCredential userCredential =
+          await _auth.signInWithCredential(credential);
+
+      final user = userCredential.user;
+      if (user != null) {
+        // Handle successful sign-in
+        print('Signed in with Google: ${user.uid}');
+        createdatabase(
+            user.email!, user.displayName ?? ''); // Use null-safe operators
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => home()),
+        );
+      }
+    } catch (error) {
+      print('Error signing in with Google: $error');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Sign-In failed: $error'),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     TextEditingController emailcontroller = TextEditingController();
@@ -209,26 +247,7 @@ class _LoginpageState extends State<Loginpage> {
                                   child: SignInButton(
                                     Buttons.Google,
                                     text: "Sign up with Google",
-                                    onPressed: () async {
-                                      final GoogleSignInProvider provider =
-                                          GoogleSignInProvider();
-                                      final GoogleSignInAccount? account =
-                                          await provider.signInWithGoogle();
-                                      if (account != null) {
-                                        // Handle successful Google Sign-In
-                                        print(
-                                            "Signed in with Google: ${account.displayName}");
-                                        Navigator.pushReplacement(
-                                            // ignore: use_build_context_synchronously
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) => home(),
-                                            ));
-                                      } else {
-                                        // Handle Sign-In errors
-                                        print("Google Sign-In failed.");
-                                      }
-                                    },
+                                    onPressed: () => _signInWithGoogle(),
                                   )),
                             ),
                             const SizedBox(
@@ -322,5 +341,18 @@ class _LoginpageState extends State<Loginpage> {
         );
       },
     );
+  }
+
+  void createdatabase(String email, String name) async {
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User? user = auth.currentUser;
+    // ignore: non_constant_identifier_names
+    final Uid = user?.uid;
+    Map<String, dynamic> newuserdata = {
+      "UID": Uid,
+      "Name": name,
+      "Email": email,
+    };
+    FirebaseFirestore.instance.collection("User").doc(Uid).set(newuserdata);
   }
 }
