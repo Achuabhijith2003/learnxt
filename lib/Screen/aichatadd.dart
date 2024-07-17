@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:math';
 
 import 'package:animate_do/animate_do.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -159,7 +158,7 @@ class _ChatcreateState extends State<Chatcreate> {
                   ),
                 )),
             Padding(
-              padding: EdgeInsets.only(top: 400),
+              padding: const EdgeInsets.only(top: 400),
               child: displaypdf(),
             )
           ],
@@ -233,14 +232,15 @@ class _ChatcreateState extends State<Chatcreate> {
                       color: Colors.green,
                     ),
                     DrawerItem(
-                        title: 'Invite a friend', icon: Icons.people_outline),
+                      title: 'Invite a friend',
+                      icon: Icons.people_outline,
+                    ),
                   ],
                 ),
-                IconButton(
-                  onPressed: () {
-                    logout();
-                  },
-                  icon: const Icon(Icons.logout),
+                DrawerItem(
+                  title: 'Log out',
+                  icon: Icons.logout,
+                  onTap: logout,
                 )
               ],
             ),
@@ -255,6 +255,7 @@ class _ChatcreateState extends State<Chatcreate> {
     await FirebaseAuth.instance.signOut();
     // ignore: use_build_context_synchronously
     Navigator.pushReplacement(
+        // ignore: use_build_context_synchronously
         context,
         MaterialPageRoute(
           builder: (context) => const Loginpage(),
@@ -330,6 +331,7 @@ class _ChatcreateState extends State<Chatcreate> {
           context,
           MaterialPageRoute(builder: (context) => home()));
     } catch (error) {
+      // ignore: use_build_context_synchronously
       Navigator.pop(context); // Dismiss loading screen even on error
       print('Error creating bot: $error');
       // Handle errors appropriately (e.g., show error message)

@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:learnxt/Auth/loginpage.dart';
 import 'package:learnxt/Screen/aichatadd.dart';
 
 class home extends StatefulWidget {
@@ -73,8 +75,8 @@ class _homeState extends State<home> {
                   child: ListView(
                     padding: const EdgeInsets.only(left: 25),
                     children: [
-                     //AI Chat section
-                     ],
+                      //AI Chat section
+                    ],
                   ),
                 ))
           ],
@@ -93,10 +95,10 @@ class _homeState extends State<home> {
           ),
           onPressed: () {
             Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) =>  const Chatcreate(),
-              ));
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const Chatcreate(),
+                ));
           },
         ),
       ),
@@ -113,15 +115,15 @@ class _homeState extends State<home> {
                 BoxShadow(
                     color: Color(0x3D000000), spreadRadius: 30, blurRadius: 20)
               ]),
-          child: const Padding(
-            padding:  EdgeInsets.fromLTRB(20, 50, 20, 20),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(20, 50, 20, 20),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Column(
+                const Column(
                   children: [
                     Row(
-                      children:  [
+                      children: [
                         Icon(
                           Icons.arrow_back_ios,
                           color: Colors.white,
@@ -136,11 +138,11 @@ class _homeState extends State<home> {
                         ),
                       ],
                     ),
-                     SizedBox(
+                    SizedBox(
                       height: 30,
                     ),
                     Row(
-                      children:  [
+                      children: [
                         UserAvatar(filename: 'img3.jpeg'),
                         SizedBox(
                           width: 12,
@@ -151,34 +153,50 @@ class _homeState extends State<home> {
                         )
                       ],
                     ),
-                    const SizedBox(
+                    SizedBox(
                       height: 35,
                     ),
-                    const DrawerItem(
+                    DrawerItem(
                       title: 'Account',
                       icon: Icons.key,
                     ),
-                    const DrawerItem(title: 'Chats', icon: Icons.chat_bubble),
-                    const DrawerItem(
+                    DrawerItem(title: 'Chats', icon: Icons.chat_bubble),
+                    DrawerItem(
                         title: 'Notifications', icon: Icons.notifications),
-                    const DrawerItem(
-                        title: 'Data and Storage', icon: Icons.storage),
-                    const DrawerItem(title: 'Help', icon: Icons.help),
-                    const Divider(
+                    DrawerItem(title: 'Data and Storage', icon: Icons.storage),
+                    DrawerItem(title: 'Help', icon: Icons.help),
+                    Divider(
                       height: 35,
                       color: Colors.green,
                     ),
-                    const DrawerItem(
-                        title: 'Invite a friend', icon: Icons.people_outline),
+                    DrawerItem(
+                      title: 'Invite a friend',
+                      icon: Icons.people_outline,
+                    ),
                   ],
                 ),
-                const DrawerItem(title: 'Log out', icon: Icons.logout,)
+                DrawerItem(
+                  title: 'Log out',
+                  icon: Icons.logout,
+                  onTap: logout,
+                )
               ],
             ),
           ),
         ),
       ),
     );
+  }
+
+  void logout() async {
+    //logout method
+    await FirebaseAuth.instance.signOut();
+    // ignore: use_build_context_synchronously
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const Loginpage(),
+        ));
   }
 
   Column buildConversationRow(
@@ -207,7 +225,8 @@ class _homeState extends State<home> {
                     ),
                     Text(
                       message,
-                      style: const TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
+                      style:
+                          const TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
                     ),
                   ],
                 )
@@ -271,16 +290,18 @@ class _homeState extends State<home> {
 class DrawerItem extends StatelessWidget {
   final String title;
   final IconData icon;
+  final VoidCallback? onTap;
   const DrawerItem({
     super.key,
     required this.title,
     required this.icon,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: onTap,
       child: Padding(
         padding: const EdgeInsets.only(bottom: 25),
         child: Row(
