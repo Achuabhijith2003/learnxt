@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:learnxt/Auth/loginpage.dart';
@@ -72,11 +73,30 @@ class _homeState extends State<home> {
                         topRight: Radius.circular(40)),
                     color: Color(0xFFEFFFFC),
                   ),
-                  child: ListView(
-                    padding: const EdgeInsets.only(left: 25),
-                    children: [
-                      //AI Chat section
-                    ],
+                  child: FutureBuilder(
+                    future: fetchData(), // Initial fetch with limit
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      }
+
+                      if (!snapshot.hasData) {
+                        return const CircularProgressIndicator(); // Show loading indicator
+                      }
+
+                      final data = snapshot.data as List<Map<String, dynamic>>;
+                      return ListView.builder(
+                        itemCount: data.length,
+                        itemBuilder: (context, index) {
+                          final botData = data[index];
+                          return ListTile(
+                            title: Text(botData[
+                                'Bot Name']), // Access data for each bot
+                          );
+                        },
+                        // Add a "Load More" button or implement infinite scrolling if needed
+                      );
+                    },
                   ),
                 ))
           ],
@@ -284,6 +304,23 @@ class _homeState extends State<home> {
         ],
       ),
     );
+  }
+
+  Future<List<Map<String, dynamic>>> fetchData() async {
+    // ... your existing fetchData logic ...
+    final user = FirebaseAuth.instance.currentUser;
+    final firestore = FirebaseFirestore.instance;
+    final collection = firestore.collection('Bot');
+
+    final query =
+        collection.where('UID', isEqualTo: user?.uid); // Example condition
+
+    final querySnapshot = await query.get();
+    final data = querySnapshot.docs.map((doc) => doc.data()).toList();
+    // Access data as a list of Maps
+    print(data);
+    //
+    return data; // Return the retrieved data list
   }
 }
 
