@@ -310,38 +310,25 @@ class _ChatcreateState extends State<Chatcreate> {
       for (File file in files) {
         final fileName = file.path.split('/').last; // Extract file name
         final uploadTask = storageRef.child('PDFs/$fileName').putFile(file);
-
-        // Track upload progress (optional)
-        final snapshot = uploadTask.snapshot;
-        double uploadProgress =
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-
-        while (uploadProgress < 100) {
-          // Update UI with upload progress (optional)
-          // ...
-          await Future.delayed(const Duration(milliseconds: 500));
-          uploadProgress =
-              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        }
-
+        final snapshot = await uploadTask.whenComplete(() => {});
         final downloadUrl = await snapshot.ref.getDownloadURL();
         downloadUrls.add(downloadUrl);
       }
 
-      // Store bot data in Firestore after upload is complete
+      // Store bot data in Firestore
       final botData = {
         'UID': uid,
         'Bot Name': botName,
         'PDFs': downloadUrls,
       };
-      await FirebaseFirestore.instance.collection('Bot').doc(uid).set(botData);
-      Navigator.pop(context); // Dismiss loading screen
-
+      await FirebaseFirestore.instance.collection('Bot').add(botData);
       // Handle successful creation (e.g., show success message)
+      // ignore: use_build_context_synchronously
+      Navigator.pop(context);
       Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => home()),
-      );
+          // ignore: use_build_context_synchronously
+          context,
+          MaterialPageRoute(builder: (context) => home()));
     } catch (error) {
       Navigator.pop(context); // Dismiss loading screen even on error
       print('Error creating bot: $error');
