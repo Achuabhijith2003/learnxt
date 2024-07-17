@@ -329,7 +329,7 @@ class _ChatcreateState extends State<Chatcreate> {
       Navigator.pushReplacement(
           // ignore: use_build_context_synchronously
           context,
-          MaterialPageRoute(builder: (context) => home()));
+          MaterialPageRoute(builder: (context) => Home()));
     } catch (error) {
       // ignore: use_build_context_synchronously
       Navigator.pop(context); // Dismiss loading screen even on error

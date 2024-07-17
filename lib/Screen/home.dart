@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:learnxt/Auth/loginpage.dart';
 import 'package:learnxt/Screen/aichatadd.dart';
 
-class home extends StatefulWidget {
+class Home extends StatefulWidget {
   @override
-  _homeState createState() => _homeState();
+  _HomeState createState() => _HomeState();
 }
 
-class _homeState extends State<home> {
+class _HomeState extends State<Home> {
   final GlobalKey<ScaffoldState> _globalKey = GlobalKey();
   @override
   Widget build(BuildContext context) {
@@ -81,7 +81,11 @@ class _homeState extends State<home> {
                       }
 
                       if (!snapshot.hasData) {
-                        return const CircularProgressIndicator(); // Show loading indicator
+                        return const Center(
+                          child: CircularProgressIndicator(
+                            color: Colors.green,
+                          ),
+                        ); // Show loading indicator
                       }
 
                       final data = snapshot.data as List<Map<String, dynamic>>;
@@ -213,6 +217,7 @@ class _homeState extends State<home> {
     await FirebaseAuth.instance.signOut();
     // ignore: use_build_context_synchronously
     Navigator.pushReplacement(
+        // ignore: use_build_context_synchronously
         context,
         MaterialPageRoute(
           builder: (context) => const Loginpage(),
@@ -266,7 +271,7 @@ class _homeState extends State<home> {
                   if (msgCount > 0)
                     CircleAvatar(
                       radius: 7,
-                      backgroundColor: Color.fromARGB(255, 30, 177, 30),
+                      backgroundColor: const Color.fromARGB(255, 30, 177, 30),
                       child: Text(
                         msgCount.toString(),
                         style:
@@ -318,7 +323,7 @@ class _homeState extends State<home> {
     final querySnapshot = await query.get();
     final data = querySnapshot.docs.map((doc) => doc.data()).toList();
     // Access data as a list of Maps
-    print(data);
+    // print(data);
     //
     return data; // Return the retrieved data list
   }

@@ -44,7 +44,7 @@ class _LoginpageState extends State<Loginpage> {
             user.email!, user.displayName ?? ''); // Use null-safe operators
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => home()),
+          MaterialPageRoute(builder: (context) => Home()),
         );
       }
     } catch (error) {
@@ -303,7 +303,7 @@ class _LoginpageState extends State<Loginpage> {
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => home(),
+                builder: (context) => Home(),
               ));
         }
       } on FirebaseAuthException catch (e) {

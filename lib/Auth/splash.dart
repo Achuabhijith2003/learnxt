@@ -14,11 +14,11 @@ class Splash extends StatelessWidget {
         child: FlutterSplashScreen.gif(
           backgroundColor: Colors.white,
           gifPath: 'assets/splash .gif',
-           gifWidth: 269,
-           gifHeight: 474,
-          nextScreen:(FirebaseAuth.instance.currentUser != null)
-            ?  home()
-            : const Loginpage(),
+          gifWidth: 269,
+          gifHeight: 474,
+          nextScreen: (FirebaseAuth.instance.currentUser != null)
+              ? Home()
+              : const Loginpage(),
           duration: const Duration(milliseconds: 3515),
           onInit: () async {
             debugPrint("onInit");
