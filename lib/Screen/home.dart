@@ -62,7 +62,7 @@ class _HomeState extends State<Home> {
               ],
             ),
             Positioned(
-                top: 185,
+                top: 112,
                 left: 0,
                 right: 0,
                 bottom: 0,
@@ -96,7 +96,11 @@ class _HomeState extends State<Home> {
                           final botData = data[index];
                           return ListTile(
                             onTap: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => const AiChat(),));
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>  AiChat(),
+                                  ));
                             },
                             title: Text(botData[
                                 'Bot Name']), // Access data for each bot
