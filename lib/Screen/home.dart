@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:learnxt/Auth/loginpage.dart';
 import 'package:learnxt/Screen/ai_chat_section.dart';
 import 'package:learnxt/Screen/aichatadd.dart';
@@ -42,8 +43,8 @@ class _HomeState extends State<Home> {
                             Icons.menu,
                             color: Colors.white,
                           )),
-                      const Text("LearnXT",
-                          style: TextStyle(
+                       Text("LearnXT",
+                          style: GoogleFonts.ptSerif(
                               color: Colors.white,
                               fontSize: 40,
                               fontWeight: FontWeight.bold)),

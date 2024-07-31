@@ -45,6 +45,10 @@ dependencies:
   cloud_firestore: ^5.1.0
   file_picker: ^8.0.6
   firebase_storage: ^12.1.1
+  google_fonts: ^6.2.1
+  dash_chat_2: ^0.0.21
+  image_picker: ^1.1.2
+  flutter_gemini: ^2.0.4
 
 dev_dependencies:
   flutter_test:

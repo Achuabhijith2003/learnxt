@@ -1,25 +1,39 @@
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:learnxt/Auth/loginpage.dart';
 import 'package:learnxt/Screen/home.dart';
+import 'dart:io';
+import 'dart:typed_data';
 
-
+import 'package:dash_chat_2/dash_chat_2.dart';
+import 'package:flutter_gemini/flutter_gemini.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AiChat extends StatefulWidget {
- const  AiChat({super.key});
-  
+  const AiChat({super.key});
 
   @override
   State<AiChat> createState() => _AiChatState();
 }
 
+final Gemini gemini = Gemini.instance;
+
+List<ChatMessage> messages = [];
+
+ChatUser currentUser = ChatUser(id: "0", firstName: "User");
+ChatUser geminiUser = ChatUser(
+  id: "1",
+  firstName: "Gemini",
+  profileImage:
+      "https://seeklogo.com/images/G/google-gemini-logo-A5787B2669-seeklogo.com.png",
+);
+
 class _AiChatState extends State<AiChat> {
   final GlobalKey<ScaffoldState> _globalKey = GlobalKey();
- 
+
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
+    return Scaffold(
       key: _globalKey,
       // backgroundColor: const Color(0xFF171717),
       body: Container(
@@ -72,15 +86,14 @@ class _AiChatState extends State<AiChat> {
                 right: 0,
                 bottom: 0,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 15),
-                  decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(40),
-                        topRight: Radius.circular(40)),
-                    color: Color(0xFFEFFFFC),
-                  ),
-                  child: Text("data")
-                ))
+                    padding: const EdgeInsets.symmetric(vertical: 15),
+                    decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(40),
+                          topRight: Radius.circular(40)),
+                      color: Color(0xFFEFFFFC),
+                    ),
+                    child: _buildUI()))
           ],
         ),
       ),
@@ -169,7 +182,8 @@ class _AiChatState extends State<AiChat> {
       ),
     );
   }
-    void logout() async {
+
+  void logout() async {
     //logout method
     await FirebaseAuth.instance.signOut();
     // ignore: use_build_context_synchronously
@@ -180,5 +194,91 @@ class _AiChatState extends State<AiChat> {
           builder: (context) => const Loginpage(),
         ));
   }
-}
 
+  Widget _buildUI() {
+    return DashChat(
+      inputOptions: InputOptions(trailing: [
+        IconButton(
+          onPressed: _sendMediaMessage,
+          icon: const Icon(
+            Icons.image,
+          ),
+        )
+      ]),
+      currentUser: currentUser,
+      onSend: _sendMessage,
+      messages: messages,
+    );
+  }
+
+  void _sendMessage(ChatMessage chatMessage) {
+    setState(() {
+      messages = [chatMessage, ...messages];
+    });
+    try {
+      String question = chatMessage.text;
+      List<Uint8List>? images;
+      if (chatMessage.medias?.isNotEmpty ?? false) {
+        images = [
+          File(chatMessage.medias!.first.url).readAsBytesSync(),
+        ];
+      }
+      gemini
+          .streamGenerateContent(
+        question,
+        images: images,
+      )
+          .listen((event) {
+        ChatMessage? lastMessage = messages.firstOrNull;
+        if (lastMessage != null && lastMessage.user == geminiUser) {
+          lastMessage = messages.removeAt(0);
+          String response = event.content?.parts?.fold(
+                  "", (previous, current) => "$previous ${current.text}") ??
+              "";
+          lastMessage.text += response;
+          setState(
+            () {
+              messages = [lastMessage!, ...messages];
+            },
+          );
+        } else {
+          String response = event.content?.parts?.fold(
+                  "", (previous, current) => "$previous ${current.text}") ??
+              "";
+          ChatMessage message = ChatMessage(
+            user: geminiUser,
+            createdAt: DateTime.now(),
+            text: response,
+          );
+          setState(() {
+            messages = [message, ...messages];
+          });
+        }
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void _sendMediaMessage() async {
+    ImagePicker picker = ImagePicker();
+    XFile? file = await picker.pickImage(
+      source: ImageSource.gallery,
+    );
+    if (file != null) {
+      ChatMessage chatMessage = ChatMessage(
+        user: currentUser,
+        createdAt: DateTime.now(),
+        text: "Describe this picture?",
+        medias: [
+          ChatMedia(
+            url: file.path,
+            fileName: "",
+            type: MediaType.image,
+          )
+        ],
+      );
+      _sendMessage(chatMessage);
+    }
+  }
+}
