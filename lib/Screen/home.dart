@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:learnxt/Auth/loginpage.dart';
+import 'package:learnxt/Screen/ai_chat_section.dart';
 import 'package:learnxt/Screen/aichatadd.dart';
 
 class Home extends StatefulWidget {
@@ -94,6 +95,9 @@ class _HomeState extends State<Home> {
                         itemBuilder: (context, index) {
                           final botData = data[index];
                           return ListTile(
+                            onTap: () {
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => const AiChat(),));
+                            },
                             title: Text(botData[
                                 'Bot Name']), // Access data for each bot
                           );
