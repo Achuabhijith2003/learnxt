@@ -295,14 +295,26 @@ class _ChatcreateState extends State<Chatcreate> {
     final storageRef = FirebaseStorage.instance.ref();
     final List<String> downloadUrls = [];
 
-    // Show loading dialog
     showDialog(
       context: context,
       barrierDismissible: false, // Disable user interaction while uploading
       builder: (context) => const Center(
-        child: CircularProgressIndicator(
-          color: Colors.greenAccent,
-        ), // Simple loading indicator
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(
+              color: Colors.greenAccent,
+            ),
+            SizedBox(height: 16), // Add spacing between indicator and text
+            Text(
+              "Processing...",
+              style: TextStyle(
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.green),
+            ),
+          ],
+        ),
       ),
     );
 
