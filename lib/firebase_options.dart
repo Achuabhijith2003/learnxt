@@ -3,6 +3,7 @@
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
+import 'package:learnxt/key.dart';
 
 /// Default [FirebaseOptions] for use with your Firebase apps.
 ///
@@ -53,7 +54,7 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyAxs5A4ATRnvOgrIvUiOi6NJAwb6i1TIic',
+    apiKey: Firebase_API_key,
     appId: '1:425002886911:android:4d3b5f1c97b862e4698eca',
     messagingSenderId: '425002886911',
     projectId: 'learnxt-88200',
