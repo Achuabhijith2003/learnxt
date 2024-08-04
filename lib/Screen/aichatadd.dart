@@ -6,8 +6,12 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_gemini/flutter_gemini.dart';
+import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:learnxt/Auth/loginpage.dart';
 import 'package:learnxt/Screen/home.dart';
+import 'package:learnxt/consts.dart';
 
 class Chatcreate extends StatefulWidget {
   const Chatcreate({super.key});
@@ -342,10 +346,20 @@ class _ChatcreateState extends State<Chatcreate> {
           // ignore: use_build_context_synchronously
           context,
           MaterialPageRoute(builder: (context) => Home()));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Bot Created sucessfully'),
+        ),
+      );
     } catch (error) {
       // ignore: use_build_context_synchronously
       Navigator.pop(context); // Dismiss loading screen even on error
       print('Error creating bot: $error');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error creating bot: $error'),
+        ),
+      );
       // Handle errors appropriately (e.g., show error message)
     }
   }
