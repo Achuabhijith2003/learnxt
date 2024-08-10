@@ -43,7 +43,7 @@ class _HomeState extends State<Home> {
                             Icons.menu,
                             color: Colors.white,
                           )),
-                       Text("LearnXT",
+                      Text("LearnXT",
                           style: GoogleFonts.ptSerif(
                               color: Colors.white,
                               fontSize: 40,
@@ -95,16 +95,27 @@ class _HomeState extends State<Home> {
                         itemCount: data.length,
                         itemBuilder: (context, index) {
                           final botData = data[index];
-                          return ListTile(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>  AiChat(),
-                                  ));
-                            },
-                            title: Text(botData[
-                                'Bot Name']), // Access data for each bot
+                          return Padding(
+                            padding: const EdgeInsets.only(
+                                left: 10, right: 10, bottom: 10),
+                            child: Container(
+                              color: Colors.green.shade300,
+                              height: 65,
+                              child: ListTile(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => AiChat(
+                                          botname: botData["Bot Name"],
+                                        ),
+                                      ));
+                                },
+                                onLongPress: () {},
+                                title: Text(botData[
+                                    'Bot Name']), // Access data for each bot
+                              ),
+                            ),
                           );
                         },
                         // Add a "Load More" button or implement infinite scrolling if needed

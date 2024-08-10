@@ -10,10 +10,12 @@ import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AiChat extends StatefulWidget {
-  const AiChat({super.key});
+  final String botname;
+
+  const AiChat({super.key, required this.botname});
 
   @override
-  State<AiChat> createState() => _AiChatState();
+  _AiChatState createState() => _AiChatState(botname: botname);
 }
 
 final Gemini gemini = Gemini.instance;
@@ -29,6 +31,8 @@ ChatUser geminiUser = ChatUser(
 );
 
 class _AiChatState extends State<AiChat> {
+  final botname;
+  _AiChatState({required this.botname});
   final GlobalKey<ScaffoldState> _globalKey = GlobalKey();
 
   @override
@@ -61,7 +65,7 @@ class _AiChatState extends State<AiChat> {
                             Icons.menu,
                             color: Colors.white,
                           )),
-                      const Text("LearnXT",
+                      Text(botname,
                           style: TextStyle(
                               color: Colors.white,
                               fontSize: 40,

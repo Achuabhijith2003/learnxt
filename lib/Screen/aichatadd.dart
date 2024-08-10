@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:learnxt/Auth/loginpage.dart';
 import 'package:learnxt/Screen/home.dart';
-import 'package:pdf_text/pdf_text.dart';
 import '../Services/data_embedded.dart';
 
 class Chatcreate extends StatefulWidget {
