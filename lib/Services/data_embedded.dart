@@ -1,6 +1,8 @@
+import 'dart:io';
+
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:learnxt/consts.dart';
-// import 'package:pdf_text/pdf_text.dart';
+import 'package:pdf_text/pdf_text.dart';
 
 class DataEmbedded {
   // ignore: non_constant_identifier_names
@@ -21,7 +23,11 @@ class DataEmbedded {
     print(result.embedding.values);
   }
 
-  pdfextract(){
-
+  //pdf to text
+  Future<String> pdfextract(File pdfFile) async {
+    final pdfDoc = await PDFDoc.fromFile(pdfFile);
+    final text = await pdfDoc.text;
+    print(text);
+    return text;
   }
 }

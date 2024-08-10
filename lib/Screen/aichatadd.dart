@@ -7,11 +7,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_gemini/flutter_gemini.dart';
-import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:learnxt/Auth/loginpage.dart';
 import 'package:learnxt/Screen/home.dart';
-import 'package:learnxt/consts.dart';
+import 'package:pdf_text/pdf_text.dart';
+import '../Services/data_embedded.dart';
 
 class Chatcreate extends StatefulWidget {
   const Chatcreate({super.key});
@@ -19,6 +18,8 @@ class Chatcreate extends StatefulWidget {
   @override
   State<Chatcreate> createState() => _ChatcreateState();
 }
+
+DataEmbedded _dataEmbedded = DataEmbedded();
 
 class _ChatcreateState extends State<Chatcreate> {
   final GlobalKey<ScaffoldState> _globalKey = GlobalKey();
@@ -330,6 +331,7 @@ class _ChatcreateState extends State<Chatcreate> {
         final snapshot = await uploadTask.whenComplete(() => {});
         final downloadUrl = await snapshot.ref.getDownloadURL();
         downloadUrls.add(downloadUrl);
+       await  _dataEmbedded.pdfextract(file);
       }
 
       // Store bot data in Firestore

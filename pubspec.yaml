@@ -50,6 +50,9 @@ dependencies:
   image_picker: ^1.1.2
   flutter_gemini: ^2.0.4
   google_generative_ai: ^0.4.4
+  pdf: ^3.0.1
+  pdf_text:
+    path: ../
 
 dev_dependencies:
   flutter_test:
