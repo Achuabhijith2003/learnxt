@@ -7,7 +7,10 @@ import 'package:learnxt/Screen/ai_chat_section.dart';
 import 'package:learnxt/Screen/aichatadd.dart';
 
 class Home extends StatefulWidget {
+  const Home({super.key});
+
   @override
+  // ignore: library_private_types_in_public_api
   _HomeState createState() => _HomeState();
 }
 
@@ -99,8 +102,8 @@ class _HomeState extends State<Home> {
                             padding: const EdgeInsets.only(
                                 left: 10, right: 10, bottom: 10),
                             child: Container(
-                              color: Colors.green.shade300,
-                              height: 65,
+                              color: const Color.fromARGB(255, 88, 156, 90),
+                              height: 75,
                               child: ListTile(
                                 onTap: () {
                                   Navigator.push(
@@ -111,9 +114,75 @@ class _HomeState extends State<Home> {
                                         ),
                                       ));
                                 },
-                                onLongPress: () {},
-                                title: Text(botData[
-                                    'Bot Name']), // Access data for each bot
+                                onLongPress: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: Text(
+                                          botData["Bot Name"],
+                                          textAlign: TextAlign.center,
+                                        ),
+                                        // content: const Text("errorMessage"),
+                                        actions: [
+                                          Center(
+                                            //Delete the bot
+                                            child: TextButton(
+                                                onPressed: () async {
+                                                  final deletionSuccessful =
+                                                      await deletebot(
+                                                          botData["docId"]);
+                                                  if (deletionSuccessful) {
+                                                    // Show a success notification (e.g., Snackbar)
+                                                    setState(() {
+                                                      fetchData();
+                                                    });
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(
+                                                      const SnackBar(
+                                                        content: Text(
+                                                            'Bot deleted successfully!'),
+                                                        backgroundColor:
+                                                            Colors.green,
+                                                      ),
+                                                    );
+
+                                                    // Potentially refresh the list of bots after successful deletion
+                                                  } else {
+                                                    // Show an error notification (e.g., Snackbar)
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(
+                                                      const SnackBar(
+                                                        content: Text(
+                                                            'Error deleting bot!'),
+                                                        backgroundColor:
+                                                            Colors.red,
+                                                      ),
+                                                    );
+                                                  }
+                                                  Navigator.pop(context);
+                                                },
+                                                child: const Text(
+                                                  'Delete the bot',
+                                                  style: TextStyle(
+                                                      color: Colors.red),
+                                                )),
+                                          )
+                                        ],
+                                      );
+                                    },
+                                  );
+                                },
+                                title: Text(
+                                  botData['Bot Name'],
+                                  style: const TextStyle(color: Colors.white),
+                                ), // Access data for each bot
+                                trailing: const Text("data"),
+                                leading: const CircleAvatar(
+                                  radius: 32,
+                                ),
                               ),
                             ),
                           );
@@ -346,6 +415,19 @@ class _HomeState extends State<Home> {
     // print(data);
     //
     return data; // Return the retrieved data list
+  }
+
+// here two times calling docId 1. passing the doc ID 2. Finding through firebase instance
+// in future try to remove Ok!
+  Future<bool> deletebot(String docId) async {
+    try {
+      final docRef = FirebaseFirestore.instance.collection('Bot').doc(docId);
+      await docRef.delete();
+      return true; // Deletion successful
+    } catch (error) {
+      print("Error deleting bot: $error");
+      return false; // Deletion failed
+    }
   }
 }
 

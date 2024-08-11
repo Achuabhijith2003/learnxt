@@ -66,7 +66,7 @@ class _AiChatState extends State<AiChat> {
                             color: Colors.white,
                           )),
                       Text(botname,
-                          style: TextStyle(
+                          style: const TextStyle(
                               color: Colors.white,
                               fontSize: 40,
                               fontWeight: FontWeight.bold)),

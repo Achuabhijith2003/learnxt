@@ -330,7 +330,7 @@ class _ChatcreateState extends State<Chatcreate> {
         final snapshot = await uploadTask.whenComplete(() => {});
         final downloadUrl = await snapshot.ref.getDownloadURL();
         downloadUrls.add(downloadUrl);
-       await  _dataEmbedded.pdfextract(file);
+        await _dataEmbedded.pdfextract(file);
       }
 
       // Store bot data in Firestore
@@ -339,7 +339,12 @@ class _ChatcreateState extends State<Chatcreate> {
         'Bot Name': botName,
         'PDFs': downloadUrls,
       };
-      await FirebaseFirestore.instance.collection('Bot').add(botData);
+      final docRef =
+          await FirebaseFirestore.instance.collection('Bot').add(botData);
+      final docId = docRef.id;
+
+      // Update the document with the docId
+      await docRef.update({'docId': docId});
       // Handle successful creation (e.g., show success message)
       // ignore: use_build_context_synchronously
       Navigator.pop(context);
