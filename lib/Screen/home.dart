@@ -18,25 +18,8 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final TextEditingController _searchController = TextEditingController();
 
-  List<String> _suggestions = [];
-
-  Future<void> _getSuggestions(String query) async {
-    // Replace 'yourCollection' with your actual collection name
-    final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-        .collection('Bot')
-        .where('Bot Name', isGreaterThanOrEqualTo: query)
-        .get();
-    try {
-      final suggestions = querySnapshot.docs
-          .map((doc) => doc['name'] as String) // Cast to String
-          .toList();
-      setState(() {
-        _suggestions = suggestions;
-      });
-    } catch (e) {
-      print(e.toString());
-    }
-  }
+  String name = "";
+  List<Map<String, dynamic>> data = [];
 
   final GlobalKey<ScaffoldState> _globalKey = GlobalKey();
   @override
@@ -97,39 +80,19 @@ class _HomeState extends State<Home> {
                     width: 35,
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 42, right: 42),
-                    child: Container(
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: Colors.white),
-                      child: TextField(
-                        controller: _searchController,
-                        onChanged: (query) {
-                          if (query.isNotEmpty) {
-                            _getSuggestions(query);
-                          } else {
+                      padding: const EdgeInsets.only(left: 42, right: 42),
+                      child: Card(
+                        child: TextField(
+                          decoration: InputDecoration(
+                              prefixIcon: Icon(Icons.search),
+                              hintText: 'Search...'),
+                          onChanged: (val) {
                             setState(() {
-                              _suggestions = [];
+                              name = val;
                             });
-                          }
-                        },
-                        cursorColor: Colors.green,
-                        decoration: const InputDecoration(
-                            hintText: String.fromEnvironment("Search",
-                                defaultValue: "Search")),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: _suggestions.length,
-                      itemBuilder: (context, index) {
-                        return ListTile(
-                          title: Text(_suggestions[index]),
-                        );
-                      },
-                    ),
-                  )
+                          },
+                        ),
+                      )),
                 ],
               ),
               Positioned(
@@ -163,100 +126,122 @@ class _HomeState extends State<Home> {
                         final data =
                             snapshot.data as List<Map<String, dynamic>>;
                         return ListView.builder(
-                          itemCount: data.length,
-                          itemBuilder: (context, index) {
-                            final botData = data[index];
-                            return Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 10, right: 10, bottom: 10),
-                              child: Container(
-                                color: const Color.fromARGB(255, 88, 156, 90),
-                                height: 75,
-                                child: ListTile(
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => AiChat(
-                                            botname: botData["Bot Name"],
-                                          ),
-                                        ));
-                                  },
-                                  onLongPress: () {
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) {
-                                        return AlertDialog(
-                                          title: Text(
-                                            botData["Bot Name"],
-                                            textAlign: TextAlign.center,
-                                          ),
-                                          // content: const Text("errorMessage"),
-                                          actions: [
-                                            Center(
-                                              //Delete the bot
-                                              child: TextButton(
-                                                  onPressed: () async {
-                                                    final deletionSuccessful =
-                                                        await deletebot(
-                                                            botData["docId"]);
-                                                    if (deletionSuccessful) {
-                                                      // Show a success notification (e.g., Snackbar)
-                                                      setState(() {
-                                                        fetchData();
-                                                      });
-                                                      ScaffoldMessenger.of(
-                                                              context)
-                                                          .showSnackBar(
-                                                        const SnackBar(
-                                                          content: Text(
-                                                              'Bot deleted successfully!'),
-                                                          backgroundColor:
-                                                              Colors.green,
-                                                        ),
-                                                      );
+                            itemCount: data.length,
+                            itemBuilder: (context, index) {
+                              final botData =
+                                  data[index] as Map<String, dynamic>;
+                              if (name.isEmpty) {
+                                return Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 10, right: 10, bottom: 10),
+                                  child: Container(
+                                    color:
+                                        const Color.fromARGB(255, 88, 156, 90),
+                                    height: 75,
+                                    child: ListTile(
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => AiChat(
+                                                botname: botData["Bot Name"],
+                                              ),
+                                            ));
+                                      },
+                                      onLongPress: () {
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return AlertDialog(
+                                              title: Text(
+                                                botData["Bot Name"],
+                                                textAlign: TextAlign.center,
+                                              ),
+                                              // content: const Text("errorMessage"),
+                                              actions: [
+                                                Center(
+                                                  //Delete the bot
+                                                  child: TextButton(
+                                                      onPressed: () async {
+                                                        final deletionSuccessful =
+                                                            await deletebot(
+                                                                botData[
+                                                                    "docId"]);
+                                                        if (deletionSuccessful) {
+                                                          // Show a success notification (e.g., Snackbar)
+                                                          setState(() {
+                                                            fetchData();
+                                                          });
+                                                          ScaffoldMessenger.of(
+                                                                  context)
+                                                              .showSnackBar(
+                                                            const SnackBar(
+                                                              content: Text(
+                                                                  'Bot deleted successfully!'),
+                                                              backgroundColor:
+                                                                  Colors.green,
+                                                            ),
+                                                          );
 
-                                                      // Potentially refresh the list of bots after successful deletion
-                                                    } else {
-                                                      // Show an error notification (e.g., Snackbar)
-                                                      ScaffoldMessenger.of(
-                                                              context)
-                                                          .showSnackBar(
-                                                        const SnackBar(
-                                                          content: Text(
-                                                              'Error deleting bot!'),
-                                                          backgroundColor:
-                                                              Colors.red,
-                                                        ),
-                                                      );
-                                                    }
-                                                    Navigator.pop(context);
-                                                  },
-                                                  child: const Text(
-                                                    'Delete the bot',
-                                                    style: TextStyle(
-                                                        color: Colors.red),
-                                                  )),
-                                            )
-                                          ],
+                                                          // Potentially refresh the list of bots after successful deletion
+                                                        } else {
+                                                          // Show an error notification (e.g., Snackbar)
+                                                          ScaffoldMessenger.of(
+                                                                  context)
+                                                              .showSnackBar(
+                                                            const SnackBar(
+                                                              content: Text(
+                                                                  'Error deleting bot!'),
+                                                              backgroundColor:
+                                                                  Colors.red,
+                                                            ),
+                                                          );
+                                                        }
+                                                        Navigator.pop(context);
+                                                      },
+                                                      child: const Text(
+                                                        'Delete the bot',
+                                                        style: TextStyle(
+                                                            color: Colors.red),
+                                                      )),
+                                                )
+                                              ],
+                                            );
+                                          },
                                         );
                                       },
-                                    );
-                                  },
+                                      title: Text(
+                                        botData['Bot Name'],
+                                        style: const TextStyle(
+                                            color: Colors.white),
+                                      ), // Access data for each bot
+                                      trailing: const Text("data"),
+                                      leading: const CircleAvatar(
+                                        radius: 32,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }
+                              if (botData['Bot Name']
+                                  .toString()
+                                  .toLowerCase()
+                                  .startsWith(name.toLowerCase())) {
+                                return ListTile(
                                   title: Text(
                                     botData['Bot Name'],
-                                    style: const TextStyle(color: Colors.white),
-                                  ), // Access data for each bot
-                                  trailing: const Text("data"),
-                                  leading: const CircleAvatar(
-                                    radius: 32,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                        color: Colors.black54,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),
                                   ),
-                                ),
-                              ),
-                            );
-                          },
-                          // Add a "Load More" button or implement infinite scrolling if needed
-                        );
+                                );
+                                // Add a "Load More" button or implement infinite scrolling if needed
+                              }
+                              return Container();
+                            });
                       },
                     ),
                   ))
