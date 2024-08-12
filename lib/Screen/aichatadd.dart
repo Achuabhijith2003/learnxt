@@ -41,9 +41,9 @@ class _ChatcreateState extends State<Chatcreate> {
             Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(top: 70, left: 5, right: 5),
+                  padding: const EdgeInsets.only(top: 36, left: 5, right: 5),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       IconButton(
                           onPressed: () {
@@ -58,16 +58,18 @@ class _ChatcreateState extends State<Chatcreate> {
                               color: Colors.white,
                               fontSize: 40,
                               fontWeight: FontWeight.bold)),
+                      const Divider(),
+                      const Divider()
                     ],
                   ),
                 ),
                 const SizedBox(
                   width: 35,
-                )
+                ),
               ],
             ),
             Positioned(
-                top: 185,
+                top: 100,
                 left: 0,
                 right: 0,
                 bottom: 0,
@@ -162,7 +164,7 @@ class _ChatcreateState extends State<Chatcreate> {
                   ),
                 )),
             Padding(
-              padding: const EdgeInsets.only(top: 400),
+              padding: const EdgeInsets.only(top: 315),
               child: displaypdf(),
             )
           ],
@@ -351,9 +353,9 @@ class _ChatcreateState extends State<Chatcreate> {
       Navigator.pushReplacement(
           // ignore: use_build_context_synchronously
           context,
-          MaterialPageRoute(builder: (context) => Home()));
+          MaterialPageRoute(builder: (context) => const Home()));
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Bot Created sucessfully'),
         ),
       );

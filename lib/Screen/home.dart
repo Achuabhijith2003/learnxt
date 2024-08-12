@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:learnxt/Auth/loginpage.dart';
 import 'package:learnxt/Screen/ai_chat_section.dart';
@@ -16,343 +15,418 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final TextEditingController _searchController = TextEditingController();
-
   String name = "";
   List<Map<String, dynamic>> data = [];
 
   final GlobalKey<ScaffoldState> _globalKey = GlobalKey();
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        key: _globalKey,
-        // backgroundColor: const Color(0xFF171717),
-        body: Container(
-          width: double.infinity,
-          decoration: BoxDecoration(
-              gradient: LinearGradient(begin: Alignment.topCenter, colors: [
-            Colors.green.shade900,
-            Colors.green.shade800,
-            Colors.green.shade400
-          ])),
-          child: Stack(
-            children: [
-              Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 70, left: 5, right: 5),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        IconButton(
-                            onPressed: () {
-                              _globalKey.currentState!.openDrawer();
-                            },
-                            icon: const Icon(
-                              Icons.menu,
-                              color: Colors.white,
-                            )),
-                        Center(
-                          child: Text(
-                            "LearnXT",
-                            style: GoogleFonts.ptSerif(
-                              color: Colors.white,
-                              fontSize: 40,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                        // adjacent "LearnXT" text to center
-                        const Divider(),
-                        const Divider()
-                        // IconButton(
-                        //     onPressed: () {},
-                        //     icon: const Icon(
-                        //       Icons.search,
-                        //       color: Colors.white,
-                        //     )),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 35,
-                  ),
-                  Padding(
-                      padding: const EdgeInsets.only(left: 42, right: 42),
-                      child: Card(
-                        child: TextField(
-                          decoration: InputDecoration(
-                              prefixIcon: Icon(Icons.search),
-                              hintText: 'Search...'),
-                          onChanged: (val) {
-                            setState(() {
-                              name = val;
-                            });
-                          },
-                        ),
-                      )),
-                ],
-              ),
-              Positioned(
-                  top: 175,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 15),
-                    decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(40),
-                          topRight: Radius.circular(40)),
-                      color: Color(0xFFEFFFFC),
-                    ),
-                    child: FutureBuilder(
-                      future: fetchData(), // Initial fetch with limit
-                      builder: (context, snapshot) {
-                        if (snapshot.hasError) {
-                          return Text('Error: ${snapshot.error}');
-                        }
-
-                        if (!snapshot.hasData) {
-                          return const Center(
-                            child: CircularProgressIndicator(
-                              color: Colors.green,
-                            ),
-                          ); // Show loading indicator
-                        }
-
-                        final data =
-                            snapshot.data as List<Map<String, dynamic>>;
-                        return ListView.builder(
-                            itemCount: data.length,
-                            itemBuilder: (context, index) {
-                              final botData =
-                                  data[index] as Map<String, dynamic>;
-                              if (name.isEmpty) {
-                                return Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 10, right: 10, bottom: 10),
-                                  child: Container(
-                                    color:
-                                        const Color.fromARGB(255, 88, 156, 90),
-                                    height: 75,
-                                    child: ListTile(
-                                      onTap: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) => AiChat(
-                                                botname: botData["Bot Name"],
-                                              ),
-                                            ));
-                                      },
-                                      onLongPress: () {
-                                        showDialog(
-                                          context: context,
-                                          builder: (context) {
-                                            return AlertDialog(
-                                              title: Text(
-                                                botData["Bot Name"],
-                                                textAlign: TextAlign.center,
-                                              ),
-                                              // content: const Text("errorMessage"),
-                                              actions: [
-                                                Center(
-                                                  //Delete the bot
-                                                  child: TextButton(
-                                                      onPressed: () async {
-                                                        final deletionSuccessful =
-                                                            await deletebot(
-                                                                botData[
-                                                                    "docId"]);
-                                                        if (deletionSuccessful) {
-                                                          // Show a success notification (e.g., Snackbar)
-                                                          setState(() {
-                                                            fetchData();
-                                                          });
-                                                          ScaffoldMessenger.of(
-                                                                  context)
-                                                              .showSnackBar(
-                                                            const SnackBar(
-                                                              content: Text(
-                                                                  'Bot deleted successfully!'),
-                                                              backgroundColor:
-                                                                  Colors.green,
-                                                            ),
-                                                          );
-
-                                                          // Potentially refresh the list of bots after successful deletion
-                                                        } else {
-                                                          // Show an error notification (e.g., Snackbar)
-                                                          ScaffoldMessenger.of(
-                                                                  context)
-                                                              .showSnackBar(
-                                                            const SnackBar(
-                                                              content: Text(
-                                                                  'Error deleting bot!'),
-                                                              backgroundColor:
-                                                                  Colors.red,
-                                                            ),
-                                                          );
-                                                        }
-                                                        Navigator.pop(context);
-                                                      },
-                                                      child: const Text(
-                                                        'Delete the bot',
-                                                        style: TextStyle(
-                                                            color: Colors.red),
-                                                      )),
-                                                )
-                                              ],
-                                            );
-                                          },
-                                        );
-                                      },
-                                      title: Text(
-                                        botData['Bot Name'],
-                                        style: const TextStyle(
-                                            color: Colors.white),
-                                      ), // Access data for each bot
-                                      trailing: const Text("data"),
-                                      leading: const CircleAvatar(
-                                        radius: 32,
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              }
-                              if (botData['Bot Name']
-                                  .toString()
-                                  .toLowerCase()
-                                  .startsWith(name.toLowerCase())) {
-                                return ListTile(
-                                  title: Text(
-                                    botData['Bot Name'],
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
-                                        color: Colors.black54,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                );
-                                // Add a "Load More" button or implement infinite scrolling if needed
-                              }
-                              return Container();
-                            });
-                      },
-                    ),
-                  ))
-            ],
-          ),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-        floatingActionButton: SizedBox(
-          height: 65,
-          width: 65,
-          child: FloatingActionButton(
-            backgroundColor: Colors.green.shade600,
-            child: const Icon(
-              Icons.create_rounded,
-              color: Colors.white,
-              size: 30,
-            ),
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const Chatcreate(),
-                  ));
-            },
-          ),
-        ),
-        drawer: Drawer(
-          width: 275,
-          elevation: 30,
-          backgroundColor: Colors.green.shade400,
-          shape: const RoundedRectangleBorder(
-              borderRadius:
-                  BorderRadius.horizontal(right: Radius.circular(40))),
-          child: Container(
-            decoration: const BoxDecoration(
-                borderRadius:
-                    BorderRadius.horizontal(right: Radius.circular(40)),
-                boxShadow: [
-                  BoxShadow(
-                      color: Color(0x3D000000),
-                      spreadRadius: 30,
-                      blurRadius: 20)
-                ]),
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 50, 20, 20),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Column(
+    return Scaffold(
+      key: _globalKey,
+      // backgroundColor: const Color(0xFF171717),
+      body: Container(
+        width: double.infinity,
+        decoration: BoxDecoration(
+            gradient: LinearGradient(begin: Alignment.topCenter, colors: [
+          Colors.green.shade900,
+          Colors.green.shade800,
+          Colors.green.shade400
+        ])),
+        child: Stack(
+          children: [
+            Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 36, left: 5, right: 5),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.arrow_back_ios,
+                      IconButton(
+                          onPressed: () {
+                            _globalKey.currentState!.openDrawer();
+                          },
+                          icon: const Icon(
+                            Icons.menu,
                             color: Colors.white,
-                            size: 20,
+                          )),
+                      Center(
+                        child: Text(
+                          "LearnXT",
+                          style: GoogleFonts.ptSerif(
+                            color: Colors.white,
+                            fontSize: 40,
+                            fontWeight: FontWeight.bold,
                           ),
-                          SizedBox(
-                            width: 56,
-                          ),
-                          Text(
-                            'Settings',
-                            style: TextStyle(color: Colors.white, fontSize: 16),
-                          ),
-                        ],
+                          textAlign: TextAlign.center,
+                        ),
                       ),
-                      SizedBox(
-                        height: 30,
-                      ),
-                      Row(
-                        children: [
-                          UserAvatar(filename: 'img3.jpeg'),
-                          SizedBox(
-                            width: 12,
-                          ),
-                          Text(
-                            'Tom Brenan',
-                            style: TextStyle(color: Colors.white),
-                          )
-                        ],
-                      ),
-                      SizedBox(
-                        height: 35,
-                      ),
-                      DrawerItem(
-                        title: 'Account',
-                        icon: Icons.key,
-                      ),
-                      DrawerItem(title: 'Chats', icon: Icons.chat_bubble),
-                      DrawerItem(
-                          title: 'Notifications', icon: Icons.notifications),
-                      DrawerItem(
-                          title: 'Data and Storage', icon: Icons.storage),
-                      DrawerItem(title: 'Help', icon: Icons.help),
-                      Divider(
-                        height: 35,
-                        color: Colors.green,
-                      ),
-                      DrawerItem(
-                        title: 'Invite a friend',
-                        icon: Icons.people_outline,
-                      ),
+                      // adjacent "LearnXT" text to center
+                      const Divider(),
+                      const Divider()
+                      // IconButton(
+                      //     onPressed: () {},
+                      //     icon: const Icon(
+                      //       Icons.search,
+                      //       color: Colors.white,
+                      //     )),
                     ],
                   ),
-                  DrawerItem(
-                    title: 'Log out',
-                    icon: Icons.logout,
-                    onTap: logout,
-                  )
-                ],
-              ),
+                ),
+                // const SizedBox(
+                //   width: 35,
+                // ),
+                Padding(
+                    padding: const EdgeInsets.only(
+                      left: 42,
+                      right: 42,
+                    ),
+                    child: Card(
+                      child: TextField(
+                        decoration: const InputDecoration(
+                            prefixIcon: Icon(Icons.search),
+                            hintText: 'Search...'),
+                        cursorColor: Colors.green,
+                        onChanged: (val) {
+                          setState(() {
+                            name = val;
+                          });
+                        },
+                      ),
+                    )),
+              ],
+            ),
+            Positioned(
+                top: 145,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 15),
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(40),
+                        topRight: Radius.circular(40)),
+                    color: Color(0xFFEFFFFC),
+                  ),
+                  child: FutureBuilder(
+                    future: fetchData(), // Initial fetch with limit
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      }
+
+                      if (!snapshot.hasData) {
+                        return const Center(
+                          child: CircularProgressIndicator(
+                            color: Colors.green,
+                          ),
+                        ); // Show loading indicator
+                      }
+
+                      final data = snapshot.data as List<Map<String, dynamic>>;
+                      return ListView.builder(
+                          itemCount: data.length,
+                          itemBuilder: (context, index) {
+                            final botData = data[index];
+                            if (name.isEmpty) {
+                              return Card(
+                                color: Colors.green.shade300,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 10, right: 10, bottom: 10),
+                                  child: ListTile(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => AiChat(
+                                              botname: botData["Bot Name"],
+                                            ),
+                                          ));
+                                    },
+                                    onLongPress: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            title: Text(
+                                              botData["Bot Name"],
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            // content: const Text("errorMessage"),
+                                            actions: [
+                                              Center(
+                                                //Delete the bot
+                                                child: TextButton(
+                                                    onPressed: () async {
+                                                      final deletionSuccessful =
+                                                          await deletebot(
+                                                              botData["docId"]);
+                                                      if (deletionSuccessful) {
+                                                        // Show a success notification (e.g., Snackbar)
+                                                        setState(() {
+                                                          fetchData();
+                                                        });
+                                                        ScaffoldMessenger.of(
+                                                                context)
+                                                            .showSnackBar(
+                                                          const SnackBar(
+                                                            content: Text(
+                                                                'Bot deleted successfully!'),
+                                                            backgroundColor:
+                                                                Colors.green,
+                                                          ),
+                                                        );
+
+                                                        // Potentially refresh the list of bots after successful deletion
+                                                      } else {
+                                                        // Show an error notification (e.g., Snackbar)
+                                                        ScaffoldMessenger.of(
+                                                                context)
+                                                            .showSnackBar(
+                                                          const SnackBar(
+                                                            content: Text(
+                                                                'Error deleting bot!'),
+                                                            backgroundColor:
+                                                                Colors.red,
+                                                          ),
+                                                        );
+                                                      }
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child: const Text(
+                                                      'Delete the bot',
+                                                      style: TextStyle(
+                                                          color: Colors.red),
+                                                    )),
+                                              )
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    },
+                                    title: Text(
+                                      botData['Bot Name'],
+                                      style:
+                                          const TextStyle(color: Colors.black),
+                                    ), // Access data for each bot
+                                    trailing: const Text("data"),
+                                    leading: const CircleAvatar(
+                                      radius: 32,
+                                    ),
+                                    horizontalTitleGap: 10,
+                                    minVerticalPadding: 25,
+                                    selectedTileColor: Colors.white,
+                                    textColor: Colors.black,
+                                  ),
+                                ),
+                              );
+                            }
+                            if (botData['Bot Name']
+                                .toString()
+                                .toLowerCase()
+                                .startsWith(name.toLowerCase())) {
+                              return Card(
+                                color: Colors.green.shade300,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 10, right: 10, bottom: 10),
+                                  child: ListTile(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => AiChat(
+                                              botname: botData["Bot Name"],
+                                            ),
+                                          ));
+                                    },
+                                    onLongPress: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            title: Text(
+                                              botData["Bot Name"],
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            // content: const Text("errorMessage"),
+                                            actions: [
+                                              Center(
+                                                //Delete the bot
+                                                child: TextButton(
+                                                    onPressed: () async {
+                                                      final deletionSuccessful =
+                                                          await deletebot(
+                                                              botData["docId"]);
+                                                      if (deletionSuccessful) {
+                                                        // Show a success notification (e.g., Snackbar)
+                                                        setState(() {
+                                                          fetchData();
+                                                        });
+                                                        ScaffoldMessenger.of(
+                                                                context)
+                                                            .showSnackBar(
+                                                          const SnackBar(
+                                                            content: Text(
+                                                                'Bot deleted successfully!'),
+                                                            backgroundColor:
+                                                                Colors.green,
+                                                          ),
+                                                        );
+
+                                                        // Potentially refresh the list of bots after successful deletion
+                                                      } else {
+                                                        // Show an error notification (e.g., Snackbar)
+                                                        ScaffoldMessenger.of(
+                                                                context)
+                                                            .showSnackBar(
+                                                          const SnackBar(
+                                                            content: Text(
+                                                                'Error deleting bot!'),
+                                                            backgroundColor:
+                                                                Colors.red,
+                                                          ),
+                                                        );
+                                                      }
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child: const Text(
+                                                      'Delete the bot',
+                                                      style: TextStyle(
+                                                          color: Colors.red),
+                                                    )),
+                                              )
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    },
+                                    title: Text(
+                                      botData['Bot Name'],
+                                      style:
+                                          const TextStyle(color: Colors.black),
+                                    ), // Access data for each bot
+                                    trailing: const Text("data"),
+                                    leading: const CircleAvatar(
+                                      radius: 32,
+                                    ),
+                                    horizontalTitleGap: 10,
+                                    minVerticalPadding: 25,
+                                    selectedTileColor: Colors.white,
+                                    textColor: Colors.black,
+                                  ),
+                                ),
+                              );
+                              // Add a "Load More" button or implement infinite scrolling if needed
+                            }
+                            return Container();
+                          });
+                    },
+                  ),
+                ))
+          ],
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: SizedBox(
+        height: 65,
+        width: 65,
+        child: FloatingActionButton(
+          backgroundColor: Colors.green.shade600,
+          child: const Icon(
+            Icons.add_box_outlined,
+            color: Colors.white,
+            size: 30,
+          ),
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const Chatcreate(),
+                ));
+          },
+        ),
+      ),
+      drawer: Drawer(
+        width: 275,
+        elevation: 30,
+        backgroundColor: Colors.green.shade400,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.horizontal(right: Radius.circular(40))),
+        child: Container(
+          decoration: const BoxDecoration(
+              borderRadius: BorderRadius.horizontal(right: Radius.circular(40)),
+              boxShadow: [
+                BoxShadow(
+                    color: Color(0x3D000000), spreadRadius: 30, blurRadius: 20)
+              ]),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(20, 50, 20, 20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Column(
+                  children: [
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.arrow_back_ios,
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                        SizedBox(
+                          width: 56,
+                        ),
+                        Text(
+                          'Settings',
+                          style: TextStyle(color: Colors.white, fontSize: 16),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Row(
+                      children: [
+                        UserAvatar(filename: 'img3.jpeg'),
+                        SizedBox(
+                          width: 12,
+                        ),
+                        Text(
+                          'Tom Brenan',
+                          style: TextStyle(color: Colors.white),
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: 35,
+                    ),
+                    DrawerItem(
+                      title: 'Account',
+                      icon: Icons.key,
+                    ),
+                    DrawerItem(title: 'Chats', icon: Icons.chat_bubble),
+                    DrawerItem(
+                        title: 'Notifications', icon: Icons.notifications),
+                    DrawerItem(title: 'Data and Storage', icon: Icons.storage),
+                    DrawerItem(title: 'Help', icon: Icons.help),
+                    Divider(
+                      height: 35,
+                      color: Colors.green,
+                    ),
+                    DrawerItem(
+                      title: 'Invite a friend',
+                      icon: Icons.people_outline,
+                    ),
+                  ],
+                ),
+                DrawerItem(
+                  title: 'Log out',
+                  icon: Icons.logout,
+                  onTap: logout,
+                )
+              ],
             ),
           ),
         ),
