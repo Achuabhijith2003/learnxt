@@ -26,12 +26,7 @@ class _HomeState extends State<Home> {
       // backgroundColor: const Color(0xFF171717),
       body: Container(
         width: double.infinity,
-        decoration: BoxDecoration(
-            gradient: LinearGradient(begin: Alignment.topCenter, colors: [
-          Colors.green.shade900,
-          Colors.green.shade800,
-          Colors.green.shade400
-        ])),
+        decoration: const BoxDecoration(color: Color(0xFFEFFFFC)),
         child: Stack(
           children: [
             Column(
@@ -47,13 +42,13 @@ class _HomeState extends State<Home> {
                           },
                           icon: const Icon(
                             Icons.menu,
-                            color: Colors.white,
+                            color: Colors.green,
                           )),
                       Center(
                         child: Text(
                           "LearnXT",
                           style: GoogleFonts.ptSerif(
-                            color: Colors.white,
+                            color: Colors.green,
                             fontSize: 40,
                             fontWeight: FontWeight.bold,
                           ),
@@ -83,6 +78,12 @@ class _HomeState extends State<Home> {
                     child: Card(
                       child: TextField(
                         decoration: const InputDecoration(
+                            prefixIconColor: Colors.green,
+                            focusColor: Colors.green,
+                            suffixIconColor: Colors.green,
+                            hoverColor: Colors.green,
+                            iconColor: Colors.green,
+                            fillColor: Colors.green,
                             prefixIcon: Icon(Icons.search),
                             hintText: 'Search...'),
                         cursorColor: Colors.green,
@@ -130,7 +131,7 @@ class _HomeState extends State<Home> {
                             final botData = data[index];
                             if (name.isEmpty) {
                               return Card(
-                                color: Colors.green.shade300,
+                                color: Colors.green.withAlpha(1000),
                                 child: Padding(
                                   padding: const EdgeInsets.only(
                                       left: 10, right: 10, bottom: 10),
@@ -149,9 +150,12 @@ class _HomeState extends State<Home> {
                                         context: context,
                                         builder: (context) {
                                           return AlertDialog(
+                                            shadowColor: Colors.green,
                                             title: Text(
                                               botData["Bot Name"],
                                               textAlign: TextAlign.center,
+                                              style: const TextStyle(
+                                                  color: Colors.green),
                                             ),
                                             // content: const Text("errorMessage"),
                                             actions: [

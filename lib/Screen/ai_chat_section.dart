@@ -41,12 +41,7 @@ class _AiChatState extends State<AiChat> {
       // backgroundColor: const Color(0xFF171717),
       body: Container(
         width: double.infinity,
-        decoration: BoxDecoration(
-            gradient: LinearGradient(begin: Alignment.topCenter, colors: [
-          Colors.green.shade900,
-          Colors.green.shade800,
-          Colors.green.shade400
-        ])),
+        decoration: const BoxDecoration(color: Color(0xFFEFFFFC)),
         child: Stack(
           children: [
             Column(
@@ -62,12 +57,12 @@ class _AiChatState extends State<AiChat> {
                           },
                           icon: const Icon(
                             Icons.arrow_back_ios_new,
-                            color: Colors.white,
+                            color: Colors.green,
                           )),
                       Text(
                         botname,
                         style: const TextStyle(
-                          color: Colors.white,
+                          color: Colors.green,
                           fontSize: 36,
                           fontWeight: FontWeight.bold,
                         ),
@@ -99,18 +94,6 @@ class _AiChatState extends State<AiChat> {
     );
   }
 
-  void logout() async {
-    //logout method
-    await FirebaseAuth.instance.signOut();
-    // ignore: use_build_context_synchronously
-    Navigator.pushReplacement(
-        // ignore: use_build_context_synchronously
-        context,
-        MaterialPageRoute(
-          builder: (context) => const Loginpage(),
-        ));
-  }
-
   Widget _buildUI() {
     return DashChat(
       inputOptions: InputOptions(trailing: [
@@ -118,6 +101,7 @@ class _AiChatState extends State<AiChat> {
           onPressed: _sendMediaMessage,
           icon: const Icon(
             Icons.image,
+            color: Color.fromARGB(255, 29, 235, 2),
           ),
         )
       ]),

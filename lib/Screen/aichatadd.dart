@@ -30,12 +30,7 @@ class _ChatcreateState extends State<Chatcreate> {
       // backgroundColor: const Color(0xFF171717),
       body: Container(
         width: double.infinity,
-        decoration: BoxDecoration(
-            gradient: LinearGradient(begin: Alignment.topCenter, colors: [
-          Colors.green.shade900,
-          Colors.green.shade800,
-          Colors.green.shade400
-        ])),
+        decoration: const BoxDecoration(color: Color(0xFFEFFFFC)),
         child: Stack(
           children: [
             Column(
@@ -47,15 +42,15 @@ class _ChatcreateState extends State<Chatcreate> {
                     children: [
                       IconButton(
                           onPressed: () {
-                            _globalKey.currentState!.openDrawer();
+                            Navigator.pop(context);
                           },
                           icon: const Icon(
-                            Icons.menu,
-                            color: Colors.white,
+                            Icons.arrow_back_ios_new,
+                            color: Colors.green,
                           )),
                       const Text("Create AI bot",
                           style: TextStyle(
-                              color: Colors.white,
+                              color: Colors.green,
                               fontSize: 40,
                               fontWeight: FontWeight.bold)),
                       const Divider(),
@@ -91,13 +86,19 @@ class _ChatcreateState extends State<Chatcreate> {
                         child: Padding(
                           padding: const EdgeInsets.only(
                               left: 20, top: 5, right: 20),
-                          child: TextField(
-                            controller: botnamecontroller,
-                            keyboardType: TextInputType.name,
-                            decoration: const InputDecoration(
+                          child: Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(23),
+                                border: Border.all(color: Colors.green)),
+                            child: TextField(
+                              controller: botnamecontroller,
+                              keyboardType: TextInputType.name,
+                              decoration: const InputDecoration(
                                 hintText: "AI Bot Name",
                                 hintStyle: TextStyle(color: Colors.grey),
-                                border: InputBorder.none),
+                                border: InputBorder.none,
+                              ),
+                            ),
                           ),
                         ),
                       ),
