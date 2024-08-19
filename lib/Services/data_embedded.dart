@@ -8,14 +8,13 @@ import 'package:pdf_text/pdf_text.dart';
 
 class DataEmbedded {
   // ignore: prefer_typing_uninitialized_variables
-  var parentdocid;
+  String? parentdocid;
+  String? pdfpath;
   // ignore: prefer_typing_uninitialized_variables, non_constant_identifier_names
-
-  DataEmbedded(String this.parentdocid);
 
   // ignore: non_constant_identifier_names
   Future<List<List<double>>> Generate_dataEmbedded(
-      List<String> textList, String fileName) async {
+      List<String> textList) async {
     final embeddings = <List<double>>[];
     for (final text in textList) {
       print(text);
@@ -26,28 +25,29 @@ class DataEmbedded {
       embeddings.add(result.embedding.values);
       print(result.embedding.values);
     }
-
-    return Store_Embeded_data(embeddings, fileName);
+    storeEmbeddedData(embeddings);
+    return embeddings;
   }
 
   // ignore: non_constant_identifier_names
-  Store_Embeded_data(List<List<double>> embeddings, String Pdfsname) async {
+  Future<void> storeEmbeddedData(List<List<double>> embeddings) async {
     try {
+      if (parentdocid!.isEmpty) {
+        throw ArgumentError('parentdocid cannot be empty');
+      }
+
       final parentDocRef =
           FirebaseFirestore.instance.collection('Bot').doc(parentdocid);
       final subcollectionRef = parentDocRef.collection('dataEmbedded');
-      final docRef = await subcollectionRef.add({
-        'embeddings': embeddings,
-        'pdfPath': Pdfsname,
-      });
-      final docId = docRef.id;
 
-      // Update the document with the docId
-      await docRef.update({'docId': docId});
-
-      print('Embedding data added with ID: ${docRef.id}');
+      for (final embedding in embeddings) {
+        await subcollectionRef.add({
+          'embeddings': embedding,
+          'pdfPath': pdfpath,
+        });
+      }
     } catch (e) {
-      print('error$e');
+      print('Error storing data: $e');
     }
   }
 
@@ -68,7 +68,8 @@ class DataEmbedded {
   //   return "null";
   // }
 
-  Future<List<List<double>>> pdfextract(File pdfFile, String fileName) async {
+  Future<List<List<double>>> pdfextract(File pdfFile, String pdfpath) async {
+    this.pdfpath = pdfpath;
     try {
       final pdfDoc = await PDFDoc.fromFile(pdfFile);
       final StringBuffer textBuffer = StringBuffer();
@@ -88,11 +89,15 @@ class DataEmbedded {
 
       final chunks =
           splitTextIntoChunks(text, 100); // Adjust chunk size as needed
-      return await Generate_dataEmbedded(chunks, fileName);
+      return await Generate_dataEmbedded(chunks);
     } catch (e) {
       print('Error processing PDF: $e');
       rethrow; // Or handle the error as needed
     }
+  }
+
+  void getDocId(String parentdocid) {
+    this.parentdocid = parentdocid;
   }
 
   List<String> splitTextIntoChunks(String text, int chunkSize) {

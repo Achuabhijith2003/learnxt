@@ -17,8 +17,7 @@ class Chatcreate extends StatefulWidget {
   State<Chatcreate> createState() => _ChatcreateState();
 }
 
-late final parentdocid;
-DataEmbedded _dataEmbedded = DataEmbedded(parentdocid);
+DataEmbedded _dataEmbedded = DataEmbedded();
 
 class _ChatcreateState extends State<Chatcreate> {
   final GlobalKey<ScaffoldState> _globalKey = GlobalKey();
@@ -329,12 +328,11 @@ class _ChatcreateState extends State<Chatcreate> {
       // Upload each file to Firebase Storage
       for (File file in files) {
         final fileName = file.path.split('/').last; // Extract file name
-        print(fileName);
         final uploadTask = storageRef.child('PDFs/$fileName').putFile(file);
         final snapshot = await uploadTask.whenComplete(() => {});
         final downloadUrl = await snapshot.ref.getDownloadURL();
         downloadUrls.add(downloadUrl);
-        await _dataEmbedded.pdfextract(file, fileName);
+        await _dataEmbedded.pdfextract(file, downloadUrl);
       }
 
       // Store bot data in Firestore
@@ -349,7 +347,8 @@ class _ChatcreateState extends State<Chatcreate> {
 
       // Update the document with the docId
       await docRef.update({'docId': docId});
-      parentdocid = docId;
+      // passing parectDocId of the Bot
+      _dataEmbedded.getDocId(docId);
       // Handle successful creation (e.g., show success message)
       // ignore: use_build_context_synchronously
       Navigator.pop(context);
