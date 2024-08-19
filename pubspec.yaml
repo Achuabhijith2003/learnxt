@@ -53,6 +53,7 @@ dependencies:
   pdf: ^3.0.1
   pdf_text:
     path: ../
+  http: ^1.2.2
 
 dev_dependencies:
   flutter_test:
