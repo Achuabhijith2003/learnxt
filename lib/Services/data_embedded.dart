@@ -1,13 +1,21 @@
 import 'dart:io';
 import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:learnxt/consts.dart';
 import 'package:pdf_text/pdf_text.dart';
 
 class DataEmbedded {
+  // ignore: prefer_typing_uninitialized_variables
+  var parentdocid;
+  // ignore: prefer_typing_uninitialized_variables, non_constant_identifier_names
+
+  DataEmbedded(String this.parentdocid);
+
+  // ignore: non_constant_identifier_names
   Future<List<List<double>>> Generate_dataEmbedded(
-      List<String> textList) async {
+      List<String> textList, String fileName) async {
     final embeddings = <List<double>>[];
     for (final text in textList) {
       print(text);
@@ -18,7 +26,29 @@ class DataEmbedded {
       embeddings.add(result.embedding.values);
       print(result.embedding.values);
     }
-    return embeddings;
+
+    return Store_Embeded_data(embeddings, fileName);
+  }
+
+  // ignore: non_constant_identifier_names
+  Store_Embeded_data(List<List<double>> embeddings, String Pdfsname) async {
+    try {
+      final parentDocRef =
+          FirebaseFirestore.instance.collection('Bot').doc(parentdocid);
+      final subcollectionRef = parentDocRef.collection('dataEmbedded');
+      final docRef = await subcollectionRef.add({
+        'embeddings': embeddings,
+        'pdfPath': Pdfsname,
+      });
+      final docId = docRef.id;
+
+      // Update the document with the docId
+      await docRef.update({'docId': docId});
+
+      print('Embedding data added with ID: ${docRef.id}');
+    } catch (e) {
+      print('error$e');
+    }
   }
 
   // ignore: non_constant_identifier_names
@@ -38,7 +68,7 @@ class DataEmbedded {
   //   return "null";
   // }
 
-  Future<List<List<double>>> pdfextract(File pdfFile) async {
+  Future<List<List<double>>> pdfextract(File pdfFile, String fileName) async {
     try {
       final pdfDoc = await PDFDoc.fromFile(pdfFile);
       final StringBuffer textBuffer = StringBuffer();
@@ -58,7 +88,7 @@ class DataEmbedded {
 
       final chunks =
           splitTextIntoChunks(text, 100); // Adjust chunk size as needed
-      return await Generate_dataEmbedded(chunks);
+      return await Generate_dataEmbedded(chunks, fileName);
     } catch (e) {
       print('Error processing PDF: $e');
       rethrow; // Or handle the error as needed

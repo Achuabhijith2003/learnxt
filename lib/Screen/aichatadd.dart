@@ -6,7 +6,6 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:learnxt/Auth/loginpage.dart';
 import 'package:learnxt/Screen/home.dart';
 import '../Services/data_embedded.dart';
@@ -18,7 +17,8 @@ class Chatcreate extends StatefulWidget {
   State<Chatcreate> createState() => _ChatcreateState();
 }
 
-DataEmbedded _dataEmbedded = DataEmbedded();
+late final parentdocid;
+DataEmbedded _dataEmbedded = DataEmbedded(parentdocid);
 
 class _ChatcreateState extends State<Chatcreate> {
   final GlobalKey<ScaffoldState> _globalKey = GlobalKey();
@@ -329,11 +329,12 @@ class _ChatcreateState extends State<Chatcreate> {
       // Upload each file to Firebase Storage
       for (File file in files) {
         final fileName = file.path.split('/').last; // Extract file name
+        print(fileName);
         final uploadTask = storageRef.child('PDFs/$fileName').putFile(file);
         final snapshot = await uploadTask.whenComplete(() => {});
         final downloadUrl = await snapshot.ref.getDownloadURL();
         downloadUrls.add(downloadUrl);
-        await _dataEmbedded.pdfextract(file);
+        await _dataEmbedded.pdfextract(file, fileName);
       }
 
       // Store bot data in Firestore
@@ -348,6 +349,7 @@ class _ChatcreateState extends State<Chatcreate> {
 
       // Update the document with the docId
       await docRef.update({'docId': docId});
+      parentdocid = docId;
       // Handle successful creation (e.g., show success message)
       // ignore: use_build_context_synchronously
       Navigator.pop(context);
