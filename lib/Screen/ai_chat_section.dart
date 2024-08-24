@@ -6,14 +6,15 @@ import 'dart:typed_data';
 import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:learnxt/Services/data_embedded.dart';
 
 class AiChat extends StatefulWidget {
   final String botname;
-
-  const AiChat({super.key, required this.botname});
+  final String docId;
+  const AiChat({super.key, required this.botname, required this.docId});
 
   @override
-  _AiChatState createState() => _AiChatState(botname: botname);
+  _AiChatState createState() => _AiChatState(botname: botname, docId: docId);
 }
 
 final Gemini gemini = Gemini.instance;
@@ -30,9 +31,10 @@ ChatUser geminiUser = ChatUser(
 
 class _AiChatState extends State<AiChat> {
   final botname;
-  _AiChatState({required this.botname});
+  final docId;
+  _AiChatState({required this.botname, required this.docId});
   final GlobalKey<ScaffoldState> _globalKey = GlobalKey();
-
+  DataEmbedded _dataEmbedded = DataEmbedded();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -95,19 +97,72 @@ class _AiChatState extends State<AiChat> {
 
   Widget _buildUI() {
     return DashChat(
-      inputOptions: InputOptions(trailing: [
-        IconButton(
-          onPressed: _sendMediaMessage,
-          icon: const Icon(
-            Icons.image,
-            color: Color.fromARGB(255, 29, 235, 2),
-          ),
-        )
+      inputOptions: const InputOptions(trailing: [
+        // IconButton(
+        //   onPressed: _sendMediaMessage,
+        //   icon: const Icon(
+        //     Icons.image,
+        //     color: Color.fromARGB(255, 29, 235, 2),
+        //   ),
+        // )
       ]),
       currentUser: currentUser,
-      onSend: _sendMessage,
+      onSend: sdmessang,
       messages: messages,
     );
+  }
+
+  void sdmessang(ChatMessage chatMessage) async {
+    setState(() {
+      messages = [chatMessage, ...messages];
+    });
+    try {
+      final keywords = await _dataEmbedded.searchAndAnswer(
+          chatMessage.text, docId); // Ensure to pass the correct parentdocid
+      print('Generated answer: $keywords');
+      gemini
+          .streamGenerateContent(
+        'Generate an answer based on the following text: $keywords, given the query: ${chatMessage.text}',
+      )
+          .listen((event) {
+        ChatMessage? lastMessage = messages.firstOrNull;
+        if (lastMessage != null && lastMessage.user == geminiUser) {
+          lastMessage = messages.removeAt(0);
+          String response = event.content?.parts?.fold(
+                  "", (previous, current) => "$previous ${current.text}") ??
+              "";
+          lastMessage.text += response;
+          setState(
+            () {
+              messages = [lastMessage!, ...messages];
+            },
+          );
+        } else {
+          String response = event.content?.parts?.fold(
+                  "", (previous, current) => "$previous ${current.text}") ??
+              "";
+          ChatMessage message = ChatMessage(
+            user: geminiUser,
+            createdAt: DateTime.now(),
+            text: response,
+          );
+          setState(() {
+            messages = [message, ...messages];
+          });
+        }
+      });
+
+      // ChatMessage message = ChatMessage(
+      //   user: geminiUser,
+      //   createdAt: DateTime.now(),
+      //   text: answer,
+      // );
+      // setState(() {
+      //   messages = [message, ...messages];
+      // });
+    } catch (e) {
+      print('Error sending message: $e');
+    }
   }
 
   void _sendMessage(ChatMessage chatMessage) {
@@ -159,25 +214,26 @@ class _AiChatState extends State<AiChat> {
     }
   }
 
-  void _sendMediaMessage() async {
-    ImagePicker picker = ImagePicker();
-    XFile? file = await picker.pickImage(
-      source: ImageSource.gallery,
-    );
-    if (file != null) {
-      ChatMessage chatMessage = ChatMessage(
-        user: currentUser,
-        createdAt: DateTime.now(),
-        text: "Describe this picture?",
-        medias: [
-          ChatMedia(
-            url: file.path,
-            fileName: "",
-            type: MediaType.image,
-          )
-        ],
-      );
-      _sendMessage(chatMessage);
-    }
-  }
+//   void _sendMediaMessage() async {
+//     ImagePicker picker = ImagePicker();
+//     XFile? file = await picker.pickImage(
+//       source: ImageSource.gallery,
+//     );
+//     if (file != null) {
+//       ChatMessage chatMessage = ChatMessage(
+//         user: currentUser,
+//         createdAt: DateTime.now(),
+//         text: "Describe this picture?",
+//         medias: [
+//           ChatMedia(
+//             url: file.path,
+//             fileName: "",
+//             type: MediaType.image,
+//           )
+//         ],
+//       );
+//       _sendMessage(chatMessage);
+//     }
+//   }
+// }
 }

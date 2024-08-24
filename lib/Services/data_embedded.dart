@@ -43,7 +43,6 @@ class DataEmbedded {
       final parentDocRef =
           FirebaseFirestore.instance.collection('Bot').doc(parentdocid);
       final subcollectionRef = parentDocRef.collection('dataEmbedded');
-
       await subcollectionRef.add({
         'embeddings': embeddings,
         'pdf_text': text,
@@ -54,12 +53,13 @@ class DataEmbedded {
   }
 
   // ignore: non_constant_identifier_names
-  Generate_promtEmbedded(String text) async {
+  Generate_promptEmbedded(String text) async {
     final model =
         GenerativeModel(model: 'text-embedding-004', apiKey: GEMINI_API_KEY);
     final content = Content.text(text);
     final result = await model.embedContent(content);
     print(result.embedding.values);
+    return result.embedding.values;
   }
 
   //pdf to text
@@ -115,38 +115,75 @@ class DataEmbedded {
   }
 
 // Generate Ans
-  Future<String> searchAndAnswer(String query) async {
-    final queryEmbedding =
-        Generate_promtEmbedded(query); // Generate embedding for the query
+  Future<String> searchAndAnswer(String query, String parentdocid) async {
+    try {
+      final queryEmbedding = await Generate_promptEmbedded(query);
 
-    // Retrieve embeddings from Firestore (optimized query for performance)
-    final querySnapshot = await FirebaseFirestore.instance
-        .collection('embeddings')
-        .orderBy('embedding',
-            descending: true) // Assuming an index on embedding field
-        .limit(10) // Adjust limit as needed
-        .get();
+      final subcollectionRef = FirebaseFirestore.instance
+          .collection('Bot')
+          .doc(parentdocid)
+          .collection('dataEmbedded');
 
-    // Calculate similarity scores and rank results
-    final rankedResults = querySnapshot.docs.map((doc) {
-      final embedding = doc.data()['embeddings'] as List<double>;
-      final similarity =
-          calculateCosineSimilarity(queryEmbedding[0], embedding);
-      return {'similarity': similarity, 'docId': doc.id};
-    }).toList();
-    rankedResults.sort((a, b) {
-      final similarityA = a['similarity'] as double?;
-      final similarityB = b['similarity'] as double?;
-      return (similarityB ?? 0).compareTo(similarityA ?? 0);
-    });
+      final querySnapshot = await subcollectionRef
+          .orderBy('embeddings', descending: true)
+          .limit(10)
+          .get();
 
-    // Retrieve original text based on top ranked results
-    // ... (implement logic to retrieve original text based on docId)
+      if (querySnapshot.docs.isEmpty) {
+        return "No results found.";
+      }
 
-    // Generate an answer based on the retrieved text
-    // ... (use a language model or other techniques to generate an answer)
+      final rankedResults = querySnapshot.docs.map((doc) {
+        final embeddingList = doc.data()['embeddings'] as List<dynamic>?;
 
-    return "generatedAnswer";
+        if (embeddingList == null) {
+          throw Exception('Embedding list is null');
+        }
+
+        // Safely convert List<dynamic> to List<double>
+        final embedding = embeddingList.map((item) {
+          if (item is num) {
+            return item.toDouble();
+          } else {
+            throw Exception('Invalid type in embedding list');
+          }
+        }).toList();
+
+        final similarity = calculateCosineSimilarity(queryEmbedding, embedding);
+        return {'similarity': similarity, 'docId': doc.id};
+      }).toList();
+
+      rankedResults.sort((a, b) {
+        final similarityA = a['similarity'] as double?;
+        final similarityB = b['similarity'] as double?;
+        return (similarityB ?? 0).compareTo(similarityA ?? 0);
+      });
+
+      if (rankedResults.isEmpty) {
+        return "No results after ranking.";
+      }
+
+      final topResult = rankedResults.first;
+      final topDocId = topResult['docId'] as String;
+
+      final topDoc = await subcollectionRef.doc(topDocId).get();
+
+      if (!topDoc.exists) {
+        return "Top document not found.";
+      }
+
+      final originalText = topDoc.data()?['pdf_text'] as String?;
+      if (originalText == null) {
+        return "No text found in the document.";
+      }
+
+      // final generatedAnswer = generateAnswer(originalText);
+
+      return originalText;
+    } catch (e) {
+      print('Error in searchAndAnswer: $e');
+      return "An error occurred.";
+    }
   }
 
   double calculateCosineSimilarity(List<double> vector1, List<double> vector2) {

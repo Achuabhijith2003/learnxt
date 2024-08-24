@@ -141,7 +141,7 @@ class _HomeState extends State<Home> {
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) => AiChat(
-                                              botname: botData["Bot Name"],
+                                              botname: botData["Bot Name"],docId: botData["docId"],
                                             ),
                                           ));
                                     },
@@ -241,7 +241,7 @@ class _HomeState extends State<Home> {
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) => AiChat(
-                                              botname: botData["Bot Name"],
+                                              botname: botData["Bot Name"],docId: botData["docId"],
                                             ),
                                           ));
                                     },
