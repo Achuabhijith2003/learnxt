@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_typing_uninitialized_variables
+
 import 'package:flutter/material.dart';
 
 import 'dart:io';
@@ -30,6 +32,8 @@ ChatUser geminiUser = ChatUser(
 );
 
 class _AiChatState extends State<AiChat> {
+  // ignore: duplicate_ignore
+  // ignore: prefer_typing_uninitialized_variables
   final botname;
   final docId;
   _AiChatState({required this.botname, required this.docId});
@@ -117,12 +121,12 @@ class _AiChatState extends State<AiChat> {
       messages = [chatMessage, ...messages];
     });
     try {
-      final keywords = await _dataEmbedded.searchAndAnswer(
+      String keywords = await _dataEmbedded.searchAndAnswer(
           chatMessage.text, docId); // Ensure to pass the correct parentdocid
       print('Generated answer: $keywords');
       gemini
           .streamGenerateContent(
-        'Generate an answer based on the following text: $keywords, given the query: ${chatMessage.text}',
+        "Considering the keywords: $keywords and the query: ${chatMessage.text}, here is a detailed answer.",
       )
           .listen((event) {
         ChatMessage? lastMessage = messages.firstOrNull;

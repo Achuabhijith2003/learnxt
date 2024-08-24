@@ -126,7 +126,7 @@ class DataEmbedded {
 
       final querySnapshot = await subcollectionRef
           .orderBy('embeddings', descending: true)
-          .limit(10)
+          .limit(100)
           .get();
 
       if (querySnapshot.docs.isEmpty) {
