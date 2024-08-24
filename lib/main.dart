@@ -2,7 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:learnxt/Auth/splash.dart';
-import 'package:learnxt/consts.dart';
+import 'package:learnxt/key.dart';
 import 'package:learnxt/firebase_options.dart';
 
 Future<void> main(List<String> args) async {

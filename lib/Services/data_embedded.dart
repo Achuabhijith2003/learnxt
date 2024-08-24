@@ -6,14 +6,14 @@ import 'package:http/http.dart' as http;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
-import 'package:learnxt/consts.dart';
+import 'package:learnxt/key.dart';
+
 import 'package:pdf_text/pdf_text.dart';
 
 class DataEmbedded {
   // ignore: prefer_typing_uninitialized_variables
   String? parentdocid;
   String? pdfpath;
-  late CollectionReference<Map<String, dynamic>> subcollectionRef;
   // ignore: prefer_typing_uninitialized_variables, non_constant_identifier_names
 
   // ignore: non_constant_identifier_names
@@ -21,43 +21,33 @@ class DataEmbedded {
       List<String> textList) async {
     final embeddings = <List<double>>[];
     for (final text in textList) {
-      // print(text);
+      print(text);
       final model =
           GenerativeModel(model: 'text-embedding-004', apiKey: GEMINI_API_KEY);
       final content = Content.text(text);
       final result = await model.embedContent(content);
       embeddings.add(result.embedding.values);
-      // print(result.embedding.values);
+      print(result.embedding.values);
     }
-    storeEmbeddedData(embeddings, textList);
+    storeEmbeddedData(embeddings);
     return embeddings;
   }
 
   // ignore: non_constant_identifier_names
-  Future<void> storeEmbeddedData(
-      List<List<double>> embeddings, List<String> textList) async {
+  Future<void> storeEmbeddedData(List<List<double>> embeddings) async {
     try {
-      // Ensure parentdocid is initialized and not null
-      if (parentdocid == null || parentdocid!.isEmpty) {
-        throw ArgumentError('parentdocid cannot be null or empty');
+      if (parentdocid!.isEmpty) {
+        throw ArgumentError('parentdocid cannot be empty');
       }
 
       final parentDocRef =
           FirebaseFirestore.instance.collection('Bot').doc(parentdocid);
       final subcollectionRef = parentDocRef.collection('dataEmbedded');
 
-      // Ensure textList and embeddings are of the same length
-      if (embeddings.length != textList.length) {
-        throw ArgumentError(
-            'Embeddings and textList must be of the same length');
-      }
-
-      for (int i = 0; i < embeddings.length; i++) {
-        final text = textList[i]; // Assuming textList cannot have null values
-
+      for (final embedding in embeddings) {
         await subcollectionRef.add({
-          'embeddings': embeddings[i],
-          'pdf_text': text,
+          'embeddings': embedding,
+          'pdfPath': pdfpath,
         });
       }
     } catch (e) {
@@ -103,6 +93,10 @@ class DataEmbedded {
     }
   }
 
+  void getDocId(String parentdocid) {
+    this.parentdocid = parentdocid;
+  }
+
   List<String> splitTextIntoChunks(String text, int chunkSize) {
     final chunks = <String>[];
     final words = text.split(' ');
@@ -129,15 +123,15 @@ class DataEmbedded {
         Generate_promtEmbedded(query); // Generate embedding for the query
 
     // Retrieve embeddings from Firestore (optimized query for performance)
-    final subcollectionRef = await FirebaseFirestore.instance
-        .collection('dataEmbedded')
-        .orderBy('embeddings',
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('embeddings')
+        .orderBy('embedding',
             descending: true) // Assuming an index on embedding field
         .limit(10) // Adjust limit as needed
         .get();
 
     // Calculate similarity scores and rank results
-    final rankedResults = subcollectionRef.docs.map((doc) {
+    final rankedResults = querySnapshot.docs.map((doc) {
       final embedding = doc.data()['embeddings'] as List<double>;
       final similarity =
           calculateCosineSimilarity(queryEmbedding[0], embedding);
@@ -174,30 +168,29 @@ class DataEmbedded {
 
     return dotProduct / magnitude;
   }
+  Future<String> generateAnswerWithGemini(String originalText, String query) async {
+  // Replace with your Gemini API endpoint and credentials
+  const geminiApiUrl = 'https://gemini.example.com/generate';
+  const apiKey = GEMINI_API_KEY;
 
-  Future<String> generateAnswerWithGemini(
-      String originalText, String query) async {
-    // Replace with your Gemini API endpoint and credentials
-    const geminiApiUrl = 'https://gemini.example.com/generate';
-    const apiKey = GEMINI_API_KEY;
+  // Prepare the query for Gemini
+  final geminiPrompt = 'Generate an answer based on the following text: $originalText, given the query: $query';
 
-    // Prepare the query for Gemini
-    final geminiPrompt =
-        'Generate an answer based on the following text: $originalText, given the query: $query';
+  // Make the API call
+  final response = await http.post(
+    Uri.parse(geminiApiUrl),
+    headers: {'Authorization': 'Bearer $apiKey'},
+    body: jsonEncode({'prompt': geminiPrompt}),
+  );
 
-    // Make the API call
-    final response = await http.post(
-      Uri.parse(geminiApiUrl),
-      headers: {'Authorization': 'Bearer $apiKey'},
-      body: jsonEncode({'prompt': geminiPrompt}),
-    );
-
-    if (response.statusCode == 200) {
-      final jsonResponse = jsonDecode(response.body);
-      final generatedAnswer = jsonResponse['answer'];
-      return generatedAnswer;
-    } else {
-      throw Exception('Gemini API Error: ${response.statusCode}');
-    }
+  if (response.statusCode == 200) {
+    final jsonResponse = jsonDecode(response.body);
+    final generatedAnswer = jsonResponse['answer'];
+    return generatedAnswer;
+  } else {
+    throw Exception('Gemini API Error: ${response.statusCode}');
   }
 }
+}
+
+

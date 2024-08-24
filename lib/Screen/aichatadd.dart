@@ -323,7 +323,18 @@ class _ChatcreateState extends State<Chatcreate> {
         ),
       ),
     );
-
+    // store pdf file
+    final botData = {
+      'UID': uid,
+      'Bot Name': botName,
+    };
+    final docRef = await FirebaseFirestore.instance.collection('Bot').add(botData);
+    final docId = docRef.id;
+    // Update the document with the docId
+    await docRef.update({'docId': docId});
+    // Update the document with the docId
+          // passing parectDocId of the Bot
+      _dataEmbedded.getDocId(docId);
     try {
       // Upload each file to Firebase Storage
       for (File file in files) {
@@ -335,20 +346,11 @@ class _ChatcreateState extends State<Chatcreate> {
         await _dataEmbedded.pdfextract(file, downloadUrl);
       }
 
-      // Store bot data in Firestore
-      final botData = {
-        'UID': uid,
-        'Bot Name': botName,
+      // Store bot pdfurl in Firestore
+      final pdfurl = {
         'PDFs': downloadUrls,
       };
-      final docRef =
-          await FirebaseFirestore.instance.collection('Bot').add(botData);
-      final docId = docRef.id;
-
-      // Update the document with the docId
-      await docRef.update({'docId': docId});
-      // passing parectDocId of the Bot
-      _dataEmbedded.getDocId(docId);
+      await docRef.update(pdfurl);
       // Handle successful creation (e.g., show success message)
       // ignore: use_build_context_synchronously
       Navigator.pop(context);
