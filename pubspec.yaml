@@ -54,6 +54,7 @@ dependencies:
   pdf_text:
     path: ../
   http: ^1.2.2
+  google_mobile_ads: ^5.1.0
 
 dev_dependencies:
   flutter_test:

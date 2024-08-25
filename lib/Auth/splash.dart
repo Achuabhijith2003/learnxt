@@ -3,12 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:another_flutter_splash_screen/another_flutter_splash_screen.dart';
 import 'package:learnxt/Auth/loginpage.dart';
 import 'package:learnxt/Screen/home.dart';
+import 'package:learnxt/Services/Gadsmob.dart';
 
 class Splash extends StatelessWidget {
   const Splash({super.key});
 
   @override
   Widget build(BuildContext context) {
+    admob ads = admob();
+    ads.loadads();
     return Scaffold(
       body: Center(
         child: FlutterSplashScreen.gif(
