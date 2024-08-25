@@ -3,12 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:learnxt/Auth/splash.dart';
-import 'package:learnxt/Services/Gadsmob.dart';
 import 'package:learnxt/key.dart';
 import 'package:learnxt/firebase_options.dart';
 
 Future<void> main(List<String> args) async {
-  admob ads = admob();
   WidgetsFlutterBinding.ensureInitialized();
   // gemini init
   Gemini.init(
@@ -20,7 +18,6 @@ Future<void> main(List<String> args) async {
   );
   // admob init
   MobileAds.instance.initialize();
-  ads.loadads;
   runApp(const Learnxt());
 }
 

@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:learnxt/Auth/loginpage.dart';
 import 'package:learnxt/Screen/ai_chat_section.dart';
 import 'package:learnxt/Screen/aichatadd.dart';
+import 'package:learnxt/Services/chat.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -21,6 +22,10 @@ class _HomeState extends State<Home> {
   final GlobalKey<ScaffoldState> _globalKey = GlobalKey();
   @override
   Widget build(BuildContext context) {
+    // Chat _chat = Chat();
+    // final lastmesss = _chat.lastmessages;
+    // String lastmess = "";
+
     return Scaffold(
       key: _globalKey,
       // backgroundColor: const Color(0xFF171717),
@@ -113,7 +118,11 @@ class _HomeState extends State<Home> {
                     future: fetchData(), // Initial fetch with limit
                     builder: (context, snapshot) {
                       if (snapshot.hasError) {
-                        return Text('Error: ${snapshot.error}');
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child:
+                              Center(child: Text('Error: ${snapshot.error}')),
+                        );
                       }
 
                       if (!snapshot.hasData) {
@@ -130,6 +139,9 @@ class _HomeState extends State<Home> {
                           itemBuilder: (context, index) {
                             final botData = data[index];
                             if (name.isEmpty) {
+                              // if (data.isNotEmpty) {
+                              //   return const Text("dadfsgsdfgsdgta");
+                              // }
                               return Card(
                                 color: Colors.green.withAlpha(1000),
                                 child: Padding(
@@ -141,7 +153,8 @@ class _HomeState extends State<Home> {
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) => AiChat(
-                                              botname: botData["Bot Name"],docId: botData["docId"],
+                                              botname: botData["Bot Name"],
+                                              docId: botData["docId"],
                                             ),
                                           ));
                                     },
@@ -214,9 +227,11 @@ class _HomeState extends State<Home> {
                                       style:
                                           const TextStyle(color: Colors.black),
                                     ), // Access data for each bot
-                                    trailing: const Text("data"),
+                                    trailing: Text("lastmess"),
                                     leading: const CircleAvatar(
                                       radius: 32,
+                                      backgroundImage:
+                                          AssetImage("assets/ai pro pic.jpeg"),
                                     ),
                                     horizontalTitleGap: 10,
                                     minVerticalPadding: 25,
@@ -241,7 +256,8 @@ class _HomeState extends State<Home> {
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) => AiChat(
-                                              botname: botData["Bot Name"],docId: botData["docId"],
+                                              botname: botData["Bot Name"],
+                                              docId: botData["docId"],
                                             ),
                                           ));
                                     },
@@ -324,7 +340,12 @@ class _HomeState extends State<Home> {
                               );
                               // Add a "Load More" button or implement infinite scrolling if needed
                             }
-                            return Container();
+                            return const Center(
+                              child: Padding(
+                                padding: EdgeInsets.only(top: 150),
+                                child: Text("No Result"),
+                              ),
+                            );
                           });
                     },
                   ),

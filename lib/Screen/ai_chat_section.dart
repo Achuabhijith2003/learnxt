@@ -2,12 +2,10 @@
 
 import 'package:flutter/material.dart';
 
-import 'dart:io';
-import 'dart:typed_data';
-
 import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:learnxt/Services/chat.dart';
 import 'package:learnxt/Services/data_embedded.dart';
 
 class AiChat extends StatefulWidget {
@@ -20,15 +18,13 @@ class AiChat extends StatefulWidget {
 }
 
 final Gemini gemini = Gemini.instance;
-
+Chat _chat = Chat();
 List<ChatMessage> messages = [];
-
 ChatUser currentUser = ChatUser(id: "0", firstName: "User");
 ChatUser geminiUser = ChatUser(
   id: "1",
-  firstName: "Gemini",
-  profileImage:
-      "https://seeklogo.com/images/G/google-gemini-logo-A5787B2669-seeklogo.com.png",
+  firstName: "LearnXt",
+  profileImage: "assets/ai pro pic.jpeg",
 );
 
 class _AiChatState extends State<AiChat> {
@@ -136,6 +132,7 @@ class _AiChatState extends State<AiChat> {
                   "", (previous, current) => "$previous ${current.text}") ??
               "";
           lastMessage.text += response;
+          _chat.getlastmessage(lastMessage.text);
           setState(
             () {
               messages = [lastMessage!, ...messages];
@@ -150,6 +147,7 @@ class _AiChatState extends State<AiChat> {
             createdAt: DateTime.now(),
             text: response,
           );
+          _chat.getlastmessage(message.text);
           setState(() {
             messages = [message, ...messages];
           });
@@ -169,54 +167,54 @@ class _AiChatState extends State<AiChat> {
     }
   }
 
-  void _sendMessage(ChatMessage chatMessage) {
-    setState(() {
-      messages = [chatMessage, ...messages];
-    });
-    try {
-      String question = chatMessage.text;
-      List<Uint8List>? images;
-      if (chatMessage.medias?.isNotEmpty ?? false) {
-        images = [
-          File(chatMessage.medias!.first.url).readAsBytesSync(),
-        ];
-      }
-      gemini
-          .streamGenerateContent(
-        question,
-        images: images,
-      )
-          .listen((event) {
-        ChatMessage? lastMessage = messages.firstOrNull;
-        if (lastMessage != null && lastMessage.user == geminiUser) {
-          lastMessage = messages.removeAt(0);
-          String response = event.content?.parts?.fold(
-                  "", (previous, current) => "$previous ${current.text}") ??
-              "";
-          lastMessage.text += response;
-          setState(
-            () {
-              messages = [lastMessage!, ...messages];
-            },
-          );
-        } else {
-          String response = event.content?.parts?.fold(
-                  "", (previous, current) => "$previous ${current.text}") ??
-              "";
-          ChatMessage message = ChatMessage(
-            user: geminiUser,
-            createdAt: DateTime.now(),
-            text: response,
-          );
-          setState(() {
-            messages = [message, ...messages];
-          });
-        }
-      });
-    } catch (e) {
-      print(e);
-    }
-  }
+  // void _sendMessage(ChatMessage chatMessage) {
+  //   setState(() {
+  //     messages = [chatMessage, ...messages];
+  //   });
+  //   try {
+  //     String question = chatMessage.text;
+  //     List<Uint8List>? images;
+  //     if (chatMessage.medias?.isNotEmpty ?? false) {
+  //       images = [
+  //         File(chatMessage.medias!.first.url).readAsBytesSync(),
+  //       ];
+  //     }
+  //     gemini
+  //         .streamGenerateContent(
+  //       question,
+  //       images: images,
+  //     )
+  //         .listen((event) {
+  //       ChatMessage? lastMessage = messages.firstOrNull;
+  //       if (lastMessage != null && lastMessage.user == geminiUser) {
+  //         lastMessage = messages.removeAt(0);
+  //         String response = event.content?.parts?.fold(
+  //                 "", (previous, current) => "$previous ${current.text}") ??
+  //             "";
+  //         lastMessage.text += response;
+  //         setState(
+  //           () {
+  //             messages = [lastMessage!, ...messages];
+  //           },
+  //         );
+  //       } else {
+  //         String response = event.content?.parts?.fold(
+  //                 "", (previous, current) => "$previous ${current.text}") ??
+  //             "";
+  //         ChatMessage message = ChatMessage(
+  //           user: geminiUser,
+  //           createdAt: DateTime.now(),
+  //           text: response,
+  //         );
+  //         setState(() {
+  //           messages = [message, ...messages];
+  //         });
+  //       }
+  //     });
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  // }
 
 //   void _sendMediaMessage() async {
 //     ImagePicker picker = ImagePicker();
