@@ -5,6 +5,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:learnxt/Auth/loginpage.dart';
 import 'package:learnxt/Screen/ai_chat_section.dart';
 import 'package:learnxt/Screen/aichatadd.dart';
+import 'package:learnxt/Services/db.dart';
+import 'package:share_plus/share_plus.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -21,10 +23,7 @@ class _HomeState extends State<Home> {
   final GlobalKey<ScaffoldState> _globalKey = GlobalKey();
   @override
   Widget build(BuildContext context) {
-    // Chat _chat = Chat();
-    // final lastmesss = _chat.lastmessages;
-    // String lastmess = "";
-
+    UserDB userDB = UserDB();
     return Scaffold(
       key: _globalKey,
       // backgroundColor: const Color(0xFF171717),
@@ -42,6 +41,7 @@ class _HomeState extends State<Home> {
                     children: [
                       IconButton(
                           onPressed: () {
+                            userDB.getUserdetailes();
                             _globalKey.currentState!.openDrawer();
                           },
                           icon: const Icon(
@@ -226,11 +226,11 @@ class _HomeState extends State<Home> {
                                       style: const TextStyle(
                                           color: Colors.white, fontSize: 22),
                                     ), // Access data for each bot
-                                    trailing: const Text(
-                                      "lastmess",
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 14),
-                                    ),
+                                    // trailing: const Text(
+                                    //   "lastmess",
+                                    //   style: TextStyle(
+                                    //       color: Colors.white, fontSize: 14),
+                                    // ),
                                     leading: const CircleAvatar(
                                       radius: 32,
                                       backgroundImage:
@@ -249,7 +249,7 @@ class _HomeState extends State<Home> {
                                 .toLowerCase()
                                 .startsWith(name.toLowerCase())) {
                               return Card(
-                                color: Colors.green.shade300,
+                                color: Colors.green,
                                 child: Padding(
                                   padding: const EdgeInsets.only(
                                       left: 10, right: 10, bottom: 10),
@@ -328,9 +328,9 @@ class _HomeState extends State<Home> {
                                     title: Text(
                                       botData['Bot Name'],
                                       style:
-                                          const TextStyle(color: Colors.black),
+                                          const TextStyle(color: Colors.white),
                                     ), // Access data for each bot
-                                    trailing: const Text("data"),
+                                    // trailing: const Text("data"),
                                     leading: const CircleAvatar(
                                       radius: 32,
                                       backgroundImage:
@@ -396,9 +396,9 @@ class _HomeState extends State<Home> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Column(
+                Column(
                   children: [
-                    Row(
+                    const Row(
                       children: [
                         Icon(
                           Icons.arrow_back_ios,
@@ -414,40 +414,53 @@ class _HomeState extends State<Home> {
                         ),
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 30,
                     ),
-                    Row(
-                      children: [
-                        UserAvatar(filename: 'img3.jpeg'),
-                        SizedBox(
-                          width: 12,
-                        ),
-                        Text(
-                          'Tom Brenan',
-                          style: TextStyle(color: Colors.white),
-                        )
-                      ],
+                    TextButton(
+                      onPressed: () {},
+                      child: const Row(
+                        children: [
+                          CircleAvatar(
+                            backgroundImage: AssetImage(
+                              "assets/ai pro pic.jpeg",
+                            ),
+                            maxRadius: 30,
+                          ),
+                          SizedBox(
+                            width: 12,
+                          ),
+                          Text(
+                            'User',
+                            style: TextStyle(color: Colors.white),
+                          )
+                        ],
+                      ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 35,
                     ),
-                    DrawerItem(
-                      title: 'Account',
-                      icon: Icons.key,
-                    ),
-                    DrawerItem(title: 'Chats', icon: Icons.chat_bubble),
-                    DrawerItem(
-                        title: 'Notifications', icon: Icons.notifications),
-                    DrawerItem(title: 'Data and Storage', icon: Icons.storage),
-                    DrawerItem(title: 'Help', icon: Icons.help),
-                    Divider(
+                    // const DrawerItem(
+                    //   title: 'Account',
+                    //   icon: Icons.key,
+                    // ),
+                    // const DrawerItem(title: 'Chats', icon: Icons.chat_bubble),
+                    // const DrawerItem(
+                    //     title: 'Notifications', icon: Icons.notifications),
+                    // const DrawerItem(
+                    //     title: 'Data and Storage', icon: Icons.storage),
+                    const DrawerItem(title: 'Help', icon: Icons.help),
+                    const Divider(
                       height: 35,
                       color: Colors.green,
                     ),
                     DrawerItem(
                       title: 'Invite a friend',
                       icon: Icons.people_outline,
+                      onTap: () async {
+                        await Share.share(
+                            "'Check out this link: https://github.com/Achuabhijith2003/learnxt/releases/tag/v0.0.1',");
+                      },
                     ),
                   ],
                 ),
@@ -640,12 +653,12 @@ class UserAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CircleAvatar(
+    return const CircleAvatar(
       radius: 32,
       backgroundColor: Colors.white,
       child: CircleAvatar(
         radius: 29,
-        backgroundImage: Image.asset('assets/images/$filename').image,
+        // backgroundImage: Image.asset('assets/images/$filename').image,
       ),
     );
   }

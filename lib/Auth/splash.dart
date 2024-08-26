@@ -11,7 +11,8 @@ class Splash extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     admob ads = admob();
-    ads.AppOpenAdload();
+    // Appopenadd
+    // ads.AppOpenAdload();
     return Scaffold(
       body: Center(
         child: FlutterSplashScreen.gif(
