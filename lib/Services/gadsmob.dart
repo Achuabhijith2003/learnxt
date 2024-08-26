@@ -5,6 +5,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 class admob {
   AppOpenAd? _appOpenAd;
   // ignore: non_constant_identifier_names
+  // Appopen ads
   AppOpenAdload() {
     AppOpenAd.load(
         adUnitId: "ca-app-pub-3940256099942544/9257395921",

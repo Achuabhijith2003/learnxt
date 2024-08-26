@@ -20,7 +20,10 @@ class AiChat extends StatefulWidget {
 final Gemini gemini = Gemini.instance;
 Chat _chat = Chat();
 List<ChatMessage> messages = [];
-ChatUser currentUser = ChatUser(id: "0", firstName: "User");
+ChatUser currentUser = ChatUser(
+  id: "0",
+  firstName: "User",
+);
 ChatUser geminiUser = ChatUser(
   id: "1",
   firstName: "LearnXt",
@@ -58,7 +61,7 @@ class _AiChatState extends State<AiChat> {
                           },
                           icon: const Icon(
                             Icons.arrow_back_ios_new,
-                            color: Colors.green,
+                            color: Color.fromARGB(255, 48, 121, 51),
                           )),
                       Text(
                         botname,
@@ -97,15 +100,21 @@ class _AiChatState extends State<AiChat> {
 
   Widget _buildUI() {
     return DashChat(
-      inputOptions: const InputOptions(trailing: [
-        // IconButton(
-        //   onPressed: _sendMediaMessage,
-        //   icon: const Icon(
-        //     Icons.image,
-        //     color: Color.fromARGB(255, 29, 235, 2),
-        //   ),
-        // )
-      ]),
+      inputOptions: const InputOptions(
+        trailing: [
+          // IconButton(
+          //   onPressed: _sendMediaMessage,
+          //   icon: const Icon(
+          //     Icons.image,
+          //     color: Color.fromARGB(255, 29, 235, 2),
+          //   ),
+          // )
+        ],
+        alwaysShowSend: true,
+        inputDecoration: InputDecoration(hintText: "Enter the promt"),
+        inputTextStyle: TextStyle(color: Colors.black),
+        sendOnEnter: false,
+      ),
       currentUser: currentUser,
       onSend: sdmessang,
       messages: messages,

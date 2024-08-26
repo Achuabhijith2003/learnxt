@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:learnxt/Auth/splash.dart';
 import 'package:learnxt/key.dart';
@@ -26,10 +27,32 @@ class Learnxt extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Splash(),
-      color: Color.fromARGB(255, 47, 255, 1),
+      home: const Splash(),
+      theme: ThemeData(
+        useMaterial3: true,
+
+        // Define the default brightness and colors.
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.green.shade400,
+          // ···
+          brightness: Brightness.light,
+        ),
+        // textTheme: TextTheme(
+        //   displayLarge: const TextStyle(
+        //     fontSize: 72,
+        //     fontWeight: FontWeight.bold,
+        //   ),
+        //   // ···
+        //   titleLarge: GoogleFonts.dmSerifDisplay(
+        //       fontSize: 40,
+        //       fontStyle: FontStyle.normal,
+        //       color: Colors.green.shade400),
+        //   bodyMedium: GoogleFonts.merriweather(),
+        //   displaySmall: GoogleFonts.pacifico(),
+        // ),
+      ),
     );
   }
 }

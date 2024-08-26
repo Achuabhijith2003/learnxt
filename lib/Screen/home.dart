@@ -5,7 +5,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:learnxt/Auth/loginpage.dart';
 import 'package:learnxt/Screen/ai_chat_section.dart';
 import 'package:learnxt/Screen/aichatadd.dart';
-import 'package:learnxt/Services/chat.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -224,10 +223,14 @@ class _HomeState extends State<Home> {
                                     },
                                     title: Text(
                                       botData['Bot Name'],
-                                      style:
-                                          const TextStyle(color: Colors.black),
+                                      style: const TextStyle(
+                                          color: Colors.white, fontSize: 22),
                                     ), // Access data for each bot
-                                    trailing: Text("lastmess"),
+                                    trailing: const Text(
+                                      "lastmess",
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 14),
+                                    ),
                                     leading: const CircleAvatar(
                                       radius: 32,
                                       backgroundImage:
@@ -330,6 +333,8 @@ class _HomeState extends State<Home> {
                                     trailing: const Text("data"),
                                     leading: const CircleAvatar(
                                       radius: 32,
+                                      backgroundImage:
+                                          AssetImage("assets/ai pro pic.jpeg"),
                                     ),
                                     horizontalTitleGap: 10,
                                     minVerticalPadding: 25,
