@@ -47,6 +47,14 @@ class _HomeState extends State<Home> {
                           icon: const Icon(
                             Icons.menu,
                             color: Colors.green,
+                            size: 34,
+                            shadows: <Shadow>[
+                              Shadow(
+                                offset: Offset(1.0, 1.0),
+                                blurRadius: 1.0,
+                                color: Color.fromARGB(255, 14, 60, 13),
+                              ),
+                            ],
                           )),
                       Center(
                         child: Text(
@@ -55,6 +63,13 @@ class _HomeState extends State<Home> {
                             color: Colors.green,
                             fontSize: 40,
                             fontWeight: FontWeight.bold,
+                            shadows: <Shadow>[
+                              const Shadow(
+                                offset: Offset(1.0, 1.0),
+                                blurRadius: 2.0,
+                                color: Color.fromARGB(255, 14, 60, 13),
+                              ),
+                            ],
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -62,12 +77,6 @@ class _HomeState extends State<Home> {
                       // adjacent "LearnXT" text to center
                       const Divider(),
                       const Divider()
-                      // IconButton(
-                      //     onPressed: () {},
-                      //     icon: const Icon(
-                      //       Icons.search,
-                      //       color: Colors.white,
-                      //     )),
                     ],
                   ),
                 ),
@@ -75,33 +84,41 @@ class _HomeState extends State<Home> {
                 //   width: 35,
                 // ),
                 Padding(
-                    padding: const EdgeInsets.only(
-                      left: 42,
-                      right: 42,
-                    ),
-                    child: Card(
-                      child: TextField(
-                        decoration: const InputDecoration(
-                            prefixIconColor: Colors.green,
-                            focusColor: Colors.green,
-                            suffixIconColor: Colors.green,
-                            hoverColor: Colors.green,
-                            iconColor: Colors.green,
-                            fillColor: Colors.green,
-                            prefixIcon: Icon(Icons.search),
-                            hintText: 'Search...'),
-                        cursorColor: Colors.green,
-                        onChanged: (val) {
-                          setState(() {
-                            name = val;
-                          });
-                        },
+                  padding: const EdgeInsets.only(
+                    top: 10,
+                    left: 42,
+                    right: 42,
+                  ),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(13),
+                        border: Border.all(
+                          strokeAlign: BorderSide.strokeAlignCenter,
+                        )),
+                    child: TextField(
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(
+                          Icons.search_outlined,
+                          color: Colors.green,
+                        ),
+                        hintText: "Search...",
+                        hintStyle: GoogleFonts.barlowSemiCondensed(
+                          fontSize: 16,
+                        ),
+                        enabled: true,
                       ),
-                    )),
+                      onChanged: (val) {
+                        setState(() {
+                          name = val;
+                        });
+                      },
+                    ),
+                  ),
+                )
               ],
             ),
             Positioned(
-                top: 145,
+                top: 155,
                 left: 0,
                 right: 0,
                 bottom: 0,
@@ -142,104 +159,120 @@ class _HomeState extends State<Home> {
                               //   return const Text("dadfsgsdfgsdgta");
                               // }
                               return Card(
-                                color: Colors.green.withAlpha(1000),
+                                color: const Color.fromARGB(240, 54, 132, 38),
                                 child: Padding(
                                   padding: const EdgeInsets.only(
                                       left: 10, right: 10, bottom: 10),
-                                  child: ListTile(
-                                    onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => AiChat(
-                                              botname: botData["Bot Name"],
-                                              docId: botData["docId"],
-                                            ),
-                                          ));
-                                    },
-                                    onLongPress: () {
-                                      showDialog(
-                                        context: context,
-                                        builder: (context) {
-                                          return AlertDialog(
-                                            shadowColor: Colors.green,
-                                            title: Text(
-                                              botData["Bot Name"],
-                                              textAlign: TextAlign.center,
-                                              style: const TextStyle(
-                                                  color: Colors.green),
-                                            ),
-                                            // content: const Text("errorMessage"),
-                                            actions: [
-                                              Center(
-                                                //Delete the bot
-                                                child: TextButton(
-                                                    onPressed: () async {
-                                                      final deletionSuccessful =
-                                                          await deletebot(
-                                                              botData["docId"]);
-                                                      if (deletionSuccessful) {
-                                                        // Show a success notification (e.g., Snackbar)
-                                                        setState(() {
-                                                          fetchData();
-                                                        });
-                                                        ScaffoldMessenger.of(
-                                                                context)
-                                                            .showSnackBar(
-                                                          const SnackBar(
-                                                            content: Text(
-                                                                'Bot deleted successfully!'),
-                                                            backgroundColor:
-                                                                Colors.green,
-                                                          ),
-                                                        );
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(16)),
+                                    child: ListTile(
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => AiChat(
+                                                botname: botData["Bot Name"],
+                                                docId: botData["docId"],
+                                              ),
+                                            ));
+                                      },
+                                      onLongPress: () {
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return AlertDialog(
+                                              shadowColor: Colors.green,
+                                              title: Text(
+                                                botData["Bot Name"],
+                                                textAlign: TextAlign.center,
+                                                style: const TextStyle(
+                                                    color: Colors.green),
+                                              ),
+                                              // content: const Text("errorMessage"),
+                                              actions: [
+                                                Center(
+                                                  //Delete the bot
+                                                  child: TextButton(
+                                                      onPressed: () async {
+                                                        final deletionSuccessful =
+                                                            await deletebot(
+                                                                botData[
+                                                                    "docId"]);
+                                                        if (deletionSuccessful) {
+                                                          // Show a success notification (e.g., Snackbar)
+                                                          setState(() {
+                                                            fetchData();
+                                                          });
+                                                          ScaffoldMessenger.of(
+                                                                  context)
+                                                              .showSnackBar(
+                                                            const SnackBar(
+                                                              content: Text(
+                                                                  'Bot deleted successfully!'),
+                                                              backgroundColor:
+                                                                  Colors.green,
+                                                            ),
+                                                          );
 
-                                                        // Potentially refresh the list of bots after successful deletion
-                                                      } else {
-                                                        // Show an error notification (e.g., Snackbar)
-                                                        ScaffoldMessenger.of(
-                                                                context)
-                                                            .showSnackBar(
-                                                          const SnackBar(
-                                                            content: Text(
-                                                                'Error deleting bot!'),
-                                                            backgroundColor:
-                                                                Colors.red,
-                                                          ),
-                                                        );
-                                                      }
-                                                      Navigator.pop(context);
-                                                    },
-                                                    child: const Text(
-                                                      'Delete the bot',
-                                                      style: TextStyle(
-                                                          color: Colors.red),
-                                                    )),
-                                              )
-                                            ],
-                                          );
-                                        },
-                                      );
-                                    },
-                                    title: Text(
-                                      botData['Bot Name'],
-                                      style: const TextStyle(
-                                          color: Colors.white, fontSize: 22),
-                                    ), // Access data for each bot
-                                    // trailing: const Text(
-                                    //   "lastmess",
-                                    //   style: TextStyle(
-                                    //       color: Colors.white, fontSize: 14),
-                                    // ),
-                                    leading: const CircleAvatar(
-                                      radius: 32,
-                                      backgroundImage:
-                                          AssetImage("assets/ai pro pic.jpeg"),
+                                                          // Potentially refresh the list of bots after successful deletion
+                                                        } else {
+                                                          // Show an error notification (e.g., Snackbar)
+                                                          ScaffoldMessenger.of(
+                                                                  context)
+                                                              .showSnackBar(
+                                                            const SnackBar(
+                                                              content: Text(
+                                                                  'Error deleting bot!'),
+                                                              backgroundColor:
+                                                                  Colors.red,
+                                                            ),
+                                                          );
+                                                        }
+                                                        Navigator.pop(context);
+                                                      },
+                                                      child: const Text(
+                                                        'Delete the bot',
+                                                        style: TextStyle(
+                                                            color: Colors.red),
+                                                      )),
+                                                )
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      },
+                                      title: Text(
+                                        botData['Bot Name'],
+                                        style: GoogleFonts.publicSans(
+                                          fontSize: 20,
+                                          color: Colors.white,
+                                          shadows: <Shadow>[
+                                            const Shadow(
+                                              offset: Offset(1.0, 1.0),
+                                              blurRadius: 1.0,
+                                              color: Color.fromARGB(
+                                                  255, 14, 60, 13),
+                                            ),
+                                          ],
+                                        ),
+                                      ), // Access data for each bot
+                                      // trailing: const Text(
+                                      //   "lastmess",
+                                      //   style: TextStyle(
+                                      //       color: Colors.white, fontSize: 14),
+                                      // ),
+                                      leading: const CircleAvatar(
+                                        maxRadius: 30,
+                                        backgroundImage: AssetImage(
+                                            "assets/ai pro pic.jpeg"),
+                                      ),
+                                      horizontalTitleGap: 10,
+                                      minVerticalPadding: 25,
+                                      selectedTileColor: Colors.white,
+                                      textColor: Colors.black,
                                     ),
-                                    horizontalTitleGap: 10,
-                                    minVerticalPadding: 25,
-                                    selectedTileColor: Colors.white,
-                                    textColor: Colors.black,
                                   ),
                                 ),
                               );
@@ -249,7 +282,7 @@ class _HomeState extends State<Home> {
                                 .toLowerCase()
                                 .startsWith(name.toLowerCase())) {
                               return Card(
-                                color: Colors.green,
+                                color: const Color.fromARGB(240, 54, 132, 38),
                                 child: Padding(
                                   padding: const EdgeInsets.only(
                                       left: 10, right: 10, bottom: 10),
@@ -327,12 +360,21 @@ class _HomeState extends State<Home> {
                                     },
                                     title: Text(
                                       botData['Bot Name'],
-                                      style:
-                                          const TextStyle(color: Colors.white),
+                                      style: GoogleFonts.publicSans(
+                                        fontSize: 20,
+                                        color: Colors.white,
+                                        shadows: <Shadow>[
+                                          const Shadow(
+                                            offset: Offset(1.0, 1.0),
+                                            blurRadius: 1.0,
+                                            color:
+                                                Color.fromARGB(255, 14, 60, 13),
+                                          ),
+                                        ],
+                                      ),
                                     ), // Access data for each bot
-                                    // trailing: const Text("data"),
                                     leading: const CircleAvatar(
-                                      radius: 32,
+                                      maxRadius: 30,
                                       backgroundImage:
                                           AssetImage("assets/ai pro pic.jpeg"),
                                     ),
