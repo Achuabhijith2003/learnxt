@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:learnxt/Services/chat.dart';
+import 'package:learnxt/Services/Hive/chat.dart';
 import 'package:learnxt/Services/data_embedded.dart';
 
 class AiChat extends StatefulWidget {
@@ -17,29 +17,32 @@ class AiChat extends StatefulWidget {
   _AiChatState createState() => _AiChatState(botname: botname, docId: docId);
 }
 
+var Docid;
 final Gemini gemini = Gemini.instance;
-Chat _chat = Chat();
+Chatputandget chatstore = Chatputandget(Docid);
+
 List<ChatMessage> messages = [];
-ChatUser currentUser = ChatUser(
-  id: "0",
-  firstName: "User",
-);
-ChatUser geminiUser = ChatUser(
-  id: "1",
-  firstName: "LearnXt",
-  profileImage: "assets/ai pro pic.jpeg",
-);
+
+// ignore: non_constant_identifier_names
 
 class _AiChatState extends State<AiChat> {
   // ignore: duplicate_ignore
   // ignore: prefer_typing_uninitialized_variables
   final botname;
   final docId;
+
+  ChatUser currentUser = chatstore.featchcurrentuser();
+  ChatUser geminiuser = chatstore.featchgeminiuser();
+
   _AiChatState({required this.botname, required this.docId});
+  // ignore: non_constant_identifier_names
+
   final GlobalKey<ScaffoldState> _globalKey = GlobalKey();
-  DataEmbedded _dataEmbedded = DataEmbedded();
+  final DataEmbedded _dataEmbedded = DataEmbedded();
+
   @override
   Widget build(BuildContext context) {
+    Docid = docId;
     return Scaffold(
       key: _globalKey,
       // backgroundColor: const Color(0xFF171717),
@@ -122,6 +125,7 @@ class _AiChatState extends State<AiChat> {
   }
 
   void sdmessang(ChatMessage chatMessage) async {
+    chatstore.storechat(botname, currentUser, chatMessage, docId);
     setState(() {
       messages = [chatMessage, ...messages];
     });
@@ -135,13 +139,12 @@ class _AiChatState extends State<AiChat> {
       )
           .listen((event) {
         ChatMessage? lastMessage = messages.firstOrNull;
-        if (lastMessage != null && lastMessage.user == geminiUser) {
+        if (lastMessage != null && lastMessage.user == geminiuser) {
           lastMessage = messages.removeAt(0);
           String response = event.content?.parts?.fold(
                   "", (previous, current) => "$previous ${current.text}") ??
               "";
           lastMessage.text += response;
-          _chat.getlastmessage(lastMessage.text);
           setState(
             () {
               messages = [lastMessage!, ...messages];
@@ -152,99 +155,17 @@ class _AiChatState extends State<AiChat> {
                   "", (previous, current) => "$previous ${current.text}") ??
               "";
           ChatMessage message = ChatMessage(
-            user: geminiUser,
+            user: geminiuser,
             createdAt: DateTime.now(),
             text: response,
           );
-          _chat.getlastmessage(message.text);
           setState(() {
             messages = [message, ...messages];
           });
         }
       });
-
-      // ChatMessage message = ChatMessage(
-      //   user: geminiUser,
-      //   createdAt: DateTime.now(),
-      //   text: answer,
-      // );
-      // setState(() {
-      //   messages = [message, ...messages];
-      // });
     } catch (e) {
       print('Error sending message: $e');
     }
   }
-
-  // void _sendMessage(ChatMessage chatMessage) {
-  //   setState(() {
-  //     messages = [chatMessage, ...messages];
-  //   });
-  //   try {
-  //     String question = chatMessage.text;
-  //     List<Uint8List>? images;
-  //     if (chatMessage.medias?.isNotEmpty ?? false) {
-  //       images = [
-  //         File(chatMessage.medias!.first.url).readAsBytesSync(),
-  //       ];
-  //     }
-  //     gemini
-  //         .streamGenerateContent(
-  //       question,
-  //       images: images,
-  //     )
-  //         .listen((event) {
-  //       ChatMessage? lastMessage = messages.firstOrNull;
-  //       if (lastMessage != null && lastMessage.user == geminiUser) {
-  //         lastMessage = messages.removeAt(0);
-  //         String response = event.content?.parts?.fold(
-  //                 "", (previous, current) => "$previous ${current.text}") ??
-  //             "";
-  //         lastMessage.text += response;
-  //         setState(
-  //           () {
-  //             messages = [lastMessage!, ...messages];
-  //           },
-  //         );
-  //       } else {
-  //         String response = event.content?.parts?.fold(
-  //                 "", (previous, current) => "$previous ${current.text}") ??
-  //             "";
-  //         ChatMessage message = ChatMessage(
-  //           user: geminiUser,
-  //           createdAt: DateTime.now(),
-  //           text: response,
-  //         );
-  //         setState(() {
-  //           messages = [message, ...messages];
-  //         });
-  //       }
-  //     });
-  //   } catch (e) {
-  //     print(e);
-  //   }
-  // }
-
-//   void _sendMediaMessage() async {
-//     ImagePicker picker = ImagePicker();
-//     XFile? file = await picker.pickImage(
-//       source: ImageSource.gallery,
-//     );
-//     if (file != null) {
-//       ChatMessage chatMessage = ChatMessage(
-//         user: currentUser,
-//         createdAt: DateTime.now(),
-//         text: "Describe this picture?",
-//         medias: [
-//           ChatMedia(
-//             url: file.path,
-//             fileName: "",
-//             type: MediaType.image,
-//           )
-//         ],
-//       );
-//       _sendMessage(chatMessage);
-//     }
-//   }
-// }
 }

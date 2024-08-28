@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:learnxt/Auth/loginpage.dart';
 import 'package:learnxt/Screen/ai_chat_section.dart';
 import 'package:learnxt/Screen/aichatadd.dart';
-import 'package:learnxt/Services/db.dart';
+
 import 'package:share_plus/share_plus.dart';
 
 class Home extends StatefulWidget {
@@ -23,7 +23,6 @@ class _HomeState extends State<Home> {
   final GlobalKey<ScaffoldState> _globalKey = GlobalKey();
   @override
   Widget build(BuildContext context) {
-    UserDB userDB = UserDB();
     return Scaffold(
       key: _globalKey,
       // backgroundColor: const Color(0xFF171717),
@@ -41,7 +40,6 @@ class _HomeState extends State<Home> {
                     children: [
                       IconButton(
                           onPressed: () {
-                            userDB.getUserdetailes();
                             _globalKey.currentState!.openDrawer();
                           },
                           icon: const Icon(
