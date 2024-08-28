@@ -16,10 +16,6 @@ Future<void> main(List<String> args) async {
   await Hive.initFlutter();
   box = await Hive.openBox('Chat_History');
   Hive.registerAdapter(ChatAdapter());
-
-  // final chatBox = await Hive.openBox<Chat>('chatBox');
-  // box.put('Bankaccount', BankAccount(cureency: "cureency", mymoney: 100000));
-
   // gemini init
   Gemini.init(
     apiKey: GEMINI_API_KEY,
@@ -33,8 +29,6 @@ Future<void> main(List<String> args) async {
   // initapp
   runApp(const Learnxt());
 }
-
-class CustomChatMessageAdapter {}
 
 class Learnxt extends StatelessWidget {
   const Learnxt({super.key});

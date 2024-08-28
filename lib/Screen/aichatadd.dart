@@ -336,6 +336,7 @@ class _ChatcreateState extends State<Chatcreate> {
     // Update the document with the docId
     // passing parectDocId of the Bot
     _dataEmbedded.getDocId(docId);
+
     try {
       // Upload each file to Firebase Storage
       for (File file in files) {

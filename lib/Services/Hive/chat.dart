@@ -21,14 +21,11 @@ class Chat {
 }
 
 class Chatputandget {
-  var docid;
-  Chatputandget(this.docid);
-
   storechat(
     String botname,
     ChatUser? user,
     ChatMessage message,
-    dynamic docId,
+    String docId,
   ) {
     final chat = Chat(
         createdAt: message.createdAt,
@@ -38,21 +35,17 @@ class Chatputandget {
     box.put(docId, chat);
   }
 
-  ChatUser featchcurrentuser() {
-    // Implementation for fetching chat
-    Chat chatdata = box.get(docid);
-    print("${chatdata.text}");
-    ChatUser currentuser = ChatUser(id: "0", firstName: chatdata.firstName);
-    return currentuser;
-  }
-
-  ChatUser featchgeminiuser() {
-    Chat chatdata = box.get(docid);
-    print("${chatdata.text}");
-    ChatUser geminiuser = ChatUser(
-        id: "1",
-        firstName: chatdata.firstName,
-        profileImage: 'assets/ai pro pic.jpeg');
-    return geminiuser;
+  fechchat(docid) {
+    try {
+      Chat chatdata = box.get(docid);
+      ChatMessage chathis = ChatMessage(
+        user: ChatUser(id: chatdata.id),
+        createdAt: chatdata.createdAt,
+        text: chatdata.text,
+      );
+      return chathis;
+    } catch (e) {
+      print("Error: $e");
+    }
   }
 }

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
-import 'package:image_picker/image_picker.dart';
+// import 'package:image_picker/image_picker.dart';
 import 'package:learnxt/Services/Hive/chat.dart';
 import 'package:learnxt/Services/data_embedded.dart';
 
@@ -12,16 +12,18 @@ class AiChat extends StatefulWidget {
   final String botname;
   final String docId;
   const AiChat({super.key, required this.botname, required this.docId});
-
   @override
+  // ignore: library_private_types_in_public_api, no_logic_in_create_state
   _AiChatState createState() => _AiChatState(botname: botname, docId: docId);
 }
 
-var Docid;
 final Gemini gemini = Gemini.instance;
-Chatputandget chatstore = Chatputandget(Docid);
+Chatputandget chatstore = Chatputandget();
 
 List<ChatMessage> messages = [];
+ChatUser currentUser = ChatUser(id: "0", firstName: "User");
+ChatUser geminiuser = ChatUser(
+    id: "1", firstName: "LearnXT", profileImage: 'assets/ai pro pic.jpeg');
 
 // ignore: non_constant_identifier_names
 
@@ -31,9 +33,6 @@ class _AiChatState extends State<AiChat> {
   final botname;
   final docId;
 
-  ChatUser currentUser = chatstore.featchcurrentuser();
-  ChatUser geminiuser = chatstore.featchgeminiuser();
-
   _AiChatState({required this.botname, required this.docId});
   // ignore: non_constant_identifier_names
 
@@ -42,7 +41,12 @@ class _AiChatState extends State<AiChat> {
 
   @override
   Widget build(BuildContext context) {
-    Docid = docId;
+    try {
+      messages.add(chatstore.fechchat(docId));
+    } catch (e) {
+      print("Error: $e");
+    }
+
     return Scaffold(
       key: _globalKey,
       // backgroundColor: const Color(0xFF171717),
