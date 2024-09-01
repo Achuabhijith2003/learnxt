@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dash_chat_2/dash_chat_2.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hive/hive.dart';
 import 'package:learnxt/Services/Hive/chatid.dart';
 import 'package:learnxt/main.dart';
@@ -86,6 +88,29 @@ class Chatputandget {
       return chathis;
     } catch (e) {
       print("Error: $e");
+    }
+  }
+
+  initallchat() async {
+    // ... your existing fetchData logic ...
+    final user = FirebaseAuth.instance.currentUser;
+    final firestore = FirebaseFirestore.instance;
+    final collection = firestore.collection('Bot');
+    Chatidputandget chatidput = Chatidputandget();
+
+    final query =
+        collection.where('UID', isEqualTo: user?.uid); // Example condition
+    try {
+      final querySnapshot = await query.get();
+      if (querySnapshot.docs.isNotEmpty) {
+        for (var element in querySnapshot.docs) {
+          final docId = element.get("docId");
+          chatidput.putid(0, docId);
+        }
+      }
+    } catch (e) {
+      print('Error fetching data: $e');
+      return null;
     }
   }
 }

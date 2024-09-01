@@ -8,8 +8,11 @@ import 'package:learnxt/Auth/accountRecovery.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:learnxt/Services/Hive/chat.dart';
 
 import '../Screen/home.dart';
+
+Chatputandget chatmodif = Chatputandget();
 
 class Loginpage extends StatefulWidget {
   const Loginpage({super.key});
@@ -41,6 +44,8 @@ class _LoginpageState extends State<Loginpage> {
         print('Signed in with Google: ${user.uid}');
         createdatabase(
             user.email!, user.displayName ?? ''); // Use null-safe operators
+        // init exiting hive chat
+        chatmodif.initallchat();
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => Home()),
@@ -299,6 +304,8 @@ class _LoginpageState extends State<Loginpage> {
         if (userCredential.user != null) {
           // Access user through the instance
           // ignore: use_build_context_synchronously
+          // init exiting hive chat
+          chatmodif.initallchat();
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(
