@@ -171,7 +171,12 @@ class _HomeState extends State<Home> {
                                     child: ListTile(
                                       onTap: () {
                                         try {
-                                          ChatUser users = ChatUser(id: "1");
+                                          int i =
+                                              chatid.getid(botData["docId"]) +
+                                                  1;
+                                          chatid.putid(i, botData["docId"]);
+                                          ChatUser users = ChatUser(
+                                              id: "1", firstName: 'LearnXt');
                                           chatstore.storechat(
                                               botData["Bot Name"],
                                               users,
@@ -304,7 +309,10 @@ class _HomeState extends State<Home> {
                                   child: ListTile(
                                     onTap: () {
                                       try {
-                                        ChatUser users = ChatUser(id: "1");
+                                        int i = chatid.getid(botData["docId"]);
+                                        chatid.putid(i++, botData["docId"]);
+                                        ChatUser users = ChatUser(
+                                            id: "1", firstName: "LearnXt");
                                         chatstore.storechat(
                                             botData["Bot Name"],
                                             users,

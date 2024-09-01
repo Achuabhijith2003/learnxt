@@ -6,6 +6,7 @@ import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
 // import 'package:image_picker/image_picker.dart';
 import 'package:learnxt/Services/Hive/chat.dart';
+import 'package:learnxt/Services/Hive/chatid.dart';
 import 'package:learnxt/Services/data_embedded.dart';
 
 class AiChat extends StatefulWidget {
@@ -19,6 +20,7 @@ class AiChat extends StatefulWidget {
 
 final Gemini gemini = Gemini.instance;
 Chatputandget chatstore = Chatputandget();
+Chatidputandget chatid = Chatidputandget();
 
 List<ChatMessage> messages = [];
 ChatUser currentUser = ChatUser(id: "0", firstName: "User");
@@ -33,6 +35,25 @@ class _AiChatState extends State<AiChat> {
   final botname;
   final docId;
 
+  @override
+  void initState() {
+    super.initState();
+    loadChatMessages();
+  }
+
+  Future<void> loadChatMessages() async {
+    final chatMessage = await chatstore.fechallchat(docId);
+    setState(() {
+      messages = [chatMessage, ...messages];
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    messages = [];
+  }
+
   _AiChatState({required this.botname, required this.docId});
   // ignore: non_constant_identifier_names
 
@@ -41,12 +62,6 @@ class _AiChatState extends State<AiChat> {
 
   @override
   Widget build(BuildContext context) {
-    try {
-      messages.add(chatstore.fechchat(docId));
-    } catch (e) {
-      print("Error: $e");
-    }
-
     return Scaffold(
       key: _globalKey,
       // backgroundColor: const Color(0xFF171717),
@@ -123,51 +138,68 @@ class _AiChatState extends State<AiChat> {
         sendOnEnter: false,
       ),
       currentUser: currentUser,
-      onSend: sdmessang,
+      onSend: sendChatMessage,
       messages: messages,
     );
   }
 
-  void sdmessang(ChatMessage chatMessage) async {
-    chatstore.storechat(botname, currentUser, chatMessage, docId);
+  void sendChatMessage(ChatMessage chatMessage) async {
+    // Update chat ID
+    int newId = chatid.getid(docId) + 1; // Ensure ID generation logic is safe
+    chatid.putid(newId, docId);
+
+    // Store chat message
+    await chatstore.storechat(botname, currentUser, chatMessage, docId);
+
+    // Fetch and update messages (consider optimization)
+    final updatedChatMessage = await chatstore.fechchat(docId);
     setState(() {
-      messages = [chatMessage, ...messages];
+      messages = [
+        updatedChatMessage,
+        ...messages
+      ]; // Update message list (explore efficient methods)
     });
+
     try {
-      String keywords = await _dataEmbedded.searchAndAnswer(
-          chatMessage.text, docId); // Ensure to pass the correct parentdocid
+      // Search for keywords and generate answer
+      final keywords =
+          await _dataEmbedded.searchAndAnswer(chatMessage.text, docId);
       print('Generated answer: $keywords');
-      gemini
+
+      final response = await gemini
           .streamGenerateContent(
-        "Considering the keywords: $keywords and the query: ${chatMessage.text}, here is a detailed answer.",
-      )
-          .listen((event) {
-        ChatMessage? lastMessage = messages.firstOrNull;
-        if (lastMessage != null && lastMessage.user == geminiuser) {
-          lastMessage = messages.removeAt(0);
-          String response = event.content?.parts?.fold(
+            "Considering the keywords: $keywords and the query: ${chatMessage.text}, here is a detailed answer.",
+          )
+          .firstWhere((event) => event.content != null); // Handle empty content
+
+      // Update existing Gemini message (if present)
+      final lastGeminiMessageIndex =
+          messages.indexWhere((message) => message.user == geminiuser);
+      if (lastGeminiMessageIndex >= 0) {
+        final lastGeminiMessage = messages.removeAt(lastGeminiMessageIndex);
+        lastGeminiMessage.text += response.content?.parts?.fold(
+                "", (previous, current) => "$previous ${current.text}") ??
+            "";
+        setState(() {
+          messages = [lastGeminiMessage, ...messages];
+        });
+      } else {
+        // Create and store new Gemini message
+        final geminiMessage = ChatMessage(
+          user: geminiuser,
+          createdAt: DateTime.now(),
+          text: response.content?.parts?.fold(
                   "", (previous, current) => "$previous ${current.text}") ??
-              "";
-          lastMessage.text += response;
-          setState(
-            () {
-              messages = [lastMessage!, ...messages];
-            },
-          );
-        } else {
-          String response = event.content?.parts?.fold(
-                  "", (previous, current) => "$previous ${current.text}") ??
-              "";
-          ChatMessage message = ChatMessage(
-            user: geminiuser,
-            createdAt: DateTime.now(),
-            text: response,
-          );
-          setState(() {
-            messages = [message, ...messages];
-          });
-        }
-      });
+              "",
+        );
+        newId = chatid.getid(docId) + 1; // Ensure ID generation logic is safe
+        chatid.putid(newId, docId);
+        await chatstore.storechat(botname, geminiuser, geminiMessage, docId);
+        final geminiresopes = await chatstore.fechchat(docId);
+        setState(() {
+          messages = [geminiresopes, ...messages];
+        });
+      }
     } catch (e) {
       print('Error sending message: $e');
     }

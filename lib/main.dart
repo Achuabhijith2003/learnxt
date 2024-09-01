@@ -5,6 +5,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:learnxt/Auth/splash.dart';
 import 'package:learnxt/Services/Hive/chat.dart';
+import 'package:learnxt/Services/Hive/chatid.dart';
 
 import 'package:learnxt/key.dart';
 import 'package:learnxt/firebase_options.dart';
@@ -16,6 +17,7 @@ Future<void> main(List<String> args) async {
   await Hive.initFlutter();
   box = await Hive.openBox('Chat_History');
   Hive.registerAdapter(ChatAdapter());
+  Hive.registerAdapter(ChatidAdapter());
   // gemini init
   Gemini.init(
     apiKey: GEMINI_API_KEY,

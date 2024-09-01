@@ -1,41 +1,35 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'chat.dart';
+part of 'chatid.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class ChatAdapter extends TypeAdapter<Chat> {
+class ChatidAdapter extends TypeAdapter<Chatid> {
   @override
-  final int typeId = 1;
+  final int typeId = 0;
 
   @override
-  Chat read(BinaryReader reader) {
+  Chatid read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return Chat(
-      id: fields[0] as String,
-      createdAt: fields[1] as DateTime,
-      text: fields[2] as String,
-      firstName: fields[3] as String?,
+    return Chatid(
+      fields[0] as int,
+      fields[1] as String,
     );
   }
 
   @override
-  void write(BinaryWriter writer, Chat obj) {
+  void write(BinaryWriter writer, Chatid obj) {
     writer
-      ..writeByte(4)
-      ..writeByte(0)
-      ..write(obj.id)
-      ..writeByte(1)
-      ..write(obj.createdAt)
       ..writeByte(2)
-      ..write(obj.text)
-      ..writeByte(3)
-      ..write(obj.firstName);
+      ..writeByte(0)
+      ..write(obj.totalchat)
+      ..writeByte(1)
+      ..write(obj.docid);
   }
 
   @override
@@ -44,7 +38,7 @@ class ChatAdapter extends TypeAdapter<Chat> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is ChatAdapter &&
+      other is ChatidAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

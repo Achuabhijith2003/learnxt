@@ -8,6 +8,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:learnxt/Auth/loginpage.dart';
 import 'package:learnxt/Screen/home.dart';
+import 'package:learnxt/Services/Hive/chatid.dart';
 import '../Services/data_embedded.dart';
 
 class Chatcreate extends StatefulWidget {
@@ -354,6 +355,8 @@ class _ChatcreateState extends State<Chatcreate> {
       };
       await docRef.update(pdfurl);
       // Handle successful creation (e.g., show success message)
+      Chatidputandget chatidput = Chatidputandget();
+      chatidput.putid(0, docId);
       // ignore: use_build_context_synchronously
       Navigator.pop(context);
       Navigator.pushReplacement(
