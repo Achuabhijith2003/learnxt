@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:learnxt/Auth/splash.dart';
 import 'package:learnxt/Services/Hive/chat.dart';
@@ -15,9 +16,9 @@ Future<void> main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
   // hive init
   await Hive.initFlutter();
-  box = await Hive.openBox('Chat_History');
-  Hive.registerAdapter(ChatAdapter());
   Hive.registerAdapter(ChatidAdapter());
+  Hive.registerAdapter(ChatAdapter());
+  box = await Hive.openBox('Chat_History');
   // gemini init
   Gemini.init(
     apiKey: GEMINI_API_KEY,

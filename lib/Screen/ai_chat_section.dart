@@ -44,7 +44,7 @@ class _AiChatState extends State<AiChat> {
   Future<void> loadChatMessages() async {
     final chatMessage = await chatstore.fechallchat(docId);
     setState(() {
-      messages = [chatMessage, ...messages];
+      messages = chatMessage;
     });
   }
 

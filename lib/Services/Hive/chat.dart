@@ -1,5 +1,4 @@
 import 'package:dash_chat_2/dash_chat_2.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hive/hive.dart';
 import 'package:learnxt/Services/Hive/chatid.dart';
 import 'package:learnxt/main.dart';
@@ -46,6 +45,7 @@ class Chatputandget {
 
   fechallchat(docid) {
     try {
+      List<ChatMessage> messages = [];
       // geting no of chats
       int i = 1;
       Chatidputandget chatidget = Chatidputandget();
@@ -60,8 +60,9 @@ class Chatputandget {
         );
         print("While looping for fetch $i");
         i++;
-        return chathis;
+        messages.add(chathis);
       }
+      return messages;
     } catch (e) {
       print("Error: $e");
     }
