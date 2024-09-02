@@ -67,7 +67,12 @@ class _AiChatState extends State<AiChat> {
       // backgroundColor: const Color(0xFF171717),
       body: Container(
         width: double.infinity,
-        decoration: const BoxDecoration(color: Color(0xFFEFFFFC)),
+        decoration: BoxDecoration(
+            gradient: LinearGradient(begin: Alignment.topCenter, colors: [
+          Colors.green.shade900,
+          Colors.green.shade800,
+          Colors.green.shade400
+        ])),
         child: Stack(
           children: [
             Column(
@@ -83,14 +88,28 @@ class _AiChatState extends State<AiChat> {
                           },
                           icon: const Icon(
                             Icons.arrow_back_ios_new,
-                            color: Color.fromARGB(255, 48, 121, 51),
+                            color: Colors.white,
+                            shadows: <Shadow>[
+                              Shadow(
+                                offset: Offset(1.0, 1.0),
+                                blurRadius: 2.0,
+                                color: Color.fromARGB(255, 14, 60, 13),
+                              ),
+                            ],
                           )),
                       Text(
                         botname,
                         style: const TextStyle(
-                          color: Colors.green,
+                          color: Colors.white,
                           fontSize: 36,
                           fontWeight: FontWeight.bold,
+                          shadows: <Shadow>[
+                            Shadow(
+                              offset: Offset(1.0, 1.0),
+                              blurRadius: 2.0,
+                              color: Color.fromARGB(255, 14, 60, 13),
+                            ),
+                          ],
                         ),
                       ),
                       const Divider(),
@@ -109,8 +128,8 @@ class _AiChatState extends State<AiChat> {
                     padding: const EdgeInsets.symmetric(vertical: 15),
                     decoration: const BoxDecoration(
                       borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(40),
-                          topRight: Radius.circular(40)),
+                          topLeft: Radius.circular(35),
+                          topRight: Radius.circular(35)),
                       color: Color(0xFFEFFFFC),
                     ),
                     child: _buildUI()))

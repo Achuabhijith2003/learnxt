@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -28,10 +29,14 @@ class _HomeState extends State<Home> {
     Chatputandget chatstore = Chatputandget();
     return Scaffold(
       key: _globalKey,
-      // backgroundColor: const Color(0xFF171717),
       body: Container(
         width: double.infinity,
-        decoration: const BoxDecoration(color: Color(0xFFEFFFFC)),
+        decoration: BoxDecoration(
+            gradient: LinearGradient(begin: Alignment.topCenter, colors: [
+          Colors.green.shade900,
+          Colors.green.shade800,
+          Colors.green.shade400
+        ])),
         child: Stack(
           children: [
             Column(
@@ -47,12 +52,12 @@ class _HomeState extends State<Home> {
                           },
                           icon: const Icon(
                             Icons.menu,
-                            color: Colors.green,
+                            color: Colors.white,
                             size: 34,
                             shadows: <Shadow>[
                               Shadow(
                                 offset: Offset(1.0, 1.0),
-                                blurRadius: 1.0,
+                                blurRadius: 2.0,
                                 color: Color.fromARGB(255, 14, 60, 13),
                               ),
                             ],
@@ -61,7 +66,7 @@ class _HomeState extends State<Home> {
                         child: Text(
                           "LearnXT",
                           style: GoogleFonts.ptSerif(
-                            color: Colors.green,
+                            color: Colors.white,
                             fontSize: 40,
                             fontWeight: FontWeight.bold,
                             shadows: <Shadow>[
@@ -91,28 +96,29 @@ class _HomeState extends State<Home> {
                     right: 42,
                   ),
                   child: Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(13),
-                        border: Border.all(
-                          strokeAlign: BorderSide.strokeAlignCenter,
-                        )),
-                    child: TextField(
-                      decoration: InputDecoration(
-                        prefixIcon: const Icon(
-                          Icons.search_outlined,
-                          color: Colors.green,
+                    color: Colors.white,
+                    child: FadeInUp(
+                      duration: const Duration(milliseconds: 1500),
+                      child: TextField(
+                        decoration: const InputDecoration(
+                          border: InputBorder.none,
+                          hintStyle: TextStyle(color: Colors.grey),
+                          prefixIcon: Icon(
+                            Icons.search_outlined,
+                            color: Colors.green,
+                          ),
+                          hintText: "Search...",
+                          // hintStyle: GoogleFonts.barlowSemiCondensed(
+                          //   fontSize: 16,
+                          // ),
+                          enabled: true,
                         ),
-                        hintText: "Search...",
-                        hintStyle: GoogleFonts.barlowSemiCondensed(
-                          fontSize: 16,
-                        ),
-                        enabled: true,
+                        onChanged: (val) {
+                          setState(() {
+                            name = val;
+                          });
+                        },
                       ),
-                      onChanged: (val) {
-                        setState(() {
-                          name = val;
-                        });
-                      },
                     ),
                   ),
                 )
@@ -124,7 +130,7 @@ class _HomeState extends State<Home> {
                 right: 0,
                 bottom: 0,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 15),
+                  padding: const EdgeInsets.symmetric(vertical: 10),
                   decoration: const BoxDecoration(
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(40),
@@ -159,139 +165,144 @@ class _HomeState extends State<Home> {
                               // if (data.isNotEmpty) {
                               //   return const Text("dadfsgsdfgsdgta");
                               // }
-                              return Card(
-                                color: const Color.fromARGB(240, 54, 132, 38),
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 10, right: 10, bottom: 10),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(16)),
-                                    child: ListTile(
-                                      onTap: () {
-                                        try {
-                                          int i =
-                                              chatid.getid(botData["docId"]) +
-                                                  1;
-                                          chatid.putid(i, botData["docId"]);
-                                          ChatUser users = ChatUser(
-                                              id: "1", firstName: 'LearnXt');
-                                          chatstore.storechat(
-                                              botData["Bot Name"],
-                                              users,
-                                              ChatMessage(
-                                                  user: users,
-                                                  createdAt: DateTime.now(),
-                                                  text:
-                                                      "How Can I help You today"),
-                                              botData["docId"]);
-                                        } catch (e) {
-                                          print("Error: $e");
-                                        }
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) => AiChat(
-                                                botname: botData["Bot Name"],
-                                                docId: botData["docId"],
-                                              ),
-                                            ));
-                                      },
-                                      onLongPress: () {
-                                        showDialog(
-                                          context: context,
-                                          builder: (context) {
-                                            return AlertDialog(
-                                              shadowColor: Colors.green,
-                                              title: Text(
+                              return FadeIn(
+                                child: Card(
+                                  color: Colors.green.shade800,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 10, right: 10, bottom: 10),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(16)),
+                                      child: ListTile(
+                                        onTap: () {
+                                          try {
+                                            int i =
+                                                chatid.getid(botData["docId"]) +
+                                                    1;
+                                            chatid.putid(i, botData["docId"]);
+                                            ChatUser users = ChatUser(
+                                                id: "1", firstName: 'LearnXt');
+                                            chatstore.storechat(
                                                 botData["Bot Name"],
-                                                textAlign: TextAlign.center,
-                                                style: const TextStyle(
-                                                    color: Colors.green),
-                                              ),
-                                              // content: const Text("errorMessage"),
-                                              actions: [
-                                                Center(
-                                                  //Delete the bot
-                                                  child: TextButton(
-                                                      onPressed: () async {
-                                                        final deletionSuccessful =
-                                                            await deletebot(
-                                                                botData[
-                                                                    "docId"]);
-                                                        if (deletionSuccessful) {
-                                                          // Show a success notification (e.g., Snackbar)
-                                                          setState(() {
-                                                            fetchData();
-                                                          });
-                                                          ScaffoldMessenger.of(
-                                                                  context)
-                                                              .showSnackBar(
-                                                            const SnackBar(
-                                                              content: Text(
-                                                                  'Bot deleted successfully!'),
-                                                              backgroundColor:
-                                                                  Colors.green,
-                                                            ),
-                                                          );
+                                                users,
+                                                ChatMessage(
+                                                    user: users,
+                                                    createdAt: DateTime.now(),
+                                                    text:
+                                                        "How Can I help You today"),
+                                                botData["docId"]);
+                                          } catch (e) {
+                                            print("Error: $e");
+                                          }
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => AiChat(
+                                                  botname: botData["Bot Name"],
+                                                  docId: botData["docId"],
+                                                ),
+                                              ));
+                                        },
+                                        onLongPress: () {
+                                          showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return AlertDialog(
+                                                shadowColor: Colors.green,
+                                                title: Text(
+                                                  botData["Bot Name"],
+                                                  textAlign: TextAlign.center,
+                                                  style: const TextStyle(
+                                                      color: Colors.green),
+                                                ),
+                                                // content: const Text("errorMessage"),
+                                                actions: [
+                                                  Center(
+                                                    //Delete the bot
+                                                    child: TextButton(
+                                                        onPressed: () async {
+                                                          final deletionSuccessful =
+                                                              await deletebot(
+                                                                  botData[
+                                                                      "docId"]);
+                                                          if (deletionSuccessful) {
+                                                            // Show a success notification (e.g., Snackbar)
+                                                            setState(() {
+                                                              fetchData();
+                                                            });
+                                                            ScaffoldMessenger
+                                                                    .of(context)
+                                                                .showSnackBar(
+                                                              const SnackBar(
+                                                                content: Text(
+                                                                    'Bot deleted successfully!'),
+                                                                backgroundColor:
+                                                                    Colors
+                                                                        .green,
+                                                              ),
+                                                            );
 
-                                                          // Potentially refresh the list of bots after successful deletion
-                                                        } else {
-                                                          // Show an error notification (e.g., Snackbar)
-                                                          ScaffoldMessenger.of(
-                                                                  context)
-                                                              .showSnackBar(
-                                                            const SnackBar(
-                                                              content: Text(
-                                                                  'Error deleting bot!'),
-                                                              backgroundColor:
-                                                                  Colors.red,
-                                                            ),
-                                                          );
-                                                        }
-                                                        Navigator.pop(context);
-                                                      },
-                                                      child: const Text(
-                                                        'Delete the bot',
-                                                        style: TextStyle(
-                                                            color: Colors.red),
-                                                      )),
-                                                )
-                                              ],
-                                            );
-                                          },
-                                        );
-                                      },
-                                      title: Text(
-                                        botData['Bot Name'],
-                                        style: GoogleFonts.publicSans(
-                                          fontSize: 20,
-                                          color: Colors.white,
-                                          shadows: <Shadow>[
-                                            const Shadow(
-                                              offset: Offset(1.0, 1.0),
-                                              blurRadius: 1.0,
-                                              color: Color.fromARGB(
-                                                  255, 14, 60, 13),
-                                            ),
-                                          ],
+                                                            // Potentially refresh the list of bots after successful deletion
+                                                          } else {
+                                                            // Show an error notification (e.g., Snackbar)
+                                                            ScaffoldMessenger
+                                                                    .of(context)
+                                                                .showSnackBar(
+                                                              const SnackBar(
+                                                                content: Text(
+                                                                    'Error deleting bot!'),
+                                                                backgroundColor:
+                                                                    Colors.red,
+                                                              ),
+                                                            );
+                                                          }
+                                                          Navigator.pop(
+                                                              context);
+                                                        },
+                                                        child: const Text(
+                                                          'Delete the bot',
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.red),
+                                                        )),
+                                                  )
+                                                ],
+                                              );
+                                            },
+                                          );
+                                        },
+                                        title: Text(
+                                          botData['Bot Name'],
+                                          style: GoogleFonts.publicSans(
+                                            fontSize: 20,
+                                            color: Colors.white,
+                                            shadows: <Shadow>[
+                                              const Shadow(
+                                                offset: Offset(1.0, 1.0),
+                                                blurRadius: 1.0,
+                                                color: Color.fromARGB(
+                                                    255, 14, 60, 13),
+                                              ),
+                                            ],
+                                          ),
+                                        ), // Access data for each bot
+                                        // trailing: const Text(
+                                        //   "lastmess",
+                                        //   style: TextStyle(
+                                        //       color: Colors.white, fontSize: 14),
+                                        // ),
+                                        leading: const CircleAvatar(
+                                          maxRadius: 30,
+                                          backgroundImage: AssetImage(
+                                              "assets/ai pro pic.jpeg"),
                                         ),
-                                      ), // Access data for each bot
-                                      // trailing: const Text(
-                                      //   "lastmess",
-                                      //   style: TextStyle(
-                                      //       color: Colors.white, fontSize: 14),
-                                      // ),
-                                      leading: const CircleAvatar(
-                                        maxRadius: 30,
-                                        backgroundImage: AssetImage(
-                                            "assets/ai pro pic.jpeg"),
+                                        horizontalTitleGap: 10,
+                                        minVerticalPadding: 25,
+                                        selectedTileColor: Colors.white,
+                                        textColor: Colors.black,
                                       ),
-                                      horizontalTitleGap: 10,
-                                      minVerticalPadding: 25,
-                                      selectedTileColor: Colors.white,
-                                      textColor: Colors.black,
                                     ),
                                   ),
                                 ),
@@ -302,7 +313,7 @@ class _HomeState extends State<Home> {
                                 .toLowerCase()
                                 .startsWith(name.toLowerCase())) {
                               return Card(
-                                color: const Color.fromARGB(240, 54, 132, 38),
+                                color: Colors.green.shade800,
                                 child: Padding(
                                   padding: const EdgeInsets.only(
                                       left: 10, right: 10, bottom: 10),
@@ -437,7 +448,7 @@ class _HomeState extends State<Home> {
         height: 65,
         width: 65,
         child: FloatingActionButton(
-          backgroundColor: Colors.green.shade600,
+          backgroundColor: Colors.green.shade800,
           child: const Icon(
             Icons.add_box_outlined,
             color: Colors.white,
@@ -455,7 +466,7 @@ class _HomeState extends State<Home> {
       drawer: Drawer(
         width: 275,
         elevation: 30,
-        backgroundColor: Colors.green.shade400,
+        backgroundColor: Colors.green.shade800,
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.horizontal(right: Radius.circular(40))),
         child: Container(
@@ -514,15 +525,6 @@ class _HomeState extends State<Home> {
                     const SizedBox(
                       height: 35,
                     ),
-                    // const DrawerItem(
-                    //   title: 'Account',
-                    //   icon: Icons.key,
-                    // ),
-                    // const DrawerItem(title: 'Chats', icon: Icons.chat_bubble),
-                    // const DrawerItem(
-                    //     title: 'Notifications', icon: Icons.notifications),
-                    // const DrawerItem(
-                    //     title: 'Data and Storage', icon: Icons.storage),
                     const DrawerItem(title: 'Help', icon: Icons.help),
                     const Divider(
                       height: 35,

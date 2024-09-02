@@ -6,6 +6,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:learnxt/Auth/loginpage.dart';
 import 'package:learnxt/Screen/home.dart';
 import 'package:learnxt/Services/Hive/chatid.dart';
@@ -30,7 +31,12 @@ class _ChatcreateState extends State<Chatcreate> {
       // backgroundColor: const Color(0xFF171717),
       body: Container(
         width: double.infinity,
-        decoration: const BoxDecoration(color: Color(0xFFEFFFFC)),
+        decoration: BoxDecoration(
+            gradient: LinearGradient(begin: Alignment.topCenter, colors: [
+          Colors.green.shade900,
+          Colors.green.shade800,
+          Colors.green.shade400
+        ])),
         child: Stack(
           children: [
             Column(
@@ -46,13 +52,31 @@ class _ChatcreateState extends State<Chatcreate> {
                           },
                           icon: const Icon(
                             Icons.arrow_back_ios_new,
-                            color: Colors.green,
+                            color: Colors.white,
+                            shadows: <Shadow>[
+                              Shadow(
+                                offset: Offset(1.0, 1.0),
+                                blurRadius: 2.0,
+                                color: Color.fromARGB(255, 14, 60, 13),
+                              ),
+                            ],
                           )),
-                      const Text("Create AI bot",
-                          style: TextStyle(
-                              color: Colors.green,
-                              fontSize: 40,
-                              fontWeight: FontWeight.bold)),
+                      Text(
+                        "Create AI Bot",
+                        style: GoogleFonts.ptSerif(
+                          color: Colors.white,
+                          fontSize: 40,
+                          fontWeight: FontWeight.bold,
+                          shadows: <Shadow>[
+                            const Shadow(
+                              offset: Offset(1.0, 1.0),
+                              blurRadius: 2.0,
+                              color: Color.fromARGB(255, 14, 60, 13),
+                            ),
+                          ],
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
                       const Divider(),
                       const Divider()
                     ],
@@ -81,7 +105,7 @@ class _ChatcreateState extends State<Chatcreate> {
                       const SizedBox(
                         height: 10,
                       ),
-                      FadeInUp(
+                      FadeIn(
                         duration: const Duration(milliseconds: 1600),
                         child: Padding(
                           padding: const EdgeInsets.only(
@@ -89,14 +113,27 @@ class _ChatcreateState extends State<Chatcreate> {
                           child: Container(
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(23),
-                                border: Border.all(color: Colors.green)),
-                            child: TextField(
-                              controller: botnamecontroller,
-                              keyboardType: TextInputType.name,
-                              decoration: const InputDecoration(
-                                hintText: "AI Bot Name",
-                                hintStyle: TextStyle(color: Colors.grey),
-                                border: InputBorder.none,
+                                border: Border.all(color: Colors.white)),
+                            child: Container(
+                              color: Colors.white,
+                              child: FadeInUp(
+                                duration: const Duration(milliseconds: 1500),
+                                child: TextField(
+                                  controller: botnamecontroller,
+                                  decoration: const InputDecoration(
+                                    border: InputBorder.none,
+                                    hintStyle: TextStyle(color: Colors.grey),
+                                    prefixIcon: Icon(
+                                      Icons.group_add_outlined,
+                                      color: Colors.green,
+                                    ),
+                                    hintText: "Name of the bot",
+                                    // hintStyle: GoogleFonts.barlowSemiCondensed(
+                                    //   fontSize: 16,
+                                    // ),
+                                    enabled: true,
+                                  ),
+                                ),
                               ),
                             ),
                           ),
@@ -105,7 +142,7 @@ class _ChatcreateState extends State<Chatcreate> {
                       const SizedBox(
                         height: 15,
                       ),
-                      FadeInUp(
+                      FadeIn(
                           duration: const Duration(milliseconds: 1600),
                           child: Padding(
                             padding: const EdgeInsets.only(
@@ -132,7 +169,7 @@ class _ChatcreateState extends State<Chatcreate> {
                               ),
                             ),
                           )),
-                      FadeInUp(
+                      FadeIn(
                           duration: const Duration(milliseconds: 1600),
                           child: Padding(
                             padding: const EdgeInsets.only(
