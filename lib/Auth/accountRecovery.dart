@@ -46,12 +46,6 @@ class _RecoveryState extends State<Recovery> {
                     const SizedBox(
                       height: 10,
                     ),
-                    // FadeInUp(
-                    //     duration: const Duration(milliseconds: 1300),
-                    //     child: const Text(
-                    //       "Welcome Back",
-                    //       style: TextStyle(color: Colors.white, fontSize: 18),
-                    //     )),
                   ],
                 ),
               ),

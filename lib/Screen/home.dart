@@ -19,7 +19,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  String name = "";
+  late String name;
   List<Map<String, dynamic>> data = [];
 
   final GlobalKey<ScaffoldState> _globalKey = GlobalKey();
@@ -424,12 +424,7 @@ class _HomeState extends State<Home> {
                               );
                               // Add a "Load More" button or implement infinite scrolling if needed
                             }
-                            return const Center(
-                              child: Padding(
-                                padding: EdgeInsets.only(top: 150),
-                                child: Text("No Result"),
-                              ),
-                            );
+                            return Container();
                           });
                     },
                   ),
@@ -538,7 +533,7 @@ class _HomeState extends State<Home> {
                       icon: Icons.people_outline,
                       onTap: () async {
                         await Share.share(
-                            "'Check out this link: https://github.com/Achuabhijith2003/learnxt/releases/tag/v0.0.1',");
+                            "Check out this link: https://github.com/Achuabhijith2003/learnxt/releases,");
                       },
                     ),
                   ],
