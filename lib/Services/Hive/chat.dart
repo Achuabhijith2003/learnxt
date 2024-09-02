@@ -13,7 +13,8 @@ class Chat {
       {required this.id,
       required this.createdAt,
       required this.text,
-      required this.firstName});
+      required this.firstName,
+      required this.profileimg});
 
   // List<ChatMessage> chat;
   @HiveField(0)
@@ -24,6 +25,8 @@ class Chat {
   String text;
   @HiveField(3)
   String? firstName;
+  @HiveField(4)
+  String? profileimg;
 }
 
 class Chatputandget {
@@ -37,7 +40,8 @@ class Chatputandget {
         createdAt: message.createdAt,
         text: message.text,
         firstName: user?.firstName,
-        id: user!.id);
+        id: user!.id,
+        profileimg: user.profileImage);
     // geting no of chats
     Chatidputandget chatidget = Chatidputandget();
     int i = await chatidget.getid(docId);

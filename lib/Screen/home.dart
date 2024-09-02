@@ -19,7 +19,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  late String name;
+  String name = "";
   List<Map<String, dynamic>> data = [];
 
   final GlobalKey<ScaffoldState> _globalKey = GlobalKey();

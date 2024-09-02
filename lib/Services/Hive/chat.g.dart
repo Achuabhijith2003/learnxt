@@ -21,13 +21,14 @@ class ChatAdapter extends TypeAdapter<Chat> {
       createdAt: fields[1] as DateTime,
       text: fields[2] as String,
       firstName: fields[3] as String?,
+      profileimg: fields[4] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, Chat obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -35,7 +36,9 @@ class ChatAdapter extends TypeAdapter<Chat> {
       ..writeByte(2)
       ..write(obj.text)
       ..writeByte(3)
-      ..write(obj.firstName);
+      ..write(obj.firstName)
+      ..writeByte(4)
+      ..write(obj.profileimg);
   }
 
   @override

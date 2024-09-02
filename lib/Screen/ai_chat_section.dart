@@ -166,40 +166,45 @@ class _AiChatState extends State<AiChat> {
           await _dataEmbedded.searchAndAnswer(chatMessage.text, docId);
       print('Generated answer: $keywords');
 
-      final response = await gemini
+      gemini
           .streamGenerateContent(
-            "Considering the keywords: $keywords and the query: ${chatMessage.text}, here is a detailed answer.",
-          )
-          .firstWhere((event) => event.content != null); // Handle empty content
-
-      // Update existing Gemini message (if present)
-      final lastGeminiMessageIndex =
-          messages.indexWhere((message) => message.user == geminiuser);
-      if (lastGeminiMessageIndex >= 0) {
-        final lastGeminiMessage = messages.removeAt(lastGeminiMessageIndex);
-        lastGeminiMessage.text += response.content?.parts?.fold(
-                "", (previous, current) => "$previous ${current.text}") ??
-            "";
-        setState(() {
-          messages = [lastGeminiMessage, ...messages];
-        });
-      } else {
-        // Create and store new Gemini message
-        final geminiMessage = ChatMessage(
-          user: geminiuser,
-          createdAt: DateTime.now(),
-          text: response.content?.parts?.fold(
+        "Considering the keywords: $keywords and the query: ${chatMessage.text}, here is a detailed answer.",
+      )
+          .listen((event) async {
+        ChatMessage? lastMessage = messages.firstOrNull;
+        if (lastMessage != null && lastMessage.user == geminiuser) {
+          lastMessage = messages.removeAt(0);
+          String response = event.content?.parts?.fold(
                   "", (previous, current) => "$previous ${current.text}") ??
-              "",
-        );
-        newId = chatid.getid(docId) + 1; // Ensure ID generation logic is safe
-        chatid.putid(newId, docId);
-        await chatstore.storechat(botname, geminiuser, geminiMessage, docId);
-        final geminiresopes = await chatstore.fechchat(docId);
-        setState(() {
-          messages = [geminiresopes, ...messages];
-        });
-      }
+              "";
+          lastMessage.text += response;
+          setState(
+            () {
+              messages = [lastMessage!, ...messages];
+            },
+          );
+        } else {
+          String response = event.content?.parts?.fold(
+                  "", (previous, current) => "$previous ${current.text}") ??
+              "";
+          ChatMessage geminimessage = ChatMessage(
+            user: geminiuser,
+            createdAt: DateTime.now(),
+            text: response,
+          );
+          int newId =
+              chatid.getid(docId) + 1; // Ensure ID generation logic is safe
+          chatid.putid(newId, docId);
+
+          // Store chat message
+          await chatstore.storechat(botname, geminiuser, geminimessage, docId);
+          final geminiresponse = await chatstore.fechchat(docId);
+
+          setState(() {
+            messages = [geminiresponse, ...messages];
+          });
+        }
+      });
     } catch (e) {
       print('Error sending message: $e');
     }
