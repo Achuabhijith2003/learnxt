@@ -66,7 +66,7 @@ class Chatputandget {
         );
         print("While looping for fetch $i");
         i++;
-        messages.add(chathis);
+        messages = [chathis, ...messages];
       }
       return messages;
     } catch (e) {
