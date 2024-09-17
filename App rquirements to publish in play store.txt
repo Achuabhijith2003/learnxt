@@ -1,0 +1,11 @@
+-aab file and signing key
+-- App Name :LearnXT
+-- Short Des: A AI tool to help you in all subject by giving summary
+--Full Description
+    - collect all the study meterials like pdf and give ans acconding your promt
+    - You can Create Custom Ai Bot for each subject
+    - 
+--App Icon
+--Feature Graphic Icon
+--Privacy policy
+--tester

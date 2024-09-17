@@ -1,4 +1,4 @@
-package com.example.learnxt
+package com.gurudha.learnxt
 
 import io.flutter.embedding.android.FlutterActivity
 
