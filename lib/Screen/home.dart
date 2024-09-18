@@ -10,6 +10,7 @@ import 'package:learnxt/Screen/aichatadd.dart';
 import 'package:learnxt/Services/Hive/chat.dart';
 
 import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -536,6 +537,19 @@ class _HomeState extends State<Home> {
                       onTap: () async {
                         await Share.share(
                             "Check out this link: https://github.com/Achuabhijith2003/learnxt/releases,");
+                      },
+                    ),
+                    DrawerItem(
+                      title: 'Privacy Policy',
+                      icon: Icons.privacy_tip_outlined,
+                      onTap: () async {
+                        final uri = Uri.parse(
+                            'https://www.developwithjr.info/privacy_policy/');
+                        if (await canLaunchUrl(uri)) {
+                          await launchUrl(uri);
+                        } else {
+                          throw 'Could not launch $uri';
+                        }
                       },
                     ),
                   ],
