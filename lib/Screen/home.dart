@@ -674,6 +674,17 @@ class _HomeState extends State<Home> {
   Future<bool> deletebot(String docId) async {
     try {
       final docRef = FirebaseFirestore.instance.collection('Bot').doc(docId);
+      final subcollection = docRef.collection("dataEmbedded");
+      try {
+        await subcollection.get().then((querySnapshot) {
+          querySnapshot.docs.forEach((doc) {
+            doc.reference.delete();
+          });
+        });
+        print('Subcollection deleted successfully');
+      } catch (e) {
+        print('Error deleting subcollection: $e');
+      }
       await docRef.delete();
       return true; // Deletion successful
     } catch (error) {
