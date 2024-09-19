@@ -97,21 +97,35 @@ class _HomeState extends State<Home> {
                     right: 42,
                   ),
                   child: Container(
-                    color: Colors.white,
+                    decoration: BoxDecoration(
+                        boxShadow: const <BoxShadow>[
+                          BoxShadow(
+                            offset: Offset(1.0, 1.0),
+                            blurRadius: 2.0,
+                            color: Color.fromARGB(255, 14, 60, 13),
+                          ),
+                        ],
+                        borderRadius: BorderRadius.circular(25),
+                        color: Colors.white),
                     child: FadeInUp(
                       duration: const Duration(milliseconds: 1500),
                       child: TextField(
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           border: InputBorder.none,
-                          hintStyle: TextStyle(color: Colors.grey),
-                          prefixIcon: Icon(
+                          prefixIcon: const Icon(
                             Icons.search_outlined,
                             color: Colors.green,
                           ),
+                          // suffixIcon: IconButton(
+                          //     onPressed: () {
+                          //     },
+                          //     icon: Icon(
+                          //       Icons.arrow_right_alt_rounded,
+                          //       color: Colors.green,
+                          //     )),
                           hintText: "Search...",
-                          // hintStyle: GoogleFonts.barlowSemiCondensed(
-                          //   fontSize: 16,
-                          // ),
+                          hintStyle: GoogleFonts.barlowSemiCondensed(
+                              fontSize: 16, color: Colors.grey),
                           enabled: true,
                         ),
                         onChanged: (val) {
