@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 import 'dart:convert';
+import 'dart:async';
 
 import 'package:http/http.dart' as http;
 
@@ -16,21 +17,30 @@ class DataEmbedded {
   // ignore: prefer_typing_uninitialized_variables, non_constant_identifier_names
 
   // ignore: non_constant_identifier_names
+
   Future<List<List<double>>> Generate_dataEmbedded(
       List<String> textList) async {
     final embeddings = <List<double>>[];
-    for (final text in textList) {
-      print(text);
-      final model =
-          GenerativeModel(model: 'text-embedding-004', apiKey: GEMINI_API_KEY);
-      final content = Content.text(text);
-      final result = await model.embedContent(content);
-      embeddings.add(result.embedding.values);
-      print(result.embedding.values);
-      storeEmbeddedData(result.embedding.values, text);
-    }
 
-    return embeddings;
+    // Use Future.wait for parallel processing
+    textList.map((text) async {
+      try {
+        print(text);
+        final model = GenerativeModel(
+            model: 'text-embedding-004', apiKey: GEMINI_API_KEY);
+        final content = Content.text(text);
+        final result = await model.embedContent(content);
+        embeddings.add(result.embedding.values);
+        print(result.embedding.values);
+        storeEmbeddedData(result.embedding.values, text);
+        return result.embedding.values;
+      } catch (e) {
+        print('Error embedding text: $e');
+        return []; // Or handle the error differently
+      }
+    }).toList();
+
+    return []; // Or handle the error differently
   }
 
   // ignore: non_constant_identifier_names
@@ -44,8 +54,8 @@ class DataEmbedded {
           FirebaseFirestore.instance.collection('Bot').doc(parentdocid);
       final subcollectionRef = parentDocRef.collection('dataEmbedded');
       await subcollectionRef.add({
-        'embeddings': embeddings,
         'pdf_text': text,
+        'embeddings': embeddings,
       });
     } catch (e) {
       print('Error storing data: $e');
@@ -63,27 +73,27 @@ class DataEmbedded {
   }
 
   //pdf to text
+
   Future<List<List<double>>> pdfextract(File pdfFile) async {
     try {
       final pdfDoc = await PDFDoc.fromFile(pdfFile);
-      final StringBuffer textBuffer = StringBuffer();
 
-      for (var i = 0; i < pdfDoc.length; i++) {
+      // Use a FutureGroup for parallel processing (optional)
+      final pageFutures =
+          List<Future<String>>.generate(pdfDoc.length, (i) async {
         final page = pdfDoc.pageAt(i + 1);
-        String pageText = await page.text;
+        return page.text;
+      });
 
-        // Debugging: Log the length of text from each page
-        print('Page ${i + 1} text length: ${pageText.length}');
+      final pageTexts = await Future.wait(pageFutures);
 
-        textBuffer.write(pageText);
-      }
-
-      String text = textBuffer.toString();
-      print('Total text length: ${text.length}');
-
+      // Process the extracted text in parallel (optional)
       final chunks =
-          splitTextIntoChunks(text, 100); // Adjust chunk size as needed
-      return await Generate_dataEmbedded(chunks);
+          pageTexts.map((text) => splitTextIntoChunks(text, 100)).toList();
+      print("chucks:$chunks");
+      chunks.map((text) => Generate_dataEmbedded(text)).toList();
+      return [];
+      // return await Generate_dataEmbedded(chunks);
     } catch (e) {
       print('Error processing PDF: $e');
       rethrow; // Or handle the error as needed
@@ -107,9 +117,9 @@ class DataEmbedded {
 
     // Debugging: Log number of chunks and size of each chunk
     print('Number of chunks: ${chunks.length}');
-    chunks.forEach((chunk) {
+    for (var chunk in chunks) {
       print('Chunk length: ${chunk.length}');
-    });
+    }
 
     return chunks;
   }

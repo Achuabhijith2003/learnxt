@@ -184,7 +184,10 @@ class _HomeState extends State<Home> {
                                                     1;
                                             chatid.putid(i, botData["docId"]);
                                             ChatUser users = ChatUser(
-                                                id: "1", firstName: 'LearnXt');
+                                                id: "1",
+                                                firstName: 'LearnXt',
+                                                profileImage:
+                                                    'assets/ai pro pic.jpeg');
                                             chatstore.storechat(
                                                 botData["Bot Name"],
                                                 users,
@@ -324,7 +327,10 @@ class _HomeState extends State<Home> {
                                         int i = chatid.getid(botData["docId"]);
                                         chatid.putid(i++, botData["docId"]);
                                         ChatUser users = ChatUser(
-                                            id: "1", firstName: "LearnXt");
+                                            id: "1",
+                                            firstName: "LearnXt",
+                                            profileImage:
+                                                'assets/ai pro pic.jpeg');
                                         chatstore.storechat(
                                             botData["Bot Name"],
                                             users,
@@ -526,7 +532,19 @@ class _HomeState extends State<Home> {
                     const SizedBox(
                       height: 35,
                     ),
-                    const DrawerItem(title: 'Help', icon: Icons.help),
+                    DrawerItem(
+                      title: 'Help',
+                      icon: Icons.help,
+                      onTap: () async {
+                        final uri = Uri.parse(
+                            'https://www.developwithjr.info/blog/v0.0.3/');
+                        if (await canLaunchUrl(uri)) {
+                          await launchUrl(uri);
+                        } else {
+                          throw 'Could not launch $uri';
+                        }
+                      },
+                    ),
                     const Divider(
                       height: 35,
                       color: Colors.green,
@@ -691,9 +709,9 @@ class _HomeState extends State<Home> {
       final subcollection = docRef.collection("dataEmbedded");
       try {
         await subcollection.get().then((querySnapshot) {
-          querySnapshot.docs.forEach((doc) {
+          for (var doc in querySnapshot.docs) {
             doc.reference.delete();
-          });
+          }
         });
         print('Subcollection deleted successfully');
       } catch (e) {

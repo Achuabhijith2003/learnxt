@@ -21,7 +21,7 @@ class Splash extends StatelessWidget {
           gifWidth: 269,
           gifHeight: 474,
           nextScreen: (FirebaseAuth.instance.currentUser != null)
-              ? Home()
+              ? const Home()
               : const Loginpage(),
           duration: const Duration(milliseconds: 3515),
           onInit: () async {

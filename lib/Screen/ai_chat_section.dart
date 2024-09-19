@@ -218,7 +218,6 @@ class _AiChatState extends State<AiChat> {
           // Store chat message
           await chatstore.storechat(botname, geminiuser, geminimessage, docId);
           final geminiresponse = await chatstore.fechchat(docId);
-
           setState(() {
             messages = [geminiresponse, ...messages];
           });

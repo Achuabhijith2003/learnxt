@@ -208,89 +208,89 @@ class _ChatcreateState extends State<Chatcreate> {
           ],
         ),
       ),
-      drawer: Drawer(
-        width: 275,
-        elevation: 30,
-        backgroundColor: Colors.green.shade400,
-        shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.horizontal(right: Radius.circular(40))),
-        child: Container(
-          decoration: const BoxDecoration(
-              borderRadius: BorderRadius.horizontal(right: Radius.circular(40)),
-              boxShadow: [
-                BoxShadow(
-                    color: Color(0x3D000000), spreadRadius: 30, blurRadius: 20)
-              ]),
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(20, 50, 20, 20),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Column(
-                  children: [
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.arrow_back_ios,
-                          color: Colors.white,
-                          size: 20,
-                        ),
-                        SizedBox(
-                          width: 56,
-                        ),
-                        Text(
-                          'Settings',
-                          style: TextStyle(color: Colors.white, fontSize: 16),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    Row(
-                      children: [
-                        UserAvatar(filename: 'img3.jpeg'),
-                        SizedBox(
-                          width: 12,
-                        ),
-                        Text(
-                          'Tom Brenan',
-                          style: TextStyle(color: Colors.white),
-                        )
-                      ],
-                    ),
-                    SizedBox(
-                      height: 35,
-                    ),
-                    DrawerItem(
-                      title: 'Account',
-                      icon: Icons.key,
-                    ),
-                    DrawerItem(title: 'Chats', icon: Icons.chat_bubble),
-                    DrawerItem(
-                        title: 'Notifications', icon: Icons.notifications),
-                    DrawerItem(title: 'Data and Storage', icon: Icons.storage),
-                    DrawerItem(title: 'Help', icon: Icons.help),
-                    Divider(
-                      height: 35,
-                      color: Colors.green,
-                    ),
-                    DrawerItem(
-                      title: 'Invite a friend',
-                      icon: Icons.people_outline,
-                    ),
-                  ],
-                ),
-                DrawerItem(
-                  title: 'Log out',
-                  icon: Icons.logout,
-                  onTap: logout,
-                )
-              ],
-            ),
-          ),
-        ),
-      ),
+      // drawer: Drawer(
+      //   width: 275,
+      //   elevation: 30,
+      //   backgroundColor: Colors.green.shade400,
+      //   shape: const RoundedRectangleBorder(
+      //       borderRadius: BorderRadius.horizontal(right: Radius.circular(40))),
+      //   child: Container(
+      //     decoration: const BoxDecoration(
+      //         borderRadius: BorderRadius.horizontal(right: Radius.circular(40)),
+      //         boxShadow: [
+      //           BoxShadow(
+      //               color: Color(0x3D000000), spreadRadius: 30, blurRadius: 20)
+      //         ]),
+      //     child: Padding(
+      //       padding: const EdgeInsets.fromLTRB(20, 50, 20, 20),
+      //       child: Column(
+      //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //         children: [
+      //           const Column(
+      //             children: [
+      //               Row(
+      //                 children: [
+      //                   Icon(
+      //                     Icons.arrow_back_ios,
+      //                     color: Colors.white,
+      //                     size: 20,
+      //                   ),
+      //                   SizedBox(
+      //                     width: 56,
+      //                   ),
+      //                   Text(
+      //                     'Settings',
+      //                     style: TextStyle(color: Colors.white, fontSize: 16),
+      //                   ),
+      //                 ],
+      //               ),
+      //               SizedBox(
+      //                 height: 30,
+      //               ),
+      //               Row(
+      //                 children: [
+      //                   UserAvatar(filename: 'img3.jpeg'),
+      //                   SizedBox(
+      //                     width: 12,
+      //                   ),
+      //                   Text(
+      //                     'Tom Brenan',
+      //                     style: TextStyle(color: Colors.white),
+      //                   )
+      //                 ],
+      //               ),
+      //               SizedBox(
+      //                 height: 35,
+      //               ),
+      //               DrawerItem(
+      //                 title: 'Account',
+      //                 icon: Icons.key,
+      //               ),
+      //               DrawerItem(title: 'Chats', icon: Icons.chat_bubble),
+      //               DrawerItem(
+      //                   title: 'Notifications', icon: Icons.notifications),
+      //               DrawerItem(title: 'Data and Storage', icon: Icons.storage),
+      //               DrawerItem(title: 'Help', icon: Icons.help),
+      //               Divider(
+      //                 height: 35,
+      //                 color: Colors.green,
+      //               ),
+      //               DrawerItem(
+      //                 title: 'Invite a friend',
+      //                 icon: Icons.people_outline,
+      //               ),
+      //             ],
+      //           ),
+      //           DrawerItem(
+      //             title: 'Log out',
+      //             icon: Icons.logout,
+      //             onTap: logout,
+      //           )
+      //         ],
+      //       ),
+      //     ),
+      //   ),
+      // ),
     );
   }
 
@@ -377,12 +377,13 @@ class _ChatcreateState extends State<Chatcreate> {
 
     try {
       // Upload each file to Firebase Storage
+      // now puesed
       for (File file in files) {
-        final fileName = file.path.split('/').last; // Extract file name
-        final uploadTask = storageRef.child('PDFs/$fileName').putFile(file);
-        final snapshot = await uploadTask.whenComplete(() => {});
-        final downloadUrl = await snapshot.ref.getDownloadURL();
-        downloadUrls.add(downloadUrl);
+        // final fileName = file.path.split('/').last; // Extract file name
+        // final uploadTask = storageRef.child('PDFs/$fileName').putFile(file);
+        // final snapshot = await uploadTask.whenComplete(() => {});
+        // final downloadUrl = await snapshot.ref.getDownloadURL();
+        // downloadUrls.add(downloadUrl);
         await _dataEmbedded.pdfextract(file);
       }
 

@@ -48,7 +48,7 @@ class _LoginpageState extends State<Loginpage> {
         chatmodif.initallchat();
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => Home()),
+          MaterialPageRoute(builder: (context) => const Home()),
         );
       }
     } catch (error) {
@@ -309,7 +309,7 @@ class _LoginpageState extends State<Loginpage> {
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => Home(),
+                builder: (context) => const Home(),
               ));
         }
       } on FirebaseAuthException catch (e) {

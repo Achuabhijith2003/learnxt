@@ -53,7 +53,7 @@ class Profile extends StatelessWidget {
                         topRight: Radius.circular(40)),
                     color: Color(0xFFEFFFFC),
                   ),
-                  child: Text("data")))
+                  child: const Text("data")))
         ]),
       ),
     );

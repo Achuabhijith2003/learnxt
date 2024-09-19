@@ -9,7 +9,7 @@ class admob {
   AppOpenAdload() {
     AppOpenAd.load(
         adUnitId: "ca-app-pub-3940256099942544/9257395921",
-        request: AdRequest(),
+        request: const AdRequest(),
         adLoadCallback: AppOpenAdLoadCallback(
           onAdLoaded: (ad) {
             _appOpenAd = ad;

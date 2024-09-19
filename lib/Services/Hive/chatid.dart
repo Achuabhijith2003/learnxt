@@ -16,7 +16,7 @@ class Chatid {
 
 class Chatidputandget {
   putid(int i, String docid) {
-    print("Chatid put: ${i}");
+    print("Chatid put: $i");
     final chatid = Chatid(i, docid);
     box.put(docid, chatid);
   }

@@ -60,7 +60,10 @@ class Chatputandget {
       while (i <= j) {
         Chat chatdata = box.get("$docid/$i") as Chat;
         ChatMessage chathis = ChatMessage(
-          user: ChatUser(id: chatdata.id, firstName: chatdata.firstName),
+          user: ChatUser(
+              id: chatdata.id,
+              firstName: chatdata.firstName,
+              profileImage: chatdata.profileimg),
           createdAt: chatdata.createdAt,
           text: chatdata.text,
         );
@@ -84,7 +87,10 @@ class Chatputandget {
 
       Chat chatdata = await box.get("$docid/$j") as Chat;
       ChatMessage chathis = ChatMessage(
-        user: ChatUser(id: chatdata.id, firstName: chatdata.firstName),
+        user: ChatUser(
+            id: chatdata.id,
+            firstName: chatdata.firstName,
+            profileImage: chatdata.profileimg),
         createdAt: chatdata.createdAt,
         text: chatdata.text,
       );
