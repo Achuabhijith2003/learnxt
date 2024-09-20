@@ -586,10 +586,17 @@ class _HomeState extends State<Home> {
                     ),
                   ],
                 ),
+                const SizedBox(
+                  height: 370,
+                ),
                 DrawerItem(
                   title: 'Log out',
                   icon: Icons.logout,
                   onTap: logout,
+                ),
+                Text(
+                  "Version : 0.0.3",
+                  style: TextStyle(color: Colors.grey.shade300),
                 )
               ],
             ),

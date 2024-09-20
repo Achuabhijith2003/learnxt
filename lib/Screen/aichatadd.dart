@@ -4,7 +4,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+// import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:learnxt/Auth/loginpage.dart';
@@ -147,150 +147,79 @@ class _ChatcreateState extends State<Chatcreate> {
                           child: Padding(
                             padding: const EdgeInsets.only(
                                 left: 20, top: 5, right: 20),
-                            child: MaterialButton(
-                              onPressed: () async {
-                                uploadPdf();
-                              },
-                              height: 50,
-                              // margin: EdgeInsets.symmetric(horizontal: 50),
-                              color: Colors.green[900],
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(50),
-                              ),
-                              // decoration: BoxDecoration(
-                              // ),
-                              child: const Center(
-                                child: Text(
-                                  "Upload PDF",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                MaterialButton(
+                                  onPressed: () async {
+                                    uploadPdf();
+                                  },
+                                  height: 50,
+                                  // margin: EdgeInsets.symmetric(horizontal: 50),
+                                  color: Colors.green[900],
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(50),
+                                  ),
+                                  // decoration: BoxDecoration(
+                                  // ),
+                                  child: const Row(
+                                    children: [
+                                      Text(
+                                        "Upload PDFs",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Icon(
+                                        Icons.upload_file,
+                                        color: Colors.white,
+                                      )
+                                    ],
+                                  ),
                                 ),
-                              ),
+                                MaterialButton(
+                                  onPressed: () {
+                                    createBot(botnamecontroller);
+                                  },
+                                  height: 50,
+                                  // margin: EdgeInsets.symmetric(horizontal: 50),
+                                  color: Colors.green[900],
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(50),
+                                  ),
+                                  // decoration: BoxDecoration(
+                                  // ),
+                                  child: const Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      Text(
+                                        "Create Bot",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Icon(
+                                        Icons.add_chart_outlined,
+                                        color: Colors.white,
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ],
                             ),
                           )),
-                      FadeIn(
-                          duration: const Duration(milliseconds: 1600),
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                                left: 20, top: 5, right: 20),
-                            child: MaterialButton(
-                              onPressed: () {
-                                createBot(botnamecontroller);
-                              },
-                              height: 50,
-                              // margin: EdgeInsets.symmetric(horizontal: 50),
-                              color: Colors.green[900],
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(50),
-                              ),
-                              // decoration: BoxDecoration(
-                              // ),
-                              child: const Center(
-                                child: Text(
-                                  "Create Bot",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                            ),
-                          )),
-                      const Divider(),
-                      // displaypdf()
+                      // const Divider(),
                     ],
                   ),
                 )),
             Padding(
-              padding: const EdgeInsets.only(top: 315),
+              padding: const EdgeInsets.only(top: 258),
               child: displaypdf(),
             )
           ],
         ),
       ),
-      // drawer: Drawer(
-      //   width: 275,
-      //   elevation: 30,
-      //   backgroundColor: Colors.green.shade400,
-      //   shape: const RoundedRectangleBorder(
-      //       borderRadius: BorderRadius.horizontal(right: Radius.circular(40))),
-      //   child: Container(
-      //     decoration: const BoxDecoration(
-      //         borderRadius: BorderRadius.horizontal(right: Radius.circular(40)),
-      //         boxShadow: [
-      //           BoxShadow(
-      //               color: Color(0x3D000000), spreadRadius: 30, blurRadius: 20)
-      //         ]),
-      //     child: Padding(
-      //       padding: const EdgeInsets.fromLTRB(20, 50, 20, 20),
-      //       child: Column(
-      //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //         children: [
-      //           const Column(
-      //             children: [
-      //               Row(
-      //                 children: [
-      //                   Icon(
-      //                     Icons.arrow_back_ios,
-      //                     color: Colors.white,
-      //                     size: 20,
-      //                   ),
-      //                   SizedBox(
-      //                     width: 56,
-      //                   ),
-      //                   Text(
-      //                     'Settings',
-      //                     style: TextStyle(color: Colors.white, fontSize: 16),
-      //                   ),
-      //                 ],
-      //               ),
-      //               SizedBox(
-      //                 height: 30,
-      //               ),
-      //               Row(
-      //                 children: [
-      //                   UserAvatar(filename: 'img3.jpeg'),
-      //                   SizedBox(
-      //                     width: 12,
-      //                   ),
-      //                   Text(
-      //                     'Tom Brenan',
-      //                     style: TextStyle(color: Colors.white),
-      //                   )
-      //                 ],
-      //               ),
-      //               SizedBox(
-      //                 height: 35,
-      //               ),
-      //               DrawerItem(
-      //                 title: 'Account',
-      //                 icon: Icons.key,
-      //               ),
-      //               DrawerItem(title: 'Chats', icon: Icons.chat_bubble),
-      //               DrawerItem(
-      //                   title: 'Notifications', icon: Icons.notifications),
-      //               DrawerItem(title: 'Data and Storage', icon: Icons.storage),
-      //               DrawerItem(title: 'Help', icon: Icons.help),
-      //               Divider(
-      //                 height: 35,
-      //                 color: Colors.green,
-      //               ),
-      //               DrawerItem(
-      //                 title: 'Invite a friend',
-      //                 icon: Icons.people_outline,
-      //               ),
-      //             ],
-      //           ),
-      //           DrawerItem(
-      //             title: 'Log out',
-      //             icon: Icons.logout,
-      //             onTap: logout,
-      //           )
-      //         ],
-      //       ),
-      //     ),
-      //   ),
-      // ),
     );
   }
 
@@ -325,6 +254,7 @@ class _ChatcreateState extends State<Chatcreate> {
     String botName = botNameController.text.trim();
 
     if (botName.isEmpty) {
+      errormessage("Enter a Name to the Bot");
       return; // Handle empty bot name
     }
 
@@ -336,7 +266,7 @@ class _ChatcreateState extends State<Chatcreate> {
 
     String uid = user.uid;
 
-    final storageRef = FirebaseStorage.instance.ref();
+    // final storageRef = FirebaseStorage.instance.ref();
     final List<String> downloadUrls = [];
 
     showDialog(
@@ -461,5 +391,24 @@ class _ChatcreateState extends State<Chatcreate> {
                     // Optional: Handle tap action on the entire ListTile
                   });
             }));
+  }
+
+  void errormessage(String errorMessage) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Error!'),
+          content: Text(errorMessage),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text('Okay'))
+          ],
+        );
+      },
+    );
   }
 }
