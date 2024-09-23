@@ -10,6 +10,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:learnxt/Auth/loginpage.dart';
 import 'package:learnxt/Screen/home.dart';
 import 'package:learnxt/Services/Hive/chatid.dart';
+import 'package:learnxt/Services/gadsmob.dart';
 import '../Services/data_embedded.dart';
 
 class Chatcreate extends StatefulWidget {
@@ -251,6 +252,9 @@ class _ChatcreateState extends State<Chatcreate> {
   }
 
   void createBot(TextEditingController botNameController) async {
+    admob ads = admob();
+    // Appopenadd
+    ads.RewardedAdload();
     String botName = botNameController.text.trim();
 
     if (botName.isEmpty) {

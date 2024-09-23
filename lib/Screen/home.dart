@@ -4,6 +4,7 @@ import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:learnxt/Auth/loginpage.dart';
 import 'package:learnxt/Screen/ai_chat_section.dart';
 import 'package:learnxt/Screen/aichatadd.dart';
@@ -21,8 +22,34 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  @override
+  void initState() {
+    super.initState();
+    BannerAdload();
+  }
+
   String name = "";
   List<Map<String, dynamic>> data = [];
+  late BannerAd _bannerAd;
+  bool isbanneradsload = false;
+  BannerAdload() {
+    _bannerAd = BannerAd(
+        size: AdSize.banner,
+        adUnitId: "ca-app-pub-3940256099942544/9214589741",
+        listener: BannerAdListener(
+          onAdLoaded: (ad) {
+            setState(() {
+              isbanneradsload = true;
+            });
+          },
+          onAdFailedToLoad: (ad, error) {
+            ad.dispose();
+            print("Error in ads banner:$error");
+          },
+        ),
+        request: const AdRequest());
+    _bannerAd.load();
+  }
 
   final GlobalKey<ScaffoldState> _globalKey = GlobalKey();
   @override
@@ -603,6 +630,13 @@ class _HomeState extends State<Home> {
           ),
         ),
       ),
+      bottomNavigationBar: isbanneradsload
+          ? SizedBox(
+              height: _bannerAd?.size.height.toDouble(),
+              width: _bannerAd?.size.width.toDouble(),
+              child: AdWidget(ad: _bannerAd),
+            )
+          : SizedBox(),
     );
   }
 
