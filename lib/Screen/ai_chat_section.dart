@@ -78,7 +78,7 @@ class _AiChatState extends State<AiChat> {
             Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(top: 36, left: 5, right: 5),
+                  padding: const EdgeInsets.only(top: 32, left: 5, right: 5),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -101,7 +101,7 @@ class _AiChatState extends State<AiChat> {
                         botname,
                         style: const TextStyle(
                           color: Colors.white,
-                          fontSize: 36,
+                          fontSize: 29,
                           fontWeight: FontWeight.bold,
                           shadows: <Shadow>[
                             Shadow(
@@ -120,7 +120,7 @@ class _AiChatState extends State<AiChat> {
               ],
             ),
             Positioned(
-                top: 100,
+                top: 85,
                 left: 0,
                 right: 0,
                 bottom: 0,

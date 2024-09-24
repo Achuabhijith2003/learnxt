@@ -5,10 +5,8 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 class admob {
   AppOpenAd? _appOpenAd;
   RewardedAd? _rewardedAd;
-  late BannerAd? _bannerAd;
-  bool isbanneradsload = false;
-  // ignore: non_constant_identifier_names
   // Appopen ads
+  // ignore: non_constant_identifier_names
   AppOpenAdload() {
     AppOpenAd.load(
         adUnitId: "ca-app-pub-3940256099942544/9257395921",
@@ -23,7 +21,8 @@ class admob {
           },
         ));
   }
-
+// RewardAd
+  // ignore: non_constant_identifier_names
   RewardedAdload() {
     RewardedAd.load(
         adUnitId: "ca-app-pub-3940256099942544/5224354917",
@@ -39,21 +38,5 @@ class admob {
             debugPrint(error as String);
           },
         ));
-  }
-
-  BannerAdload() {
-    _bannerAd = BannerAd(
-        size: AdSize.banner,
-        adUnitId: "ca-app-pub-3940256099942544/9214589741",
-        listener: BannerAdListener(
-          onAdLoaded: (ad) {
-            isbanneradsload = true;
-          },
-          onAdFailedToLoad: (ad, error) {
-            ad.dispose();
-          },
-        ),
-        request: const AdRequest());
-    _bannerAd?.load();
   }
 }

@@ -8,6 +8,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:learnxt/Auth/loginpage.dart';
 import 'package:learnxt/Screen/ai_chat_section.dart';
 import 'package:learnxt/Screen/aichatadd.dart';
+import 'package:learnxt/Screen/user_profile.dart';
 import 'package:learnxt/Services/Hive/chat.dart';
 
 import 'package:share_plus/share_plus.dart';
@@ -551,7 +552,12 @@ class _HomeState extends State<Home> {
                       height: 30,
                     ),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const UserProfile()));
+                      },
                       child: const Row(
                         children: [
                           CircleAvatar(
@@ -622,7 +628,7 @@ class _HomeState extends State<Home> {
                   onTap: logout,
                 ),
                 Text(
-                  "Version : 0.0.3",
+                  "Version : 0.0.4",
                   style: TextStyle(color: Colors.grey.shade300),
                 )
               ],
@@ -632,11 +638,11 @@ class _HomeState extends State<Home> {
       ),
       bottomNavigationBar: isbanneradsload
           ? SizedBox(
-              height: _bannerAd?.size.height.toDouble(),
-              width: _bannerAd?.size.width.toDouble(),
+              height: _bannerAd.size.height.toDouble(),
+              width: _bannerAd.size.width.toDouble(),
               child: AdWidget(ad: _bannerAd),
             )
-          : SizedBox(),
+          : const SizedBox(),
     );
   }
 
