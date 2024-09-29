@@ -7,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:learnxt/Auth/loginpage.dart';
 import 'package:learnxt/Screen/home.dart';
 import 'package:learnxt/Services/Hive/chatid.dart';
@@ -23,6 +24,32 @@ class Chatcreate extends StatefulWidget {
 DataEmbedded _dataEmbedded = DataEmbedded();
 
 class _ChatcreateState extends State<Chatcreate> {
+  void initState() {
+    super.initState();
+    BannerAdload();
+  }
+
+  late BannerAd _bannerAd;
+  bool isbanneradsload = false;
+  BannerAdload() {
+    _bannerAd = BannerAd(
+        size: AdSize.banner,
+        adUnitId: "ca-app-pub-8568607330093795/5482884902",
+        listener: BannerAdListener(
+          onAdLoaded: (ad) {
+            setState(() {
+              isbanneradsload = true;
+            });
+          },
+          onAdFailedToLoad: (ad, error) {
+            ad.dispose();
+            print("Error in ads banner:$error");
+          },
+        ),
+        request: const AdRequest());
+    _bannerAd.load();
+  }
+
   final GlobalKey<ScaffoldState> _globalKey = GlobalKey();
   @override
   Widget build(BuildContext context) {
@@ -230,6 +257,13 @@ class _ChatcreateState extends State<Chatcreate> {
           ],
         ),
       ),
+      bottomNavigationBar: isbanneradsload
+          ? SizedBox(
+              height: _bannerAd.size.height.toDouble(),
+              width: _bannerAd.size.width.toDouble(),
+              child: AdWidget(ad: _bannerAd),
+            )
+          : const SizedBox(),
     );
   }
 

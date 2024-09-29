@@ -9,7 +9,7 @@ class admob {
   // ignore: non_constant_identifier_names
   AppOpenAdload() {
     AppOpenAd.load(
-        adUnitId: "ca-app-pub-3940256099942544/9257395921",
+        adUnitId: "ca-app-pub-8568607330093795/5253465407",
         request: const AdRequest(),
         adLoadCallback: AppOpenAdLoadCallback(
           onAdLoaded: (ad) {
@@ -25,7 +25,7 @@ class admob {
   // ignore: non_constant_identifier_names
   RewardedAdload() {
     RewardedAd.load(
-        adUnitId: "ca-app-pub-3940256099942544/5224354917",
+        adUnitId: "ca-app-pub-8568607330093795/5897817876",
         request: const AdRequest(),
         rewardedAdLoadCallback: RewardedAdLoadCallback(
           onAdLoaded: (ad) {

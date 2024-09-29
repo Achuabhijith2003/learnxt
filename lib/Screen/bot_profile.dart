@@ -1,45 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:learnxt/Auth/loginpage.dart';
 
-class UserProfile extends StatefulWidget {
-  const UserProfile({super.key});
+class BotProfile extends StatefulWidget {
+  const BotProfile({super.key});
 
   @override
-  State<UserProfile> createState() => _UserProfileState();
+  State<BotProfile> createState() => _BotProfileState();
 }
 
-class _UserProfileState extends State<UserProfile> {
-  void initState() {
-    super.initState();
-    BannerAdload();
-  }
-
-  late BannerAd _bannerAd;
-  bool isbanneradsload = false;
-  BannerAdload() {
-    _bannerAd = BannerAd(
-        size: AdSize.banner,
-        adUnitId: "ca-app-pub-8568607330093795/5482884902",
-        listener: BannerAdListener(
-          onAdLoaded: (ad) {
-            setState(() {
-              isbanneradsload = true;
-            });
-          },
-          onAdFailedToLoad: (ad, error) {
-            ad.dispose();
-            print("Error in ads banner:$error");
-          },
-        ),
-        request: const AdRequest());
-    _bannerAd.load();
-  }
-
+class _BotProfileState extends State<BotProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,7 +46,7 @@ class _UserProfileState extends State<UserProfile> {
                           ],
                         )),
                     Text(
-                      "Profile",
+                      "bot profile",
                       style: GoogleFonts.ptSerif(
                         color: Colors.white,
                         fontSize: 29,
@@ -112,7 +83,7 @@ class _UserProfileState extends State<UserProfile> {
                 ),
                 child: Stack(children: [
                   FutureBuilder(
-                    future: fetch_user_profile(),
+                    future: fetch_bot_profile(),
                     builder: (context, snapshot) {
                       if (snapshot.hasError) {
                         return Padding(
@@ -183,7 +154,7 @@ class _UserProfileState extends State<UserProfile> {
                                 padding: EdgeInsets.only(
                                     left: 50, right: 50, top: 15, bottom: 10),
                                 child: Divider(
-                                color: Colors.green,
+                                  color: Colors.green,
                                 ),
                               ),
                               Padding(
@@ -200,7 +171,7 @@ class _UserProfileState extends State<UserProfile> {
                                         Icons.logout_outlined,
                                         color: Colors.white,
                                       ),
-                                      onTap: logout,
+                                      // onTap: logout,
                                     )),
                               )
                             ],
@@ -213,34 +184,17 @@ class _UserProfileState extends State<UserProfile> {
               ))
         ]),
       ),
-      bottomNavigationBar: isbanneradsload
-          ? SizedBox(
-              height: _bannerAd.size.height.toDouble(),
-              width: _bannerAd.size.width.toDouble(),
-              child: AdWidget(ad: _bannerAd),
-            )
-          : const SizedBox(),
+      
     );
   }
 
-  void logout() async {
-    //logout method
-    await FirebaseAuth.instance.signOut();
-    // ignore: use_build_context_synchronously
-    Navigator.pushReplacement(
-        // ignore: use_build_context_synchronously
-        context,
-        MaterialPageRoute(
-          builder: (context) => const Loginpage(),
-        ));
-  }
-
   // ignore: non_constant_identifier_names
-  fetch_user_profile() async {
+
+   Future<List<Map<String, dynamic>>> fetch_bot_profile() async {
     // ... your existing fetchData logic ...
     final user = FirebaseAuth.instance.currentUser;
     final firestore = FirebaseFirestore.instance;
-    final collection = firestore.collection('User');
+    final collection = firestore.collection('Bot');
 
     final query =
         collection.where('UID', isEqualTo: user?.uid); // Example condition

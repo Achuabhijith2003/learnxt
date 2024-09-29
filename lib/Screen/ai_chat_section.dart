@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 // import 'package:image_picker/image_picker.dart';
 import 'package:learnxt/Services/Hive/chat.dart';
 import 'package:learnxt/Services/Hive/chatid.dart';
@@ -22,6 +23,8 @@ final Gemini gemini = Gemini.instance;
 Chatputandget chatstore = Chatputandget();
 Chatidputandget chatid = Chatidputandget();
 
+
+
 List<ChatMessage> messages = [];
 ChatUser currentUser = ChatUser(id: "0", firstName: "User");
 ChatUser geminiuser = ChatUser(
@@ -30,16 +33,35 @@ ChatUser geminiuser = ChatUser(
 // ignore: non_constant_identifier_names
 
 class _AiChatState extends State<AiChat> {
+  void initState() {
+    super.initState();
+    BannerAdload();
+    loadChatMessages();
+  }
+    late BannerAd _bannerAd;
+  bool isbanneradsload = false;
+  BannerAdload() {
+    _bannerAd = BannerAd(
+        size: AdSize.banner,
+        adUnitId: "ca-app-pub-8568607330093795/5482884902",
+        listener: BannerAdListener(
+          onAdLoaded: (ad) {
+            setState(() {
+              isbanneradsload = true;
+            });
+          },
+          onAdFailedToLoad: (ad, error) {
+            ad.dispose();
+            print("Error in ads banner:$error");
+          },
+        ),
+        request: const AdRequest());
+    _bannerAd.load();
+  }
   // ignore: duplicate_ignore
   // ignore: prefer_typing_uninitialized_variables
   final botname;
   final docId;
-
-  @override
-  void initState() {
-    super.initState();
-    loadChatMessages();
-  }
 
   Future<void> loadChatMessages() async {
     final chatMessage = await chatstore.fechallchat(docId);
@@ -97,19 +119,28 @@ class _AiChatState extends State<AiChat> {
                               ),
                             ],
                           )),
-                      Text(
-                        botname,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 29,
-                          fontWeight: FontWeight.bold,
-                          shadows: <Shadow>[
-                            Shadow(
-                              offset: Offset(1.0, 1.0),
-                              blurRadius: 2.0,
-                              color: Color.fromARGB(255, 14, 60, 13),
-                            ),
-                          ],
+                      TextButton(
+                        onPressed: () {
+                          // Navigate to bot profile
+                          // Navigator.push(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //         builder: (context) => const BotProfile()));
+                        },
+                        child: Text(
+                          botname,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 29,
+                            fontWeight: FontWeight.bold,
+                            shadows: <Shadow>[
+                              Shadow(
+                                offset: Offset(1.0, 1.0),
+                                blurRadius: 2.0,
+                                color: Color.fromARGB(255, 14, 60, 13),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                       const Divider(),
@@ -136,6 +167,13 @@ class _AiChatState extends State<AiChat> {
           ],
         ),
       ),
+      bottomNavigationBar: isbanneradsload
+          ? SizedBox(
+              height: _bannerAd.size.height.toDouble(),
+              width: _bannerAd.size.width.toDouble(),
+              child: AdWidget(ad: _bannerAd),
+            )
+          : const SizedBox(),
     );
   }
 
