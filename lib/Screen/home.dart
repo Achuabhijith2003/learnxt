@@ -26,6 +26,7 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
     BannerAdload();
+    fetch_user_profile();
   }
 
   String name = "";
@@ -514,6 +515,20 @@ class _HomeState extends State<Home> {
       drawer: FutureBuilder(
         future: fetch_user_profile(),
         builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Center(child: Text('Error: ${snapshot.error}')),
+            );
+          }
+
+          if (!snapshot.hasData) {
+            return const Center(
+              child: CircularProgressIndicator(
+                color: Colors.green,
+              ),
+            ); // Show loading indicator
+          }
           final data = snapshot.data as List<Map<String, dynamic>>;
           final profileData = data[0];
           if (snapshot.hasError) {
@@ -813,20 +828,27 @@ class _HomeState extends State<Home> {
 
 // ignore: non_constant_identifier_names
 fetch_user_profile() async {
+  try {
+    final user = FirebaseAuth.instance.currentUser;
+    final firestore = FirebaseFirestore.instance;
+    final collection = firestore.collection('User');
+
+    final query =
+        collection.where('UID', isEqualTo: user?.uid); // Example condition
+
+    final querySnapshot = await query.get();
+    final data = querySnapshot.docs.map((doc) => doc.data()).toList();
+    return data;
+  } catch (e) {
+    print("Fetch prrofile error : $e");
+  }
   // ... your existing fetchData logic ...
-  final user = FirebaseAuth.instance.currentUser;
-  final firestore = FirebaseFirestore.instance;
-  final collection = firestore.collection('User');
 
-  final query =
-      collection.where('UID', isEqualTo: user?.uid); // Example condition
-
-  final querySnapshot = await query.get();
-  final data = querySnapshot.docs.map((doc) => doc.data()).toList();
   // Access data as a list of Maps
   // print(data);
   //
-  return data; // Return the retrieved data list
+  // Return the retrieved data list
+  return [];
 }
 
 class DrawerItem extends StatelessWidget {
