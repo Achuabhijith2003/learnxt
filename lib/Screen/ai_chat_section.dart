@@ -164,7 +164,7 @@ class _AiChatState extends State<AiChat> {
 
   void sendChatMessage(ChatMessage chatMessage) async {
     // Update chat ID
-    int newId = chatid.getid(docId) + 1; // Ensure ID generation logic is safe
+    int newId = chatid.getid(docId) + 1;
     chatid.putid(newId, docId);
 
     // Store chat message

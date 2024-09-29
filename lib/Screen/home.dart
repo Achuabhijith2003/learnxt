@@ -10,7 +10,6 @@ import 'package:learnxt/Screen/ai_chat_section.dart';
 import 'package:learnxt/Screen/aichatadd.dart';
 import 'package:learnxt/Screen/user_profile.dart';
 import 'package:learnxt/Services/Hive/chat.dart';
-
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -512,129 +511,155 @@ class _HomeState extends State<Home> {
           },
         ),
       ),
-      drawer: Drawer(
-        width: 275,
-        elevation: 30,
-        backgroundColor: Colors.green.shade800,
-        shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.horizontal(right: Radius.circular(40))),
-        child: Container(
-          decoration: const BoxDecoration(
-              borderRadius: BorderRadius.horizontal(right: Radius.circular(40)),
-              boxShadow: [
-                BoxShadow(
-                    color: Color(0x3D000000), spreadRadius: 30, blurRadius: 20)
-              ]),
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(20, 50, 20, 20),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
+      drawer: FutureBuilder(
+        future: fetch_user_profile(),
+        builder: (context, snapshot) {
+          final data = snapshot.data as List<Map<String, dynamic>>;
+          final profileData = data[0];
+          if (snapshot.hasError) {
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Center(child: Text('Error: ${snapshot.error}')),
+            );
+          }
+
+          if (!snapshot.hasData) {
+            return const Center(
+              child: CircularProgressIndicator(
+                color: Colors.green,
+              ),
+            ); // Show loading indicator
+          }
+          return Drawer(
+            width: 275,
+            elevation: 30,
+            backgroundColor: Colors.green.shade800,
+            shape: const RoundedRectangleBorder(
+                borderRadius:
+                    BorderRadius.horizontal(right: Radius.circular(40))),
+            child: Container(
+              decoration: const BoxDecoration(
+                  borderRadius:
+                      BorderRadius.horizontal(right: Radius.circular(40)),
+                  boxShadow: [
+                    BoxShadow(
+                        color: Color(0x3D000000),
+                        spreadRadius: 30,
+                        blurRadius: 20)
+                  ]),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20, 50, 20, 20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Row(
+                    Column(
                       children: [
-                        Icon(
-                          Icons.arrow_back_ios,
-                          color: Colors.white,
-                          size: 20,
+                        const Row(
+                          children: [
+                            Icon(
+                              Icons.arrow_back_ios,
+                              color: Colors.white,
+                              size: 20,
+                            ),
+                            SizedBox(
+                              width: 56,
+                            ),
+                            Text(
+                              'Settings',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 16),
+                            ),
+                          ],
                         ),
-                        SizedBox(
-                          width: 56,
+                        const SizedBox(
+                          height: 30,
                         ),
-                        Text(
-                          'Settings',
-                          style: TextStyle(color: Colors.white, fontSize: 16),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const UserProfile()));
+                          },
+                          child: Row(
+                            children: [
+                              const CircleAvatar(
+                                backgroundImage: AssetImage(
+                                  "assets/ai pro pic.jpeg",
+                                ),
+                                maxRadius: 30,
+                              ),
+                              const SizedBox(
+                                width: 12,
+                              ),
+                              Text(
+                                profileData["Name"],
+                                style: const TextStyle(color: Colors.white),
+                              )
+                            ],
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 35,
+                        ),
+                        DrawerItem(
+                          title: 'Help',
+                          icon: Icons.help,
+                          onTap: () async {
+                            final uri = Uri.parse(
+                                'https://www.developwithjr.info/blog/v0.0.3/');
+                            if (await canLaunchUrl(uri)) {
+                              await launchUrl(uri);
+                            } else {
+                              throw 'Could not launch $uri';
+                            }
+                          },
+                        ),
+                        const Divider(
+                          height: 35,
+                          color: Colors.green,
+                        ),
+                        DrawerItem(
+                          title: 'Invite a friend',
+                          icon: Icons.people_outline,
+                          onTap: () async {
+                            await Share.share(
+                                "Check out this link: https://github.com/Achuabhijith2003/learnxt/releases,");
+                          },
+                        ),
+                        DrawerItem(
+                          title: 'Privacy Policy',
+                          icon: Icons.privacy_tip_outlined,
+                          onTap: () async {
+                            final uri = Uri.parse(
+                                'https://www.developwithjr.info/privacy_policy/');
+                            if (await canLaunchUrl(uri)) {
+                              await launchUrl(uri);
+                            } else {
+                              throw 'Could not launch $uri';
+                            }
+                          },
                         ),
                       ],
                     ),
                     const SizedBox(
-                      height: 30,
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const UserProfile()));
-                      },
-                      child: const Row(
-                        children: [
-                          CircleAvatar(
-                            backgroundImage: AssetImage(
-                              "assets/ai pro pic.jpeg",
-                            ),
-                            maxRadius: 30,
-                          ),
-                          SizedBox(
-                            width: 12,
-                          ),
-                          Text(
-                            'User',
-                            style: TextStyle(color: Colors.white),
-                          )
-                        ],
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 35,
+                      height: 370,
                     ),
                     DrawerItem(
-                      title: 'Help',
-                      icon: Icons.help,
-                      onTap: () async {
-                        final uri = Uri.parse(
-                            'https://www.developwithjr.info/blog/v0.0.3/');
-                        if (await canLaunchUrl(uri)) {
-                          await launchUrl(uri);
-                        } else {
-                          throw 'Could not launch $uri';
-                        }
-                      },
+                      title: 'Log out',
+                      icon: Icons.logout,
+                      onTap: logout,
                     ),
-                    const Divider(
-                      height: 35,
-                      color: Colors.green,
-                    ),
-                    DrawerItem(
-                      title: 'Invite a friend',
-                      icon: Icons.people_outline,
-                      onTap: () async {
-                        await Share.share(
-                            "Check out this link: https://github.com/Achuabhijith2003/learnxt/releases,");
-                      },
-                    ),
-                    DrawerItem(
-                      title: 'Privacy Policy',
-                      icon: Icons.privacy_tip_outlined,
-                      onTap: () async {
-                        final uri = Uri.parse(
-                            'https://www.developwithjr.info/privacy_policy/');
-                        if (await canLaunchUrl(uri)) {
-                          await launchUrl(uri);
-                        } else {
-                          throw 'Could not launch $uri';
-                        }
-                      },
-                    ),
+                    Text(
+                      "Version : 0.0.4",
+                      style: TextStyle(color: Colors.grey.shade300),
+                    )
                   ],
                 ),
-                const SizedBox(
-                  height: 370,
-                ),
-                DrawerItem(
-                  title: 'Log out',
-                  icon: Icons.logout,
-                  onTap: logout,
-                ),
-                Text(
-                  "Version : 0.0.4",
-                  style: TextStyle(color: Colors.grey.shade300),
-                )
-              ],
+              ),
             ),
-          ),
-        ),
+          );
+        },
       ),
       bottomNavigationBar: isbanneradsload
           ? SizedBox(
@@ -784,6 +809,24 @@ class _HomeState extends State<Home> {
       return false; // Deletion failed
     }
   }
+}
+
+// ignore: non_constant_identifier_names
+fetch_user_profile() async {
+  // ... your existing fetchData logic ...
+  final user = FirebaseAuth.instance.currentUser;
+  final firestore = FirebaseFirestore.instance;
+  final collection = firestore.collection('User');
+
+  final query =
+      collection.where('UID', isEqualTo: user?.uid); // Example condition
+
+  final querySnapshot = await query.get();
+  final data = querySnapshot.docs.map((doc) => doc.data()).toList();
+  // Access data as a list of Maps
+  // print(data);
+  //
+  return data; // Return the retrieved data list
 }
 
 class DrawerItem extends StatelessWidget {

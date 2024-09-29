@@ -1,9 +1,18 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:learnxt/Auth/loginpage.dart';
 
-class UserProfile extends StatelessWidget {
+class UserProfile extends StatefulWidget {
   const UserProfile({super.key});
 
+  @override
+  State<UserProfile> createState() => _UserProfileState();
+}
+
+class _UserProfileState extends State<UserProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,7 +51,7 @@ class UserProfile extends StatelessWidget {
                       "Profile",
                       style: GoogleFonts.ptSerif(
                         color: Colors.white,
-                        fontSize: 40,
+                        fontSize: 29,
                         fontWeight: FontWeight.bold,
                         shadows: <Shadow>[
                           const Shadow(
@@ -75,161 +84,138 @@ class UserProfile extends StatelessWidget {
                   color: Color(0xFFEFFFFC),
                 ),
                 child: Stack(children: [
-                  Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Row(
-                            children: [
-                              Column(
-                                children: [
-                                  const CircleAvatar(
-                                    backgroundColor: Colors.green,
-                                    maxRadius: 55,
-                                    backgroundImage:
-                                        AssetImage("assets/ai pro pic.jpeg"),
-                                  ),
-                                  Text(
-                                    "Abhijith JR",
-                                    style: GoogleFonts.ptSerif(
-                                      color: Colors.black,
-                                      fontSize: 26,
-                                      fontWeight: FontWeight.bold,
-                                      shadows: <Shadow>[
-                                        const Shadow(
-                                          offset: Offset(1.0, 1.0),
-                                          blurRadius: 2.0,
-                                          color:
-                                              Color.fromARGB(255, 14, 60, 13),
-                                        ),
-                                      ],
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          const VerticalDivider(
+                  FutureBuilder(
+                    future: fetch_user_profile(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child:
+                              Center(child: Text('Error: ${snapshot.error}')),
+                        );
+                      }
+
+                      if (!snapshot.hasData) {
+                        return const Center(
+                          child: CircularProgressIndicator(
                             color: Colors.green,
-                            thickness: 3,
                           ),
-                          Row(
-                            children: [
-                              Column(
-                                children: [
-                                  Text(
-                                    "Email: jrabhijithktd@gmail.com",
-                                    style: GoogleFonts.ptSerif(
-                                      color: Colors.black,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      shadows: <Shadow>[
-                                        const Shadow(
-                                          offset: Offset(1.0, 1.0),
-                                          blurRadius: 2.0,
-                                          color:
-                                              Color.fromARGB(255, 14, 60, 13),
-                                        ),
-                                      ],
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  Text(
-                                    "Email: jrabhijithktd@gmail.com",
-                                    style: GoogleFonts.ptSerif(
-                                      color: Colors.black,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      shadows: <Shadow>[
-                                        const Shadow(
-                                          offset: Offset(1.0, 1.0),
-                                          blurRadius: 2.0,
-                                          color:
-                                              Color.fromARGB(255, 14, 60, 13),
-                                        ),
-                                      ],
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  Text(
-                                    "Email: jrabhijithktd@gmail.com",
-                                    style: GoogleFonts.ptSerif(
-                                      color: Colors.black,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      shadows: <Shadow>[
-                                        const Shadow(
-                                          offset: Offset(1.0, 1.0),
-                                          blurRadius: 2.0,
-                                          color:
-                                              Color.fromARGB(255, 14, 60, 13),
-                                        ),
-                                      ],
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  Text(
-                                    "Email: jrabhijithktd@gmail.com",
-                                    style: GoogleFonts.ptSerif(
-                                      color: Colors.black,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      shadows: <Shadow>[
-                                        const Shadow(
-                                          offset: Offset(1.0, 1.0),
-                                          blurRadius: 2.0,
-                                          color:
-                                              Color.fromARGB(255, 14, 60, 13),
-                                        ),
-                                      ],
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  Text(
-                                    "Email: jrabhijithktd@gmail.com",
-                                    style: GoogleFonts.ptSerif(
-                                      color: Colors.black,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      shadows: <Shadow>[
-                                        const Shadow(
-                                          offset: Offset(1.0, 1.0),
-                                          blurRadius: 2.0,
-                                          color:
-                                              Color.fromARGB(255, 14, 60, 13),
-                                        ),
-                                      ],
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      const Column(
+                        ); // Show loading indicator
+                      }
+                      final data = snapshot.data as List<Map<String, dynamic>>;
+                      final profileData = data[0];
+                      return Column(
                         children: [
                           Padding(
-                            padding: EdgeInsets.only(
-                                left: 50, right: 50, top: 15, bottom: 10),
-                            child: Divider(
-                              color: Colors.green,
+                            padding: const EdgeInsets.only(left: 35),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    const CircleAvatar(
+                                      backgroundColor: Colors.green,
+                                      maxRadius: 35,
+                                      backgroundImage:
+                                          AssetImage("assets/ai pro pic.jpeg"),
+                                    ),
+                                    Column(
+                                      children: [
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 15),
+                                          child: Column(
+                                            children: [
+                                              Text(
+                                                profileData["Name"],
+                                                style: GoogleFonts.ptSerif(
+                                                  color: Colors.black,
+                                                  fontSize: 26,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                              Text(profileData["Email"])
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                const VerticalDivider(
+                                  color: Colors.green,
+                                  thickness: 3,
+                                ),
+                              ],
                             ),
                           ),
-                          CircleAvatar(
-                            backgroundColor: Colors.green,
+                          Column(
+                            children: [
+                              const Padding(
+                                padding: EdgeInsets.only(
+                                    left: 50, right: 50, top: 15, bottom: 10),
+                                child: Divider(
+                                  color: Colors.green,
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 15, right: 15),
+                                child: Card(
+                                    color: Colors.green.shade400,
+                                    child: ListTile(
+                                      title: const Text(
+                                        "Logout",
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      trailing: const Icon(
+                                        Icons.logout_outlined,
+                                        color: Colors.white,
+                                      ),
+                                      onTap: logout,
+                                    )),
+                              )
+                            ],
                           )
                         ],
-                      )
-                    ],
+                      );
+                    },
                   ),
                 ]),
               ))
         ]),
       ),
     );
+  }
+
+  void logout() async {
+    //logout method
+    await FirebaseAuth.instance.signOut();
+    // ignore: use_build_context_synchronously
+    Navigator.pushReplacement(
+        // ignore: use_build_context_synchronously
+        context,
+        MaterialPageRoute(
+          builder: (context) => const Loginpage(),
+        ));
+  }
+
+  // ignore: non_constant_identifier_names
+  fetch_user_profile() async {
+    // ... your existing fetchData logic ...
+    final user = FirebaseAuth.instance.currentUser;
+    final firestore = FirebaseFirestore.instance;
+    final collection = firestore.collection('User');
+
+    final query =
+        collection.where('UID', isEqualTo: user?.uid); // Example condition
+
+    final querySnapshot = await query.get();
+    final data = querySnapshot.docs.map((doc) => doc.data()).toList();
+    // Access data as a list of Maps
+    // print(data);
+    //
+    return data; // Return the retrieved data list
   }
 }

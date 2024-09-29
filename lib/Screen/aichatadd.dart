@@ -116,7 +116,16 @@ class _ChatcreateState extends State<Chatcreate> {
                                 borderRadius: BorderRadius.circular(23),
                                 border: Border.all(color: Colors.white)),
                             child: Container(
-                              color: Colors.white,
+                              decoration: BoxDecoration(
+                                  boxShadow: const <BoxShadow>[
+                                    BoxShadow(
+                                      offset: Offset(1.0, 1.0),
+                                      blurRadius: 2.0,
+                                      color: Color.fromARGB(255, 14, 60, 13),
+                                    ),
+                                  ],
+                                  borderRadius: BorderRadius.circular(25),
+                                  color: Colors.white),
                               child: FadeInUp(
                                 duration: const Duration(milliseconds: 1500),
                                 child: TextField(
