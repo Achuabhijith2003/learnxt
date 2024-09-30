@@ -23,8 +23,6 @@ final Gemini gemini = Gemini.instance;
 Chatputandget chatstore = Chatputandget();
 Chatidputandget chatid = Chatidputandget();
 
-
-
 List<ChatMessage> messages = [];
 ChatUser currentUser = ChatUser(id: "0", firstName: "User");
 ChatUser geminiuser = ChatUser(
@@ -38,7 +36,8 @@ class _AiChatState extends State<AiChat> {
     BannerAdload();
     loadChatMessages();
   }
-    late BannerAd _bannerAd;
+
+  late BannerAd _bannerAd;
   bool isbanneradsload = false;
   BannerAdload() {
     _bannerAd = BannerAd(
@@ -58,6 +57,7 @@ class _AiChatState extends State<AiChat> {
         request: const AdRequest());
     _bannerAd.load();
   }
+
   // ignore: duplicate_ignore
   // ignore: prefer_typing_uninitialized_variables
   final botname;

@@ -8,6 +8,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:learnxt/Auth/loginpage.dart';
 import 'package:learnxt/Screen/ai_chat_section.dart';
 import 'package:learnxt/Screen/aichatadd.dart';
+import 'package:learnxt/Screen/chatai.dart';
 import 'package:learnxt/Screen/user_profile.dart';
 import 'package:learnxt/Services/Hive/chat.dart';
 import 'package:share_plus/share_plus.dart';
@@ -245,11 +246,11 @@ class _HomeState extends State<Home> {
                                           Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                builder: (context) => AiChat(
-                                                  botname: botData["Bot Name"],
-                                                  docId: botData["docId"],
-                                                ),
-                                              ));
+                                                  builder: (context) => Chatai(
+                                                        botname:
+                                                            botData["Bot Name"],
+                                                        docId: botData["docId"],
+                                                      )));
                                         },
                                         onLongPress: () {
                                           showDialog(

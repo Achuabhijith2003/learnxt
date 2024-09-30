@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -183,7 +182,7 @@ class _UserProfileState extends State<UserProfile> {
                                 padding: EdgeInsets.only(
                                     left: 50, right: 50, top: 15, bottom: 10),
                                 child: Divider(
-                                color: Colors.green,
+                                  color: Colors.green,
                                 ),
                               ),
                               Padding(
@@ -204,7 +203,7 @@ class _UserProfileState extends State<UserProfile> {
                                     )),
                               )
                             ],
-                          )
+                          ),
                         ],
                       );
                     },
