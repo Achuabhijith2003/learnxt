@@ -1,16 +1,13 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:learnxt/Auth/loginpage.dart';
-import 'package:learnxt/Screen/ai_chat_section.dart';
 import 'package:learnxt/Screen/aichatadd.dart';
 import 'package:learnxt/Screen/chatai.dart';
 import 'package:learnxt/Screen/user_profile.dart';
-import 'package:learnxt/Services/Hive/chat.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -56,7 +53,6 @@ class _HomeState extends State<Home> {
   final GlobalKey<ScaffoldState> _globalKey = GlobalKey();
   @override
   Widget build(BuildContext context) {
-    Chatputandget chatstore = Chatputandget();
     return Scaffold(
       key: _globalKey,
       body: Container(
@@ -222,24 +218,24 @@ class _HomeState extends State<Home> {
                                       child: ListTile(
                                         onTap: () {
                                           try {
-                                            int i =
-                                                chatid.getid(botData["docId"]) +
-                                                    1;
-                                            chatid.putid(i, botData["docId"]);
-                                            ChatUser users = ChatUser(
-                                                id: "1",
-                                                firstName: 'LearnXt',
-                                                profileImage:
-                                                    'assets/ai pro pic.jpeg');
-                                            chatstore.storechat(
-                                                botData["Bot Name"],
-                                                users,
-                                                ChatMessage(
-                                                    user: users,
-                                                    createdAt: DateTime.now(),
-                                                    text:
-                                                        "How Can I help You today"),
-                                                botData["docId"]);
+                                            // int i =
+                                            //     chatid.getid(botData["docId"]) +
+                                            //         1;
+                                            // chatid.putid(i, botData["docId"]);
+                                            // ChatUser users = ChatUser(
+                                            //     id: "1",
+                                            //     firstName: 'LearnXt',
+                                            //     profileImage:
+                                            //         'assets/ai pro pic.jpeg');
+                                            // chatstore.storechat(
+                                            //     botData["Bot Name"],
+                                            //     users,
+                                            //     ChatMessage(
+                                            //         user: users,
+                                            //         createdAt: DateTime.now(),
+                                            //         text:
+                                            //             "How Can I help You today"),
+                                            //     botData["docId"]);
                                           } catch (e) {
                                             print("Error: $e");
                                           }
@@ -367,33 +363,33 @@ class _HomeState extends State<Home> {
                                   child: ListTile(
                                     onTap: () {
                                       try {
-                                        int i = chatid.getid(botData["docId"]);
-                                        chatid.putid(i++, botData["docId"]);
-                                        ChatUser users = ChatUser(
-                                            id: "1",
-                                            firstName: "LearnXt",
-                                            profileImage:
-                                                'assets/ai pro pic.jpeg');
-                                        chatstore.storechat(
-                                            botData["Bot Name"],
-                                            users,
-                                            ChatMessage(
-                                                user: users,
-                                                createdAt: DateTime.now(),
-                                                text:
-                                                    "How Can I help You today"),
-                                            botData["docId"]);
+                                        // int i = chatid.getid(botData["docId"]);
+                                        // chatid.putid(i++, botData["docId"]);
+                                        // ChatUser users = ChatUser(
+                                        //     id: "1",
+                                        //     firstName: "LearnXt",
+                                        //     profileImage:
+                                        //         'assets/ai pro pic.jpeg');
+                                        // chatstore.storechat(
+                                        //     botData["Bot Name"],
+                                        //     users,
+                                        //     ChatMessage(
+                                        //         user: users,
+                                        //         createdAt: DateTime.now(),
+                                        //         text:
+                                        //             "How Can I help You today"),
+                                        //     botData["docId"]);
                                       } catch (e) {
                                         print("Error: $e");
                                       }
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                            builder: (context) => AiChat(
-                                              botname: botData["Bot Name"],
-                                              docId: botData["docId"],
-                                            ),
-                                          ));
+                                              builder: (context) => Chatai(
+                                                    botname:
+                                                        botData["Bot Name"],
+                                                    docId: botData["docId"],
+                                                  )));
                                     },
                                     onLongPress: () {
                                       showDialog(
@@ -667,7 +663,7 @@ class _HomeState extends State<Home> {
                       onTap: logout,
                     ),
                     Text(
-                      "Version : 0.0.4",
+                      "Version : 0.0.5",
                       style: TextStyle(color: Colors.grey.shade300),
                     )
                   ],

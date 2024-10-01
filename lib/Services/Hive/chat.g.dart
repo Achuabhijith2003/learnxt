@@ -6,7 +6,7 @@ part of 'chat.dart';
 // TypeAdapterGenerator
 // **************************************************************************
 
-class ChatAdapter extends TypeAdapter<CHathive> {
+class CHathiveAdapter extends TypeAdapter<CHathive> {
   @override
   final int typeId = 1;
 
@@ -18,7 +18,7 @@ class ChatAdapter extends TypeAdapter<CHathive> {
     };
     return CHathive(
       id: fields[0] as String,
-      createdAt: fields[1] as DateTime,
+      createdAt: fields[1] as int?,
       text: fields[2] as String,
       firstName: fields[3] as String?,
       profileimg: fields[4] as String?,
@@ -47,7 +47,7 @@ class ChatAdapter extends TypeAdapter<CHathive> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is ChatAdapter &&
+      other is CHathiveAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

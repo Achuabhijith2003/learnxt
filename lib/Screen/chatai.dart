@@ -21,21 +21,31 @@ class _ChataiState extends State<Chatai> {
   final Gemini gemini = Gemini.instance;
   Chatputandget chatstore = Chatputandget();
   Chatidputandget chatid = Chatidputandget();
+  @override
   void initState() {
     super.initState();
     BannerAdload();
-    // loadChatMessages();
+    loadChatMessages();
+  }
+
+  Future<void> loadChatMessages() async {
+    final chatMessage = await chatstore.fechallchat(widget.docId);
+    setState(() {
+      _messages = chatMessage;
+    });
   }
 
   void _addMessage(types.Message message) {
     setState(() {
-      _messages.insert(0, message);
+      // Append messages to avoid index clashes
+      _messages.add(message);
     });
-    print("MEssage INserted");
+    print("Message inserted");
   }
 
   late BannerAd _bannerAd;
   bool isbanneradsload = false;
+  // ignore: non_constant_identifier_names
   BannerAdload() {
     _bannerAd = BannerAd(
         size: AdSize.banner,
@@ -57,7 +67,7 @@ class _ChataiState extends State<Chatai> {
 
   final cureentUser = const types.User(id: '1', firstName: "You");
   final geminiuser = const types.User(id: '0', firstName: "Learnxt");
-  final List<types.Message> _messages = [];
+  List<types.Message> _messages = [];
 
   @override
   Widget build(BuildContext context) {
@@ -140,8 +150,26 @@ class _ChataiState extends State<Chatai> {
                       color: Color(0xFFEFFFFC),
                     ),
                     child: Chat(
+                      inputOptions: const InputOptions(
+                        autocorrect: true,
+                        enableSuggestions: true,
+                        sendButtonVisibilityMode:
+                            SendButtonVisibilityMode.always,
+                        inputClearMode: InputClearMode.always,
+                      ),
+                      theme: const DefaultChatTheme(
+                        backgroundColor: Color(0xFFEFFFFC),
+                        inputBackgroundColor: Colors.green,
+                        inputTextDecoration:
+                            InputDecoration(labelText: "Enter prompt"),
+                        messageBorderRadius: 35,
+                      ),
                       messages: _messages,
-                      onSendPressed: (p0) {
+                      onSendPressed: (p0) async {
+                        // Update chat ID
+                        int newId = chatid.getid(widget.docId) + 1;
+                        chatid.putid(newId, widget.docId);
+
                         final textMessage = types.TextMessage(
                           author: cureentUser,
                           createdAt: DateTime.now().millisecondsSinceEpoch,
@@ -149,7 +177,15 @@ class _ChataiState extends State<Chatai> {
                               .toString(), // Ensuring a unique ID for each message
                           text: p0.text,
                         );
-                        _addMessage(textMessage);
+
+                        // Store chat message
+                        await chatstore.storechat(widget.botname, cureentUser,
+                            textMessage, widget.docId);
+                        final userchatmess =
+                            await chatstore.fechchat(widget.docId);
+                        setState(() {
+                          _addMessage(userchatmess);
+                        });
                         sendChatMessage(p0);
                       },
                       showUserAvatars: true,
@@ -170,25 +206,6 @@ class _ChataiState extends State<Chatai> {
   }
 
   void sendChatMessage(types.PartialText chatMessage) async {
-    // Update chat ID
-    // int newId = chatid.getid(docId) + 1;
-    // chatid.putid(newId, docId);
-
-    // // Store chat message
-    // await chatstore.storechat(botname, currentUser, chatMessage, docId);
-
-    // Fetch and update messages (consider optimization)
-    // final updatedChatMessage = await chatstore.fechchat(docId);
-    // setState(() {
-    //   final textMessage = types.TextMessage(
-    //     author: cureentUser,
-    //     createdAt: DateTime.now().millisecondsSinceEpoch,
-    //     id: DateTime.now().toString(), // Ensuring a unique ID for each message
-    //     text: chatMessage.text,
-    //   );
-    //   _addMessage(textMessage);
-    // });
-
     try {
       // Search for keywords and generate answer
       final keywords =
@@ -197,7 +214,7 @@ class _ChataiState extends State<Chatai> {
 
       gemini
           .streamGenerateContent(
-        "Considering the keywords: $keywords and the query: ${chatMessage.text}, here is a detailed answer.",
+        "Based on the keywords: $keywords and the question: ${chatMessage.text}, explain the answer in a simple and easy-to-understand way for a student, breaking down any difficult concepts and using examples where possible.",
       )
           .listen((event) async {
         types.TextMessage? lastMessage =
@@ -220,7 +237,7 @@ class _ChataiState extends State<Chatai> {
           setState(() {
             int index = _messages.indexOf(lastMessage);
             if (index != -1) {
-              _messages[index] = updatedMessage; // Update in place
+              _messages[index] = updatedMessage; // Update message in place
             }
           });
         } else {
@@ -236,19 +253,20 @@ class _ChataiState extends State<Chatai> {
             text: response,
           );
 
+          int newId = chatid.getid(widget.docId) +
+              1; // Ensure ID generation logic is safe
+          chatid.putid(newId, widget.docId);
+
+          // Store chat message
+          await chatstore.storechat(
+              widget.botname, geminiuser, geminimessage, widget.docId);
+          final geminiresponse = await chatstore.fechchat(widget.docId);
+
           // Add the new message
           setState(() {
-            _addMessage(geminimessage);
+            _addMessage(geminiresponse);
           });
         }
-
-        // int newId =
-        //     chatid.getid(docId) + 1; // Ensure ID generation logic is safe
-        // chatid.putid(newId, docId);
-
-        // // Store chat message
-        // await chatstore.storechat(botname, geminiuser, geminimessage, docId);
-        // final geminiresponse = await chatstore.fechchat(docId);
       });
     } catch (e) {
       print('Error sending message: $e');

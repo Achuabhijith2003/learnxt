@@ -1,9 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart';
 import 'package:hive/hive.dart';
 import 'package:learnxt/Services/Hive/chatid.dart';
 import 'package:learnxt/main.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
 part 'chat.g.dart';
 
@@ -20,7 +21,7 @@ class CHathive {
   @HiveField(0)
   String id;
   @HiveField(1)
-  DateTime createdAt;
+  int? createdAt;
   @HiveField(2)
   String text;
   @HiveField(3)
@@ -32,8 +33,8 @@ class CHathive {
 class Chatputandget {
   storechat(
     String botname,
-    ChatUser? user,
-    ChatMessage message,
+    types.User? user,
+    TextMessage message,
     String docId,
   ) async {
     final chat = CHathive(
@@ -41,7 +42,7 @@ class Chatputandget {
         text: message.text,
         firstName: user?.firstName,
         id: user!.id,
-        profileimg: user.profileImage);
+        profileimg: user.imageUrl);
     // geting no of chats
     Chatidputandget chatidget = Chatidputandget();
     int i = await chatidget.getid(docId);
@@ -49,9 +50,10 @@ class Chatputandget {
     box.put("$docId/$i", chat);
   }
 
+  List<types.Message> messages = [];
   fechallchat(docid) {
     try {
-      List<ChatMessage> messages = [];
+      List<types.Message> messages = [];
       // geting no of chats
       int i = 1;
       Chatidputandget chatidget = Chatidputandget();
@@ -59,22 +61,25 @@ class Chatputandget {
       print("Chatid put while fecht: $j");
       while (i <= j) {
         CHathive chatdata = box.get("$docid/$i") as CHathive;
-        ChatMessage chathis = ChatMessage(
-          user: ChatUser(
-              id: chatdata.id,
-              firstName: chatdata.firstName,
-              profileImage: chatdata.profileimg),
-          createdAt: chatdata.createdAt,
-          text: chatdata.text,
-        );
+        TextMessage chathis = TextMessage(
+            createdAt: chatdata.createdAt,
+            text: chatdata.text,
+            author: types.User(id: chatdata.id),
+            id: chatdata.id);
         print("While looping for fetch $i");
         i++;
-        messages = [chathis, ...messages];
+        _addMessage(chathis as Message);
       }
       return messages;
     } catch (e) {
       print("Error: $e");
     }
+  }
+
+  void _addMessage(types.Message message) {
+    messages.add(message);
+
+    print("MEssage INserted");
   }
 
   fechchat(docid) async {
@@ -86,14 +91,18 @@ class Chatputandget {
       print("Chatid put while fecht: $j");
 
       CHathive chatdata = await box.get("$docid/$j") as CHathive;
-      ChatMessage chathis = ChatMessage(
-        user: ChatUser(
-            id: chatdata.id,
-            firstName: chatdata.firstName,
-            profileImage: chatdata.profileimg),
-        createdAt: chatdata.createdAt,
-        text: chatdata.text,
-      );
+      // ChatMessage chathis = ChatMessage(
+      //   user: ChatUser(
+      //       id: chatdata.id,
+      //       firstName: chatdata.firstName,
+      //       profileImage: chatdata.profileimg),
+      //   createdAt: chatdata.createdAt,
+      //   text: chatdata.text,
+      // );
+      TextMessage chathis = TextMessage(
+          text: chatdata.text,
+          author: types.User(id: chatdata.id),
+          id: chatdata.id);
       print("While looping for fetch $j");
       return chathis;
     } catch (e) {

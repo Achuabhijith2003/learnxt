@@ -16,7 +16,7 @@ Future<void> main(List<String> args) async {
   // hive init
   await Hive.initFlutter();
   Hive.registerAdapter(ChatidAdapter());
-  Hive.registerAdapter(ChatAdapter());
+  Hive.registerAdapter(CHathiveAdapter());
   box = await Hive.openBox('Chat_History');
   // gemini init
   Gemini.init(

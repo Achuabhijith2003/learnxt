@@ -24,13 +24,14 @@ class Chatcreate extends StatefulWidget {
 DataEmbedded _dataEmbedded = DataEmbedded();
 
 class _ChatcreateState extends State<Chatcreate> {
+  @override
   void initState() {
     super.initState();
     BannerAdload();
   }
-
   late BannerAd _bannerAd;
   bool isbanneradsload = false;
+  // ignore: non_constant_identifier_names
   BannerAdload() {
     _bannerAd = BannerAd(
         size: AdSize.banner,
@@ -314,7 +315,7 @@ class _ChatcreateState extends State<Chatcreate> {
     String uid = user.uid;
 
     // final storageRef = FirebaseStorage.instance.ref();
-    final List<String> downloadUrls = [];
+    final List<String> filenames = [];
 
     showDialog(
       context: context,
@@ -356,7 +357,8 @@ class _ChatcreateState extends State<Chatcreate> {
       // Upload each file to Firebase Storage
       // now puesed
       for (File file in files) {
-        // final fileName = file.path.split('/').last; // Extract file name
+        final fileName = file.path.split('/').last; // Extract file name
+        filenames.add(fileName);
         // final uploadTask = storageRef.child('PDFs/$fileName').putFile(file);
         // final snapshot = await uploadTask.whenComplete(() => {});
         // final downloadUrl = await snapshot.ref.getDownloadURL();
@@ -366,7 +368,7 @@ class _ChatcreateState extends State<Chatcreate> {
 
       // Store bot pdfurl in Firestore
       final pdfurl = {
-        'PDFs': downloadUrls,
+        'pdfs_name': filenames,
       };
       await docRef.update(pdfurl);
       // Handle successful creation (e.g., show success message)
