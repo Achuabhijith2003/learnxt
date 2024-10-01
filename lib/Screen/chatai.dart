@@ -141,7 +141,17 @@ class _ChataiState extends State<Chatai> {
                     ),
                     child: Chat(
                       messages: _messages,
-                      onSendPressed: sendChatMessage,
+                      onSendPressed: (p0) {
+                        final textMessage = types.TextMessage(
+                          author: cureentUser,
+                          createdAt: DateTime.now().millisecondsSinceEpoch,
+                          id: DateTime.now()
+                              .toString(), // Ensuring a unique ID for each message
+                          text: p0.text,
+                        );
+                        _addMessage(textMessage);
+                        sendChatMessage(p0);
+                      },
                       showUserAvatars: true,
                       showUserNames: true,
                       user: cureentUser,
@@ -169,15 +179,15 @@ class _ChataiState extends State<Chatai> {
 
     // Fetch and update messages (consider optimization)
     // final updatedChatMessage = await chatstore.fechchat(docId);
-    setState(() {
-      final textMessage = types.TextMessage(
-        author: cureentUser,
-        createdAt: DateTime.now().millisecondsSinceEpoch,
-        id: DateTime.now().toString(), // Ensuring a unique ID for each message
-        text: chatMessage.text,
-      );
-      _addMessage(textMessage);
-    });
+    // setState(() {
+    //   final textMessage = types.TextMessage(
+    //     author: cureentUser,
+    //     createdAt: DateTime.now().millisecondsSinceEpoch,
+    //     id: DateTime.now().toString(), // Ensuring a unique ID for each message
+    //     text: chatMessage.text,
+    //   );
+    //   _addMessage(textMessage);
+    // });
 
     try {
       // Search for keywords and generate answer
@@ -193,38 +203,52 @@ class _ChataiState extends State<Chatai> {
         types.TextMessage? lastMessage =
             _messages.firstOrNull as types.TextMessage?;
         if (lastMessage != null && lastMessage.author == geminiuser) {
-          lastMessage = _messages.removeAt(0) as types.TextMessage?;
+          // Get the response text
           String response = event.content?.parts?.fold(
                   "", (previous, current) => "$previous ${current.text}") ??
               "";
-          // lastMessage.text += response;
-          setState(
-            () {
-              _addMessage(lastMessage!);
-            },
+
+          // Create a new message with the updated text
+          final updatedMessage = types.TextMessage(
+            author: lastMessage.author,
+            id: lastMessage.id,
+            createdAt: lastMessage.createdAt,
+            text: lastMessage.text + response, // Append the response
           );
+
+          // Replace the old message in the list instead of removing it
+          setState(() {
+            int index = _messages.indexOf(lastMessage);
+            if (index != -1) {
+              _messages[index] = updatedMessage; // Update in place
+            }
+          });
         } else {
+          // Handle the case where there was no previous message
           String response = event.content?.parts?.fold(
                   "", (previous, current) => "$previous ${current.text}") ??
               "";
-          // Storing gemini Respones
+
+          // Storing Gemini Response as a new message
           types.TextMessage geminimessage = types.TextMessage(
             author: geminiuser,
             id: '0',
             text: response,
           );
 
-          // int newId =
-          //     chatid.getid(docId) + 1; // Ensure ID generation logic is safe
-          // chatid.putid(newId, docId);
-
-          // // Store chat message
-          // await chatstore.storechat(botname, geminiuser, geminimessage, docId);
-          // final geminiresponse = await chatstore.fechchat(docId);
+          // Add the new message
           setState(() {
             _addMessage(geminimessage);
           });
         }
+
+        // int newId =
+        //     chatid.getid(docId) + 1; // Ensure ID generation logic is safe
+        // chatid.putid(newId, docId);
+
+        // // Store chat message
+        // await chatstore.storechat(botname, geminiuser, geminimessage, docId);
+        // final geminiresponse = await chatstore.fechchat(docId);
       });
     } catch (e) {
       print('Error sending message: $e');
