@@ -6,17 +6,17 @@ part of 'chat.dart';
 // TypeAdapterGenerator
 // **************************************************************************
 
-class ChatAdapter extends TypeAdapter<Chat> {
+class ChatAdapter extends TypeAdapter<CHathive> {
   @override
   final int typeId = 1;
 
   @override
-  Chat read(BinaryReader reader) {
+  CHathive read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return Chat(
+    return CHathive(
       id: fields[0] as String,
       createdAt: fields[1] as DateTime,
       text: fields[2] as String,
@@ -26,7 +26,7 @@ class ChatAdapter extends TypeAdapter<Chat> {
   }
 
   @override
-  void write(BinaryWriter writer, Chat obj) {
+  void write(BinaryWriter writer, CHathive obj) {
     writer
       ..writeByte(5)
       ..writeByte(0)

@@ -64,6 +64,7 @@ dependencies:
   # markdown_editor_mobile_web: ^0.0.4
   flutter_markdown: ^0.7.3+2
   flutter_chat_ui: ^1.6.15
+  flutter_chat_types: ^3.6.2
 
 dev_dependencies:
   flutter_test:

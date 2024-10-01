@@ -8,8 +8,8 @@ import 'package:learnxt/main.dart';
 part 'chat.g.dart';
 
 @HiveType(typeId: 1)
-class Chat {
-  Chat(
+class CHathive {
+  CHathive(
       {required this.id,
       required this.createdAt,
       required this.text,
@@ -36,7 +36,7 @@ class Chatputandget {
     ChatMessage message,
     String docId,
   ) async {
-    final chat = Chat(
+    final chat = CHathive(
         createdAt: message.createdAt,
         text: message.text,
         firstName: user?.firstName,
@@ -58,7 +58,7 @@ class Chatputandget {
       int j = chatidget.getid(docid);
       print("Chatid put while fecht: $j");
       while (i <= j) {
-        Chat chatdata = box.get("$docid/$i") as Chat;
+        CHathive chatdata = box.get("$docid/$i") as CHathive;
         ChatMessage chathis = ChatMessage(
           user: ChatUser(
               id: chatdata.id,
@@ -85,7 +85,7 @@ class Chatputandget {
       int j = chatidget.getid(docid);
       print("Chatid put while fecht: $j");
 
-      Chat chatdata = await box.get("$docid/$j") as Chat;
+      CHathive chatdata = await box.get("$docid/$j") as CHathive;
       ChatMessage chathis = ChatMessage(
         user: ChatUser(
             id: chatdata.id,
