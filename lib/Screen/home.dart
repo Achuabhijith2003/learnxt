@@ -66,9 +66,9 @@ class _HomeState extends State<Home> {
         width: double.infinity,
         decoration: BoxDecoration(
             gradient: LinearGradient(begin: Alignment.topCenter, colors: [
-          Colors.green.shade900,
-          Colors.green.shade800,
-          Colors.green.shade400
+          Colors.grey.shade900,
+          Colors.grey.shade800,
+          Colors.grey.shade400
         ])),
         child: Stack(
           children: [
@@ -146,14 +146,14 @@ class _HomeState extends State<Home> {
                           border: InputBorder.none,
                           prefixIcon: const Icon(
                             Icons.search_outlined,
-                            color: Colors.green,
+                            color: Colors.grey,
                           ),
                           // suffixIcon: IconButton(
                           //     onPressed: () {
                           //     },
                           //     icon: Icon(
                           //       Icons.arrow_right_alt_rounded,
-                          //       color: Colors.green,
+                          //       color: Colors.grey,
                           //     )),
                           hintText: "Search...",
                           hintStyle: GoogleFonts.barlowSemiCondensed(
@@ -198,7 +198,7 @@ class _HomeState extends State<Home> {
                       if (!snapshot.hasData) {
                         return const Center(
                           child: CircularProgressIndicator(
-                            color: Colors.green,
+                            color: Colors.grey,
                           ),
                         ); // Show loading indicator
                       }
@@ -213,16 +213,12 @@ class _HomeState extends State<Home> {
                               //   return const Text("dadfsgsdfgsdgta");
                               // }
                               return FadeIn(
-                                child: Card(
-                                  color: Colors.green.shade800,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 10, right: 10, bottom: 10),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(16)),
-                                      child: ListTile(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 10, right: 10, bottom: 10),
+                                  child: Column(
+                                    children: [
+                                      ListTile(
                                         onTap: () {
                                           try {
                                             int i =
@@ -260,12 +256,12 @@ class _HomeState extends State<Home> {
                                             context: context,
                                             builder: (context) {
                                               return AlertDialog(
-                                                shadowColor: Colors.green,
+                                                shadowColor: Colors.grey,
                                                 title: Text(
                                                   botData["Bot Name"],
                                                   textAlign: TextAlign.center,
                                                   style: const TextStyle(
-                                                      color: Colors.green),
+                                                      color: Colors.grey),
                                                 ),
                                                 // content: const Text("errorMessage"),
                                                 actions: [
@@ -289,8 +285,7 @@ class _HomeState extends State<Home> {
                                                                 content: Text(
                                                                     'Bot deleted successfully!'),
                                                                 backgroundColor:
-                                                                    Colors
-                                                                        .green,
+                                                                    Colors.grey,
                                                               ),
                                                             );
 
@@ -326,17 +321,9 @@ class _HomeState extends State<Home> {
                                         title: Text(
                                           botData['Bot Name'],
                                           style: GoogleFonts.publicSans(
-                                            fontSize: 20,
-                                            color: Colors.white,
-                                            shadows: <Shadow>[
-                                              const Shadow(
-                                                offset: Offset(1.0, 1.0),
-                                                blurRadius: 1.0,
-                                                color: Color.fromARGB(
-                                                    255, 14, 60, 13),
-                                              ),
-                                            ],
-                                          ),
+                                              fontSize: 20,
+                                              color: Colors.black87,
+                                              fontWeight: FontWeight.w700),
                                         ), // Access data for each bot
                                         // trailing: const Text(
                                         //   "lastmess",
@@ -345,15 +332,16 @@ class _HomeState extends State<Home> {
                                         // ),
                                         leading: const CircleAvatar(
                                           maxRadius: 30,
-                                          backgroundImage: AssetImage(
-                                              "assets/ai pro pic.jpeg"),
+                                          backgroundImage:
+                                              AssetImage("assets/ai logo.jpeg"),
                                         ),
-                                        horizontalTitleGap: 10,
-                                        minVerticalPadding: 25,
-                                        selectedTileColor: Colors.white,
+                                        horizontalTitleGap: 16,
+                                        minVerticalPadding: 5,
+                                        selectedTileColor: Colors.black87,
                                         textColor: Colors.black,
                                       ),
-                                    ),
+                                      const Divider()
+                                    ],
                                   ),
                                 ),
                               );
@@ -363,7 +351,7 @@ class _HomeState extends State<Home> {
                                 .toLowerCase()
                                 .startsWith(name.toLowerCase())) {
                               return Card(
-                                color: Colors.green.shade800,
+                                color: Colors.grey.shade800,
                                 child: Padding(
                                   padding: const EdgeInsets.only(
                                       left: 10, right: 10, bottom: 10),
@@ -429,7 +417,7 @@ class _HomeState extends State<Home> {
                                                             content: Text(
                                                                 'Bot deleted successfully!'),
                                                             backgroundColor:
-                                                                Colors.green,
+                                                                Colors.grey,
                                                           ),
                                                         );
 
@@ -489,7 +477,7 @@ class _HomeState extends State<Home> {
                               );
                               // Add a "Load More" button or implement infinite scrolling if needed
                             }
-                            return Container();
+                            return null;
                           });
                     },
                   ),
@@ -502,7 +490,7 @@ class _HomeState extends State<Home> {
         height: 65,
         width: 65,
         child: FloatingActionButton(
-          backgroundColor: Colors.green.shade800,
+          backgroundColor: Colors.grey.shade800,
           child: const Icon(
             Icons.add_box_outlined,
             color: Colors.white,
@@ -530,7 +518,7 @@ class _HomeState extends State<Home> {
           if (!snapshot.hasData) {
             return const Center(
               child: CircularProgressIndicator(
-                color: Colors.green,
+                color: Colors.grey,
               ),
             ); // Show loading indicator
           }
@@ -546,14 +534,14 @@ class _HomeState extends State<Home> {
           if (!snapshot.hasData) {
             return const Center(
               child: CircularProgressIndicator(
-                color: Colors.green,
+                color: Colors.grey,
               ),
             ); // Show loading indicator
           }
           return Drawer(
             width: 275,
             elevation: 30,
-            backgroundColor: Colors.green.shade800,
+            backgroundColor: Colors.grey.shade800,
             shape: const RoundedRectangleBorder(
                 borderRadius:
                     BorderRadius.horizontal(right: Radius.circular(40))),
@@ -605,7 +593,7 @@ class _HomeState extends State<Home> {
                             children: [
                               const CircleAvatar(
                                 backgroundImage: AssetImage(
-                                  "assets/ai pro pic.jpeg",
+                                  "assets/ai logo.jpeg",
                                 ),
                                 maxRadius: 30,
                               ),
@@ -637,7 +625,7 @@ class _HomeState extends State<Home> {
                         ),
                         const Divider(
                           height: 35,
-                          color: Colors.green,
+                          color: Colors.grey,
                         ),
                         DrawerItem(
                           title: 'Invite a friend',

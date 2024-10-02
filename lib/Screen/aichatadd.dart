@@ -29,6 +29,7 @@ class _ChatcreateState extends State<Chatcreate> {
     super.initState();
     BannerAdload();
   }
+
   late BannerAd _bannerAd;
   bool isbanneradsload = false;
   // ignore: non_constant_identifier_names
@@ -62,9 +63,9 @@ class _ChatcreateState extends State<Chatcreate> {
         width: double.infinity,
         decoration: BoxDecoration(
             gradient: LinearGradient(begin: Alignment.topCenter, colors: [
-          Colors.green.shade900,
-          Colors.green.shade800,
-          Colors.green.shade400
+          Colors.grey.shade900,
+          Colors.grey.shade800,
+          Colors.grey.shade400
         ])),
         child: Stack(
           children: [
@@ -163,7 +164,7 @@ class _ChatcreateState extends State<Chatcreate> {
                                     hintStyle: TextStyle(color: Colors.grey),
                                     prefixIcon: Icon(
                                       Icons.group_add_outlined,
-                                      color: Colors.green,
+                                      color: Colors.grey,
                                     ),
                                     hintText: "Name of the bot",
                                     // hintStyle: GoogleFonts.barlowSemiCondensed(
@@ -194,7 +195,7 @@ class _ChatcreateState extends State<Chatcreate> {
                                   },
                                   height: 50,
                                   // margin: EdgeInsets.symmetric(horizontal: 50),
-                                  color: Colors.green[900],
+                                  color: Colors.grey[900],
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(50),
                                   ),
@@ -221,7 +222,7 @@ class _ChatcreateState extends State<Chatcreate> {
                                   },
                                   height: 50,
                                   // margin: EdgeInsets.symmetric(horizontal: 50),
-                                  color: Colors.green[900],
+                                  color: Colors.grey[900],
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(50),
                                   ),
@@ -325,7 +326,7 @@ class _ChatcreateState extends State<Chatcreate> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CircularProgressIndicator(
-              color: Colors.greenAccent,
+              color: Colors.grey,
             ),
             SizedBox(height: 16), // Add spacing between indicator and text
             Text(
@@ -333,7 +334,7 @@ class _ChatcreateState extends State<Chatcreate> {
               style: TextStyle(
                   fontSize: 25,
                   fontWeight: FontWeight.bold,
-                  color: Colors.green),
+                  color: Colors.grey),
             ),
           ],
         ),
@@ -402,7 +403,7 @@ class _ChatcreateState extends State<Chatcreate> {
     return Container(
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: Colors.green.shade400)),
+            border: Border.all(color: Colors.grey.shade400)),
         padding: const EdgeInsets.only(left: 20, top: 5, right: 20),
         child: ListView.builder(
             itemCount: files.length,

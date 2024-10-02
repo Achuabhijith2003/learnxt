@@ -20,9 +20,9 @@ class _RecoveryState extends State<Recovery> {
         width: double.infinity,
         decoration: BoxDecoration(
             gradient: LinearGradient(begin: Alignment.topCenter, colors: [
-          Colors.green.shade900,
-          Colors.green.shade800,
-          Colors.green.shade400
+          Colors.grey.shade900,
+          Colors.grey.shade800,
+          Colors.grey.shade400
         ])),
         child: Padding(
           padding: const EdgeInsets.all(.0),
@@ -111,7 +111,7 @@ class _RecoveryState extends State<Recovery> {
                               },
                               height: 50,
                               // margin: EdgeInsets.symmetric(horizontal: 50),
-                              color: Colors.green[900],
+                              color: Colors.grey[900],
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(50),
                               ),

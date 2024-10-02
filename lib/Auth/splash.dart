@@ -16,8 +16,8 @@ class Splash extends StatelessWidget {
     return Scaffold(
       body: Center(
         child: FlutterSplashScreen.gif(
-          backgroundColor: Colors.white,
-          gifPath: 'assets/splash .gif',
+          backgroundColor: Color(int.parse("#f5f3ef".substring(1, 7), radix: 16) + 0xFF000000),
+          gifPath: 'assets/XT.gif',
           gifWidth: 269,
           gifHeight: 474,
           nextScreen: (FirebaseAuth.instance.currentUser != null)

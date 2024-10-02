@@ -46,9 +46,9 @@ class _UserProfileState extends State<UserProfile> {
         width: double.infinity,
         decoration: BoxDecoration(
             gradient: LinearGradient(begin: Alignment.topCenter, colors: [
-          Colors.green.shade900,
-          Colors.green.shade800,
-          Colors.green.shade400
+          Colors.grey.shade900,
+          Colors.grey.shade800,
+          Colors.grey.shade400
         ])),
         child: Stack(children: [
           Column(
@@ -124,7 +124,7 @@ class _UserProfileState extends State<UserProfile> {
                       if (!snapshot.hasData) {
                         return const Center(
                           child: CircularProgressIndicator(
-                            color: Colors.green,
+                            color: Colors.grey,
                           ),
                         ); // Show loading indicator
                       }
@@ -140,10 +140,10 @@ class _UserProfileState extends State<UserProfile> {
                                 Row(
                                   children: [
                                     const CircleAvatar(
-                                      backgroundColor: Colors.green,
+                                      backgroundColor: Colors.grey,
                                       maxRadius: 35,
                                       backgroundImage:
-                                          AssetImage("assets/ai pro pic.jpeg"),
+                                          AssetImage("assets/ai logo.jpeg"),
                                     ),
                                     Column(
                                       children: [
@@ -170,7 +170,7 @@ class _UserProfileState extends State<UserProfile> {
                                   ],
                                 ),
                                 const VerticalDivider(
-                                  color: Colors.green,
+                                  color: Colors.grey,
                                   thickness: 3,
                                 ),
                               ],
@@ -182,14 +182,14 @@ class _UserProfileState extends State<UserProfile> {
                                 padding: EdgeInsets.only(
                                     left: 50, right: 50, top: 15, bottom: 10),
                                 child: Divider(
-                                  color: Colors.green,
+                                  color: Colors.grey,
                                 ),
                               ),
                               Padding(
                                 padding:
                                     const EdgeInsets.only(left: 15, right: 15),
                                 child: Card(
-                                    color: Colors.green.shade400,
+                                    color: Colors.grey.shade400,
                                     child: ListTile(
                                       title: const Text(
                                         "Logout",

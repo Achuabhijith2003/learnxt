@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -79,9 +80,9 @@ class _ChataiState extends State<Chatai> {
         width: double.infinity,
         decoration: BoxDecoration(
             gradient: LinearGradient(begin: Alignment.topCenter, colors: [
-          Colors.green.shade900,
-          Colors.green.shade800,
-          Colors.green.shade400
+          Colors.grey.shade900,
+          Colors.grey.shade800,
+          Colors.grey.shade400
         ])),
         child: Stack(
           children: [
@@ -161,7 +162,7 @@ class _ChataiState extends State<Chatai> {
                       ),
                       theme: const DefaultChatTheme(
                         backgroundColor: Color(0xFFEFFFFC),
-                        inputBackgroundColor: Color.fromARGB(255, 12, 95, 15),
+                        inputBackgroundColor: Colors.grey,
                         inputTextDecoration:
                             InputDecoration(labelText: "Enter prompt"),
                         messageBorderRadius: 35,
