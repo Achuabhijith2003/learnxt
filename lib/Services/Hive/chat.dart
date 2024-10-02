@@ -12,10 +12,11 @@ part 'chat.g.dart';
 class CHathive {
   CHathive(
       {required this.id,
+      required this.userid,
       required this.createdAt,
       required this.text,
       required this.firstName,
-      required this.profileimg});
+      this.profileimg});
 
   // List<ChatMessage> chat;
   @HiveField(0)
@@ -28,6 +29,8 @@ class CHathive {
   String? firstName;
   @HiveField(4)
   String? profileimg;
+  @HiveField(5)
+  String userid;
 }
 
 class Chatputandget {
@@ -38,11 +41,12 @@ class Chatputandget {
     String docId,
   ) async {
     final chat = CHathive(
-        createdAt: message.createdAt,
-        text: message.text,
-        firstName: user?.firstName,
-        id: user!.id,
-        profileimg: user.imageUrl);
+      createdAt: message.createdAt,
+      text: message.text,
+      userid: user!.id,
+      firstName: user.firstName,
+      id: message.id,
+    );
     // geting no of chats
     Chatidputandget chatidget = Chatidputandget();
     int i = await chatidget.getid(docId);
@@ -53,7 +57,6 @@ class Chatputandget {
   List<types.Message> messages = [];
   fechallchat(docid) {
     try {
-      List<types.Message> messages = [];
       // geting no of chats
       int i = 1;
       Chatidputandget chatidget = Chatidputandget();
@@ -64,7 +67,7 @@ class Chatputandget {
         TextMessage chathis = TextMessage(
             createdAt: chatdata.createdAt,
             text: chatdata.text,
-            author: types.User(id: chatdata.id),
+            author: types.User(id: chatdata.userid),
             id: chatdata.id);
         print("While looping for fetch $i");
         i++;
@@ -77,7 +80,7 @@ class Chatputandget {
   }
 
   void _addMessage(types.Message message) {
-    messages.add(message);
+    messages.insert(0, message);
 
     print("MEssage INserted");
   }

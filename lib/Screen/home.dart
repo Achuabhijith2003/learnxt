@@ -8,8 +8,12 @@ import 'package:learnxt/Auth/loginpage.dart';
 import 'package:learnxt/Screen/aichatadd.dart';
 import 'package:learnxt/Screen/chatai.dart';
 import 'package:learnxt/Screen/user_profile.dart';
+import 'package:learnxt/Services/Hive/chatid.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+
+import '../Services/Hive/chat.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -49,6 +53,9 @@ class _HomeState extends State<Home> {
         request: const AdRequest());
     _bannerAd.load();
   }
+
+  Chatputandget chatstore = Chatputandget();
+  Chatidputandget chatid = Chatidputandget();
 
   final GlobalKey<ScaffoldState> _globalKey = GlobalKey();
   @override
@@ -218,24 +225,24 @@ class _HomeState extends State<Home> {
                                       child: ListTile(
                                         onTap: () {
                                           try {
-                                            // int i =
-                                            //     chatid.getid(botData["docId"]) +
-                                            //         1;
-                                            // chatid.putid(i, botData["docId"]);
-                                            // ChatUser users = ChatUser(
-                                            //     id: "1",
-                                            //     firstName: 'LearnXt',
-                                            //     profileImage:
-                                            //         'assets/ai pro pic.jpeg');
-                                            // chatstore.storechat(
-                                            //     botData["Bot Name"],
-                                            //     users,
-                                            //     ChatMessage(
-                                            //         user: users,
-                                            //         createdAt: DateTime.now(),
-                                            //         text:
-                                            //             "How Can I help You today"),
-                                            //     botData["docId"]);
+                                            int i =
+                                                chatid.getid(botData["docId"]) +
+                                                    1;
+                                            chatid.putid(i, botData["docId"]);
+                                            chatstore.storechat(
+                                                botData["Bot Name"],
+                                                const types.User(
+                                                    id: "0",
+                                                    firstName: "Learnxt"),
+                                                types.TextMessage(
+                                                    author: types.User(id: ""),
+                                                    createdAt: DateTime.now()
+                                                        .millisecondsSinceEpoch,
+                                                    id: DateTime.now()
+                                                        .toString(),
+                                                    text:
+                                                        "How Can I help you today?"),
+                                                botData["docId"]);
                                           } catch (e) {
                                             print("Error: $e");
                                           }
@@ -363,22 +370,23 @@ class _HomeState extends State<Home> {
                                   child: ListTile(
                                     onTap: () {
                                       try {
-                                        // int i = chatid.getid(botData["docId"]);
-                                        // chatid.putid(i++, botData["docId"]);
-                                        // ChatUser users = ChatUser(
-                                        //     id: "1",
-                                        //     firstName: "LearnXt",
-                                        //     profileImage:
-                                        //         'assets/ai pro pic.jpeg');
-                                        // chatstore.storechat(
-                                        //     botData["Bot Name"],
-                                        //     users,
-                                        //     ChatMessage(
-                                        //         user: users,
-                                        //         createdAt: DateTime.now(),
-                                        //         text:
-                                        //             "How Can I help You today"),
-                                        //     botData["docId"]);
+                                        int i =
+                                            chatid.getid(botData["docId"]) + 1;
+                                        chatid.putid(i, botData["docId"]);
+                                        chatstore.storechat(
+                                            botData["Bot Name"],
+                                            const types.User(
+                                                id: "0", firstName: "Learnxt"),
+                                            types.TextMessage(
+                                                author: const types.User(
+                                                    id: "",
+                                                    firstName: "LearnXT"),
+                                                createdAt: DateTime.now()
+                                                    .millisecondsSinceEpoch,
+                                                id: DateTime.now().toString(),
+                                                text:
+                                                    "How Can I help you today?"),
+                                            botData["docId"]);
                                       } catch (e) {
                                         print("Error: $e");
                                       }

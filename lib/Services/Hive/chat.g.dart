@@ -18,6 +18,7 @@ class CHathiveAdapter extends TypeAdapter<CHathive> {
     };
     return CHathive(
       id: fields[0] as String,
+      userid: fields[5] as String,
       createdAt: fields[1] as int?,
       text: fields[2] as String,
       firstName: fields[3] as String?,
@@ -28,7 +29,7 @@ class CHathiveAdapter extends TypeAdapter<CHathive> {
   @override
   void write(BinaryWriter writer, CHathive obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -38,7 +39,9 @@ class CHathiveAdapter extends TypeAdapter<CHathive> {
       ..writeByte(3)
       ..write(obj.firstName)
       ..writeByte(4)
-      ..write(obj.profileimg);
+      ..write(obj.profileimg)
+      ..writeByte(5)
+      ..write(obj.userid);
   }
 
   @override

@@ -24,21 +24,20 @@ class _ChataiState extends State<Chatai> {
   @override
   void initState() {
     super.initState();
-    BannerAdload();
     loadChatMessages();
+    BannerAdload();
   }
 
   Future<void> loadChatMessages() async {
     final chatMessage = await chatstore.fechallchat(widget.docId);
     setState(() {
-      _messages = chatMessage;
+      _messages.insertAll(0, chatMessage);
     });
   }
 
   void _addMessage(types.Message message) {
     setState(() {
-      // Append messages to avoid index clashes
-      _messages.add(message);
+      _messages.insert(0, message);
     });
     print("Message inserted");
   }
@@ -66,8 +65,11 @@ class _ChataiState extends State<Chatai> {
   }
 
   final cureentUser = const types.User(id: '1', firstName: "You");
-  final geminiuser = const types.User(id: '0', firstName: "Learnxt");
-  List<types.Message> _messages = [];
+  final geminiuser = const types.User(
+    id: '0',
+    firstName: "Learnxt",
+  );
+  final List<types.Message> _messages = [];
 
   @override
   Widget build(BuildContext context) {
@@ -142,7 +144,7 @@ class _ChataiState extends State<Chatai> {
                 right: 0,
                 bottom: 0,
                 child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 15),
+                    padding: const EdgeInsets.symmetric(vertical: 0),
                     decoration: const BoxDecoration(
                       borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(35),
@@ -159,7 +161,7 @@ class _ChataiState extends State<Chatai> {
                       ),
                       theme: const DefaultChatTheme(
                         backgroundColor: Color(0xFFEFFFFC),
-                        inputBackgroundColor: Colors.green,
+                        inputBackgroundColor: Color.fromARGB(255, 12, 95, 15),
                         inputTextDecoration:
                             InputDecoration(labelText: "Enter prompt"),
                         messageBorderRadius: 35,
@@ -181,10 +183,8 @@ class _ChataiState extends State<Chatai> {
                         // Store chat message
                         await chatstore.storechat(widget.botname, cureentUser,
                             textMessage, widget.docId);
-                        final userchatmess =
-                            await chatstore.fechchat(widget.docId);
                         setState(() {
-                          _addMessage(userchatmess);
+                          _addMessage(textMessage);
                         });
                         sendChatMessage(p0);
                       },
@@ -228,17 +228,15 @@ class _ChataiState extends State<Chatai> {
           // Create a new message with the updated text
           final updatedMessage = types.TextMessage(
             author: lastMessage.author,
-            id: lastMessage.id,
-            createdAt: lastMessage.createdAt,
+            id: DateTime.now().toString(),
+            createdAt: DateTime.now().millisecondsSinceEpoch,
+
             text: lastMessage.text + response, // Append the response
           );
 
           // Replace the old message in the list instead of removing it
           setState(() {
-            int index = _messages.indexOf(lastMessage);
-            if (index != -1) {
-              _messages[index] = updatedMessage; // Update message in place
-            }
+            _addMessage(updatedMessage);
           });
         } else {
           // Handle the case where there was no previous message
@@ -249,7 +247,7 @@ class _ChataiState extends State<Chatai> {
           // Storing Gemini Response as a new message
           types.TextMessage geminimessage = types.TextMessage(
             author: geminiuser,
-            id: '0',
+            id: DateTime.now().toString(),
             text: response,
           );
 
