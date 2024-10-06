@@ -204,14 +204,12 @@ class _HomeState extends State<Home> {
                       }
 
                       final data = snapshot.data as List<Map<String, dynamic>>;
+
                       return ListView.builder(
                           itemCount: data.length,
                           itemBuilder: (context, index) {
                             final botData = data[index];
                             if (name.isEmpty) {
-                              // if (data.isNotEmpty) {
-                              //   return const Text("dadfsgsdfgsdgta");
-                              // }
                               return FadeIn(
                                 child: Padding(
                                   padding: const EdgeInsets.only(
@@ -231,7 +229,8 @@ class _HomeState extends State<Home> {
                                                     id: "0",
                                                     firstName: "Learnxt"),
                                                 types.TextMessage(
-                                                    author: types.User(id: ""),
+                                                    author: const types.User(
+                                                        id: ""),
                                                     createdAt: DateTime.now()
                                                         .millisecondsSinceEpoch,
                                                     id: DateTime.now()

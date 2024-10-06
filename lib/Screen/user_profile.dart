@@ -13,6 +13,7 @@ class UserProfile extends StatefulWidget {
 }
 
 class _UserProfileState extends State<UserProfile> {
+  @override
   void initState() {
     super.initState();
     BannerAdload();

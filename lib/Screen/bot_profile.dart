@@ -162,12 +162,12 @@ class _BotProfileState extends State<BotProfile> {
                                     const EdgeInsets.only(left: 15, right: 15),
                                 child: Card(
                                     color: Colors.green.shade400,
-                                    child: ListTile(
-                                      title: const Text(
+                                    child: const ListTile(
+                                      title: Text(
                                         "Logout",
                                         style: TextStyle(color: Colors.white),
                                       ),
-                                      trailing: const Icon(
+                                      trailing: Icon(
                                         Icons.logout_outlined,
                                         color: Colors.white,
                                       ),

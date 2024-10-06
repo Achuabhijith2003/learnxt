@@ -212,6 +212,32 @@ class _LoginpageState extends State<Loginpage> {
                             duration: const Duration(milliseconds: 1600),
                             child: MaterialButton(
                               onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  barrierDismissible:
+                                      false, // Disable user interaction while uploading
+                                  builder: (context) => const Center(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        CircularProgressIndicator(
+                                          color: Colors.grey,
+                                        ),
+                                        SizedBox(
+                                            height:
+                                                10), // Add spacing between indicator and text
+                                        // Text(
+                                        //   "Welcome Back",
+                                        //   style: GoogleFonts
+                                        //       .barlowSemiCondensed(
+                                        //           fontSize: 16,
+                                        //           color: Colors.grey),
+                                        // ),
+                                      ],
+                                    ),
+                                  ),
+                                );
                                 login(emailcontroller, passwordcontroller);
                               },
                               height: 50,
@@ -248,11 +274,37 @@ class _LoginpageState extends State<Loginpage> {
                             Expanded(
                               child: FadeInUp(
                                   duration: const Duration(milliseconds: 1800),
-                                  child: SignInButton(
-                                    Buttons.Google,
-                                    text: "Sign up with Google",
-                                    onPressed: () => _signInWithGoogle(),
-                                  )),
+                                  child: SignInButton(Buttons.Google,
+                                      text: "Sign up with Google",
+                                      onPressed: () {
+                                    showDialog(
+                                      context: context,
+                                      barrierDismissible:
+                                          false, // Disable user interaction while uploading
+                                      builder: (context) => const Center(
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            CircularProgressIndicator(
+                                              color: Colors.grey,
+                                            ),
+                                            SizedBox(
+                                                height:
+                                                    10), // Add spacing between indicator and text
+                                            // Text(
+                                            //   "Welcome Back",
+                                            //   style: GoogleFonts
+                                            //       .barlowSemiCondensed(
+                                            //           fontSize: 16,
+                                            //           color: Colors.grey),
+                                            // ),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                    _signInWithGoogle();
+                                  })),
                             ),
                             const SizedBox(
                               width: 0,

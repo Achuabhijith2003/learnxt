@@ -329,13 +329,13 @@ class _ChatcreateState extends State<Chatcreate> {
               color: Colors.grey,
             ),
             SizedBox(height: 16), // Add spacing between indicator and text
-            Text(
-              "Processing...",
-              style: TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.grey),
-            ),
+            // Text(
+            //   "Processing...",
+            //   style: TextStyle(
+            //       fontSize: 25,
+            //       fontWeight: FontWeight.bold,
+            //       color: Colors.grey),
+            // ),
           ],
         ),
       ),
