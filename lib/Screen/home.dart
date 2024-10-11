@@ -137,7 +137,9 @@ class _HomeState extends State<Home> {
                           ),
                         ],
                         borderRadius: BorderRadius.circular(25),
-                        color: Colors.white),
+                        color: Color(
+                            int.parse("#f5f3ef".substring(1, 7), radix: 16) +
+                                0xFF000000)),
                     child: FadeInUp(
                       duration: const Duration(milliseconds: 1500),
                       child: TextField(
@@ -217,29 +219,6 @@ class _HomeState extends State<Home> {
                                     children: [
                                       ListTile(
                                         onTap: () {
-                                          try {
-                                            // int i =
-                                            //     chatid.getid(botData["docId"]) +
-                                            //         1;
-                                            // chatid.putid(i, botData["docId"]);
-                                            // chatstore.storechat(
-                                            //     botData["Bot Name"],
-                                            //     const types.User(
-                                            //         id: "0",
-                                            //         firstName: "Learnxt"),
-                                            //     types.TextMessage(
-                                            //         author: const types.User(
-                                            //             id: ""),
-                                            //         createdAt: DateTime.now()
-                                            //             .millisecondsSinceEpoch,
-                                            //         id: DateTime.now()
-                                            //             .toString(),
-                                            //         text:
-                                            //             "How Can I help you today?"),
-                                            //     botData["docId"]);
-                                          } catch (e) {
-                                            print("Error: $e");
-                                          }
                                           Navigator.push(
                                               context,
                                               MaterialPageRoute(
@@ -267,6 +246,25 @@ class _HomeState extends State<Home> {
                                                     //Delete the bot
                                                     child: TextButton(
                                                         onPressed: () async {
+                                                          showDialog(
+                                                            context: context,
+                                                            barrierDismissible:
+                                                                false, // Disable user interaction while uploading
+                                                            builder: (context) =>
+                                                                const Center(
+                                                              child: Column(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                children: [
+                                                                  CircularProgressIndicator(
+                                                                    color: Colors
+                                                                        .grey,
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          );
                                                           final deletionSuccessful =
                                                               await deletebot(
                                                                   botData[
@@ -275,7 +273,7 @@ class _HomeState extends State<Home> {
                                                             // Show a success notification (e.g., Snackbar)
                                                             setState(() {
                                                               fetchData();
-                                                            });
+                                                            }); // Show loading indicator
                                                             ScaffoldMessenger
                                                                     .of(context)
                                                                 .showSnackBar(
@@ -301,6 +299,8 @@ class _HomeState extends State<Home> {
                                                               ),
                                                             );
                                                           }
+                                                          Navigator.pop(
+                                                              context);
                                                           Navigator.pop(
                                                               context);
                                                         },
@@ -355,27 +355,6 @@ class _HomeState extends State<Home> {
                                       left: 10, right: 10, bottom: 10),
                                   child: ListTile(
                                     onTap: () {
-                                      try {
-                                        // int i =
-                                        //     chatid.getid(botData["docId"]) + 1;
-                                        // chatid.putid(i, botData["docId"]);
-                                        // chatstore.storechat(
-                                        //     botData["Bot Name"],
-                                        //     const types.User(
-                                        //         id: "0", firstName: "Learnxt"),
-                                        //     types.TextMessage(
-                                        //         author: const types.User(
-                                        //             id: "",
-                                        //             firstName: "LearnXT"),
-                                        //         createdAt: DateTime.now()
-                                        //             .millisecondsSinceEpoch,
-                                        //         id: DateTime.now().toString(),
-                                        //         text:
-                                        //             "How Can I help you today?"),
-                                        //     botData["docId"]);
-                                      } catch (e) {
-                                        print("Error: $e");
-                                      }
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
@@ -805,11 +784,17 @@ class _HomeState extends State<Home> {
             doc.reference.delete();
           }
         });
+        await docRef.delete();
+        setState(() {
+          fetchData();
+        });
+
         print('Subcollection deleted successfully');
+        return true; // Deletion successful
       } catch (e) {
         print('Error deleting subcollection: $e');
       }
-      await docRef.delete();
+
       return true; // Deletion successful
     } catch (error) {
       return false; // Deletion failed
