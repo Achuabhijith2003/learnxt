@@ -33,50 +33,60 @@ class CHathive {
   String userid;
 }
 
+Chatidputandget chatid = Chatidputandget();
+
 class Chatputandget {
-  storechat(
-    String botname,
-    types.User? user,
-    TextMessage message,
-    String docId,
-  ) async {
+  Future<void> storechat(
+      types.Message message, String docId, String text, String botname) async {
+    int newId = chatid.getid(docId);
+    // Store chat message with the updated ID
     final chat = CHathive(
       createdAt: message.createdAt,
-      text: message.text,
-      userid: user!.id,
-      firstName: user.firstName,
+      text: text,
+      userid: message.author.id,
+      firstName: message.author.firstName,
       id: message.id,
+      profileimg: message.author.imageUrl,
     );
-    // geting no of chats
-    Chatidputandget chatidget = Chatidputandget();
-    int i = await chatidget.getid(docId);
-    print("Chatid put while store: $i");
-    box.put("$docId/$i", chat);
+
+    // Store the message using newId as part of the key
+    box.put("$docId/$newId", chat);
+
+    print("Chat message stored with ID: $newId for docId: $docId");
   }
 
-  List<types.Message> messages = [];
-  fechallchat(docid) {
+  List<types.Message> messages = []; // Initialize an empty list
+  Future<List<types.Message>> fechallchat(String docId) async {
     try {
-      // geting no of chats
       int i = 1;
       Chatidputandget chatidget = Chatidputandget();
-      int j = chatidget.getid(docid);
-      print("Chatid put while fecht: $j");
-      while (i <= j) {
-        CHathive chatdata = box.get("$docid/$i") as CHathive;
-        TextMessage chathis = TextMessage(
-            createdAt: chatdata.createdAt,
-            text: chatdata.text,
-            author: types.User(id: chatdata.userid),
-            id: chatdata.id);
-        print("While looping for fetch $i");
+      int totalMessages = chatidget.getid(docId);
+
+      // Loop through and fetch messages
+      while (i <= totalMessages) {
+        CHathive chatData = box.get("$docId/$i") as CHathive;
+        print("id: $i text : ${chatData.text} ");
+        // ignore: unnecessary_null_comparison
+        if (chatData != null) {
+          // Convert CHathive to TextMessage
+          types.TextMessage chatMessage = types.TextMessage(
+            createdAt: chatData.createdAt,
+            text: chatData.text,
+            author:
+                types.User(id: chatData.userid, imageUrl: chatData.profileimg),
+            id: chatData.id,
+          );
+
+          // Add message to the list
+          _addMessage(chatMessage);
+        }
         i++;
-        _addMessage(chathis as Message);
       }
-      return messages;
     } catch (e) {
       print("Error: $e");
     }
+
+    return messages; // Return the list of messages
   }
 
   void _addMessage(types.Message message) {
@@ -94,14 +104,6 @@ class Chatputandget {
       print("Chatid put while fecht: $j");
 
       CHathive chatdata = await box.get("$docid/$j") as CHathive;
-      // ChatMessage chathis = ChatMessage(
-      //   user: ChatUser(
-      //       id: chatdata.id,
-      //       firstName: chatdata.firstName,
-      //       profileImage: chatdata.profileimg),
-      //   createdAt: chatdata.createdAt,
-      //   text: chatdata.text,
-      // );
       TextMessage chathis = TextMessage(
           text: chatdata.text,
           author: types.User(id: chatdata.id),
