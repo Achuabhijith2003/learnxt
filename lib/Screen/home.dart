@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:animate_do/animate_do.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -8,11 +11,10 @@ import 'package:learnxt/Auth/loginpage.dart';
 import 'package:learnxt/Screen/aichatadd.dart';
 import 'package:learnxt/Screen/chatai.dart';
 import 'package:learnxt/Screen/user_profile.dart';
-import 'package:learnxt/Services/Hive/chatid.dart';
+import 'package:learnxt/Services/data_embedded.dart';
+import 'package:learnxt/Services/gadsmob.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import '../Services/Hive/chat.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -30,6 +32,7 @@ class _HomeState extends State<Home> {
     fetch_user_profile();
   }
 
+  admob ads = admob();
   String name = "";
   List<Map<String, dynamic>> data = [];
   late BannerAd _bannerAd;
@@ -52,9 +55,6 @@ class _HomeState extends State<Home> {
         request: const AdRequest());
     _bannerAd.load();
   }
-
-  Chatputandget chatstore = Chatputandget();
-  Chatidputandget chatid = Chatidputandget();
 
   final GlobalKey<ScaffoldState> _globalKey = GlobalKey();
   @override
@@ -129,17 +129,16 @@ class _HomeState extends State<Home> {
                   ),
                   child: Container(
                     decoration: BoxDecoration(
-                        boxShadow: const <BoxShadow>[
-                          BoxShadow(
-                            offset: Offset(1.0, 1.0),
-                            blurRadius: 2.0,
-                            color: Color.fromARGB(255, 14, 60, 13),
-                          ),
-                        ],
-                        borderRadius: BorderRadius.circular(25),
-                        color: Color(
-                            int.parse("#f5f3ef".substring(1, 7), radix: 16) +
-                                0xFF000000)),
+                      boxShadow: const <BoxShadow>[
+                        BoxShadow(
+                          offset: Offset(1.0, 1.0),
+                          blurRadius: 2.0,
+                          color: Color.fromARGB(255, 14, 60, 13),
+                        ),
+                      ],
+                      borderRadius: BorderRadius.circular(25),
+                      color: Colors.white,
+                    ),
                     child: FadeInUp(
                       duration: const Duration(milliseconds: 1500),
                       child: TextField(
@@ -243,6 +242,16 @@ class _HomeState extends State<Home> {
                                                 // content: const Text("errorMessage"),
                                                 actions: [
                                                   Center(
+                                                    child: TextButton(
+                                                        onPressed: () {
+                                                          addpdfs(
+                                                              botData["docId"]);
+                                                        },
+                                                        child: const Text(
+                                                          "Add PDFs",
+                                                        )),
+                                                  ),
+                                                  Center(
                                                     //Delete the bot
                                                     child: TextButton(
                                                         onPressed: () async {
@@ -310,7 +319,7 @@ class _HomeState extends State<Home> {
                                                               color:
                                                                   Colors.red),
                                                         )),
-                                                  )
+                                                  ),
                                                 ],
                                               );
                                             },
@@ -376,9 +385,37 @@ class _HomeState extends State<Home> {
                                             // content: const Text("errorMessage"),
                                             actions: [
                                               Center(
+                                                child: TextButton(
+                                                    onPressed: () {
+                                                      addpdfs(botData["docId"]);
+                                                    },
+                                                    child: const Text(
+                                                      "Add PDFs",
+                                                    )),
+                                              ),
+                                              Center(
                                                 //Delete the bot
                                                 child: TextButton(
                                                     onPressed: () async {
+                                                      showDialog(
+                                                        context: context,
+                                                        barrierDismissible:
+                                                            false, // Disable user interaction while uploading
+                                                        builder: (context) =>
+                                                            const Center(
+                                                          child: Column(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            children: [
+                                                              CircularProgressIndicator(
+                                                                color:
+                                                                    Colors.grey,
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      );
                                                       final deletionSuccessful =
                                                           await deletebot(
                                                               botData["docId"]);
@@ -412,6 +449,7 @@ class _HomeState extends State<Home> {
                                                           ),
                                                         );
                                                       }
+                                                      Navigator.pop(context);
                                                       Navigator.pop(context);
                                                     },
                                                     child: const Text(
@@ -454,7 +492,7 @@ class _HomeState extends State<Home> {
                               );
                               // Add a "Load More" button or implement infinite scrolling if needed
                             }
-                            return null;
+                            return Container();
                           });
                     },
                   ),
@@ -775,6 +813,7 @@ class _HomeState extends State<Home> {
 // here two times calling docId 1. passing the doc ID 2. Finding through firebase instance
 // in future try to remove Ok!
   Future<bool> deletebot(String docId) async {
+    ads.RewardedInterstitialAdload;
     try {
       final docRef = FirebaseFirestore.instance.collection('Bot').doc(docId);
       final subcollection = docRef.collection("dataEmbedded");
@@ -800,7 +839,84 @@ class _HomeState extends State<Home> {
       return false; // Deletion failed
     }
   }
+
+// add pdfs
+  addpdfs(docid) async {
+    List<File> files = [];
+// pick files
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      allowMultiple: true,
+    );
+
+    if (result != null) {
+      files = result.paths.map((path) => File(path!)).toList();
+
+      return showDialog(
+        context: context,
+        barrierDismissible: false, // Disable user interaction while uploading
+        builder: (context) {
+          return AlertDialog(
+            title: Text("Selected PDF Files"),
+            content: Container(
+              width: double.maxFinite,
+              child: ListView.builder(
+                shrinkWrap: true, // Make the list view wrap its content
+                itemCount: files.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text(files[index].path.split('/').last),
+                  );
+                },
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () async {
+                  ads.RewardedInterstitialAdload;
+                  showDialog(
+                    context: context,
+                    barrierDismissible:
+                        false, // Disable user interaction while uploading
+                    builder: (context) => const Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CircularProgressIndicator(
+                            color: Colors.grey,
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                  CollectionReference insertfilename =
+                      FirebaseFirestore.instance.collection('Bot');
+                  DataEmbedded dataEmbedded = DataEmbedded();
+                  final List<String> filenames = [];
+                  dataEmbedded.getDocId(docid);
+                  for (File file in files) {
+                    final fileName =
+                        file.path.split('/').last; // Extract file name
+                    filenames.add(fileName);
+                    await dataEmbedded.pdfextract(file);
+                  }
+                  await insertfilename.doc(docid).update({
+                    'pdfs_name': FieldValue.arrayUnion(filenames),
+                  });
+                  Navigator.of(context).pop(); // Close the dialog
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                },
+                child: const Text("ADD"),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
 }
+
+insertpdfs(docid) {}
 
 // ignore: non_constant_identifier_names
 fetch_user_profile() async {

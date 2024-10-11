@@ -8,7 +8,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:learnxt/Auth/loginpage.dart';
 import 'package:learnxt/Screen/home.dart';
 import 'package:learnxt/Services/Hive/chatid.dart';
 import 'package:learnxt/Services/gadsmob.dart';
@@ -269,18 +268,6 @@ class _ChatcreateState extends State<Chatcreate> {
     );
   }
 
-  void logout() async {
-    //logout method
-    await FirebaseAuth.instance.signOut();
-    // ignore: use_build_context_synchronously
-    Navigator.pushReplacement(
-        // ignore: use_build_context_synchronously
-        context,
-        MaterialPageRoute(
-          builder: (context) => const Loginpage(),
-        ));
-  }
-
   List<File> files = [];
   String pdfName = ''; // Corrected variable name for clarity
 
@@ -367,11 +354,11 @@ class _ChatcreateState extends State<Chatcreate> {
         await _dataEmbedded.pdfextract(file);
       }
 
-      // Store bot pdfurl in Firestore
-      final pdfurl = {
+      // Store bot pdfname in Firestore
+      final pdfname = {
         'pdfs_name': filenames,
       };
-      await docRef.update(pdfurl);
+      await docRef.update(pdfname);
       // Handle successful creation (e.g., show success message)
       Chatidputandget chatidput = Chatidputandget();
       chatidput.putid(0, docId);
