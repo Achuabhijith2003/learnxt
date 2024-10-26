@@ -17,6 +17,7 @@ class _UserProfileState extends State<UserProfile> {
   void initState() {
     super.initState();
     BannerAdload();
+    nativeadvancedadloader();
   }
 
   late BannerAd _bannerAd;
@@ -38,6 +39,37 @@ class _UserProfileState extends State<UserProfile> {
         ),
         request: const AdRequest());
     _bannerAd.load();
+  }
+
+  // native_ads
+  late NativeAd nativeAd;
+  bool isNativeAdAdLoaded = false;
+  final String adUnitId = "ca-app-pub-3940256099942544/2247696110";
+
+  // Native advanced
+  nativeadvancedadloader() {
+    nativeAd = NativeAd(
+        adUnitId: adUnitId,
+        listener: NativeAdListener(
+          onAdLoaded: (ad) {
+            setState(() {
+              isNativeAdAdLoaded = true;
+            });
+
+            print("native advanced adloader: Ad Loaded");
+          },
+          onAdFailedToLoad: (ad, error) {
+            setState(() {
+              isNativeAdAdLoaded = false;
+              ad.dispose();
+            });
+            print("native advanced adloader: Ad Loaded is failed");
+          },
+        ),
+        request: const AdManagerAdRequest(),
+        nativeTemplateStyle:
+            NativeTemplateStyle(templateType: TemplateType.small));
+    nativeAd.load();
   }
 
   @override
@@ -202,12 +234,20 @@ class _UserProfileState extends State<UserProfile> {
                                       ),
                                       onTap: logout,
                                     )),
-                              )
+                              ),
                             ],
                           ),
                         ],
                       );
                     },
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 258),
+                    child: isNativeAdAdLoaded
+                        ? SizedBox(
+                            child: AdWidget(ad: nativeAd),
+                          )
+                        : const SizedBox(),
                   ),
                 ]),
               ))

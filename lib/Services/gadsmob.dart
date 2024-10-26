@@ -5,7 +5,8 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 class admob {
   AppOpenAd? _appOpenAd;
   RewardedAd? _rewardedAd;
-  RewardedInterstitialAd? _rewardedInterstitialAd;
+  RewardedInterstitialAd? _rewardedInterstitialAd; 
+
   // Appopen ads
   // ignore: non_constant_identifier_names
   AppOpenAdload() {
@@ -100,4 +101,6 @@ class admob {
       ),
     );
   }
+
+
 }

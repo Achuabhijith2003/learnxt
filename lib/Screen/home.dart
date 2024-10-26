@@ -813,7 +813,7 @@ class _HomeState extends State<Home> {
 // here two times calling docId 1. passing the doc ID 2. Finding through firebase instance
 // in future try to remove Ok!
   Future<bool> deletebot(String docId) async {
-    ads.RewardedInterstitialAdload;
+    ads.AppOpenAdload();
     try {
       final docRef = FirebaseFirestore.instance.collection('Bot').doc(docId);
       final subcollection = docRef.collection("dataEmbedded");
@@ -856,8 +856,8 @@ class _HomeState extends State<Home> {
         barrierDismissible: false, // Disable user interaction while uploading
         builder: (context) {
           return AlertDialog(
-            title: Text("Selected PDF Files"),
-            content: Container(
+            title: const Text("Selected PDF Files"),
+            content: SizedBox(
               width: double.maxFinite,
               child: ListView.builder(
                 shrinkWrap: true, // Make the list view wrap its content
@@ -872,7 +872,7 @@ class _HomeState extends State<Home> {
             actions: [
               TextButton(
                 onPressed: () async {
-                  ads.RewardedInterstitialAdload;
+                  ads.AppOpenAdload();
                   showDialog(
                     context: context,
                     barrierDismissible:
