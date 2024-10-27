@@ -200,6 +200,9 @@ class _ChataiState extends State<Chatai> {
                       showUserAvatars: true,
                       showUserNames: true,
                       user: cureentUser,
+                      onMessageLongPress: (context, p1) {
+                       
+                      },
                     )))
           ],
         ),
@@ -223,7 +226,8 @@ class _ChataiState extends State<Chatai> {
 
       gemini
           .streamGenerateContent(
-        "Based on the keywords: $keywords and the question: ${chatMessage.text}, explain the answer in a simple and easy-to-understand way for a student, breaking down any difficult concepts and using examples where possible.",
+        modelName: "models/gemini-1.5-flash",
+        "Based on the keywords: $keywords and answer the question: ${chatMessage.text}, explain the answer in a simple and easy-to-understand way for a student, breaking down any difficult concepts and using examples where possible.",
       )
           .listen((event) async {
         String response = event.content?.parts?.fold(
