@@ -137,4 +137,26 @@ class Chatputandget {
       return null;
     }
   }
+
+  chatmodify(
+    int id,
+    types.Message message,
+    String docId,
+    String text,
+  ) {
+    // Store chat message with the updated ID
+    final chat = CHathive(
+      createdAt: message.createdAt,
+      text: text,
+      userid: message.author.id,
+      firstName: message.author.firstName,
+      id: message.id,
+      profileimg: message.author.imageUrl,
+    );
+
+    // Store the message using newId as part of the key
+    box.put("$docId/$id", chat);
+
+    print("Modifed Chat message stored with ID: $id for docId: $docId");
+  }
 }

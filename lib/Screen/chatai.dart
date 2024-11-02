@@ -30,13 +30,20 @@ class _ChataiState extends State<Chatai> {
 
   Future<void> loadChatMessages() async {
     final chatMessages = await chatstore.fechallchat(widget.docId);
-
     if (chatMessages.isNotEmpty) {
       setState(() {
         // Ensure no duplicate messages are inserted
+        _messages.clear();
         _messages.insertAll(0, chatMessages);
       });
     }
+  }
+
+  Future<void> clearChatMessages() async {
+    setState(() {
+      // Ensure no duplicate messages are inserted
+      _messages.clear();
+    });
   }
 
   Future<void> _addMessage(types.Message message, String text) async {
@@ -77,6 +84,32 @@ class _ChataiState extends State<Chatai> {
   final geminiuser = const types.User(
       id: '0', firstName: "Learnxt", imageUrl: "assets/ai logo.jpeg");
   final List<types.Message> _messages = [];
+
+  Future<void> deleteMessageAndReplace(int messageId) async {
+    final deletedMessageIndex =
+        _messages.indexWhere((msg) => msg.id == messageId.toString());
+
+    if (deletedMessageIndex != -1) {
+      // Update the message in the database
+      final deletedMessage = types.TextMessage(
+        author: _messages[deletedMessageIndex].author,
+        createdAt: _messages[deletedMessageIndex].createdAt,
+        id: _messages[deletedMessageIndex].id,
+        text: "__Message Deleted__",
+      );
+
+      // Replace the message content locally with "__Message Deleted__"
+      setState(() {
+        _messages[deletedMessageIndex] = deletedMessage;
+      });
+
+      await chatstore.chatmodify(
+          messageId, deletedMessage, widget.docId, "__Message Deleted__");
+
+      // Reload messages to reflect the changes if necessary
+      // loadChatMessages();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -182,8 +215,7 @@ class _ChataiState extends State<Chatai> {
                         final textMessage = types.TextMessage(
                           author: cureentUser,
                           createdAt: DateTime.now().millisecondsSinceEpoch,
-                          id: DateTime.now()
-                              .toString(), // Ensuring a unique ID for each message
+                          id: "$newId", // Ensuring a unique ID for each message
                           text: p0.text,
                         );
 
@@ -201,7 +233,44 @@ class _ChataiState extends State<Chatai> {
                       showUserNames: true,
                       user: cureentUser,
                       onMessageLongPress: (context, p1) {
-                       
+                        showDialog(
+                          context: context,
+                          barrierDismissible: true,
+                          builder: (context) => AlertDialog(
+                            title: const Center(child: Text("Options")),
+                            actions: [
+                              Column(
+                                children: [
+                                  Center(
+                                    child: TextButton(
+                                      onPressed: () async {
+                                        // Convert id to integer and handle any errors
+                                        var newId = int.tryParse(p1.id);
+                                        if (newId == null) {
+                                          print("Invalid ID: ${p1.id}");
+                                          return;
+                                        } else {
+                                          print(
+                                              "Parsed ID successfully: $newId");
+                                        }
+
+                                        deleteMessageAndReplace(newId);
+                                        Navigator.pop(context);
+                                      },
+                                      child: const Text(
+                                        "Delete Chat",
+                                        style: TextStyle(color: Colors.red),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        );
+
+                        print("P1 ID: ${p1.id}");
+                        print("Context: $context");
                       },
                     )))
           ],
@@ -218,6 +287,7 @@ class _ChataiState extends State<Chatai> {
   }
 
   void sendChatMessage(types.PartialText chatMessage) async {
+    int newId = chatid.getid(widget.docId);
     try {
       // Search for keywords and generate an answer
       final keywords =
@@ -241,7 +311,7 @@ class _ChataiState extends State<Chatai> {
           // Create an updated message by appending response
           final updatedMessage = types.TextMessage(
             author: lastMessage.author,
-            id: lastMessage.id, // Keep the same ID
+            id: "$newId", // Keep the same ID
             createdAt: lastMessage.createdAt,
             text: lastMessage.text + response, // Append the response
           );
@@ -259,7 +329,7 @@ class _ChataiState extends State<Chatai> {
           // No last message from geminiuser, create a new one
           types.TextMessage geminimessage = types.TextMessage(
             author: geminiuser,
-            id: DateTime.now().toString(),
+            id: "$newId",
             text: response,
           );
 
