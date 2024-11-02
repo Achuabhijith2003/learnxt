@@ -329,9 +329,9 @@ class _ChatcreateState extends State<Chatcreate> {
   }
 
   void createBot(TextEditingController botNameController) async {
-    admob ads = admob();
+    // admob ads = admob();
     // rewardads
-    ads.RewardedAdload();
+    // ads.RewardedAdload();
     String botName = botNameController.text.trim();
 
     if (botName.isEmpty) {
