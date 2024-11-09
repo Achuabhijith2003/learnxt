@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:learnxt/Screen/Settings.dart';
 import 'package:learnxt/Screen/aichatadd.dart';
 import 'package:learnxt/Screen/home.dart';
 
@@ -12,6 +12,11 @@ class RemastedHome extends StatefulWidget {
 }
 
 class _RemastedHomeState extends State<RemastedHome> {
+    @override
+  void initState() {
+    super.initState();
+    BannerAdload();
+  }
   late BannerAd _bannerAd;
   bool isbanneradsload = false;
   BannerAdload() {
@@ -35,7 +40,7 @@ class _RemastedHomeState extends State<RemastedHome> {
 
   int _cureentindex = 0;
 
-  List<Widget> body = const [Home(), Chatcreate()];
+  List<Widget> body = const [Home(), Chatcreate(), Settings()];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,6 +73,14 @@ class _RemastedHomeState extends State<RemastedHome> {
                     //         0xFF000000),
                   ),
                   label: "Create Chats"),
+              BottomNavigationBarItem(
+                  icon: Icon(
+                    Icons.settings,
+                    // color: Color(
+                    //     int.parse("#f5f3ef".substring(1, 7), radix: 16) +
+                    //         0xFF000000),
+                  ),
+                  label: "Settings"),
             ],
             currentIndex: _cureentindex,
             onTap: (value) {
