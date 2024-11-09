@@ -8,9 +8,8 @@ import 'package:learnxt/Auth/accountRecovery.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:learnxt/Screen/Remasted_home.dart';
 import 'package:learnxt/Services/Hive/chat.dart';
-
-import '../Screen/home.dart';
 
 Chatputandget chatmodif = Chatputandget();
 
@@ -48,7 +47,7 @@ class _LoginpageState extends State<Loginpage> {
         chatmodif.initallchat();
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const Home()),
+          MaterialPageRoute(builder: (context) => const RemastedHome()),
         );
       }
     } catch (error) {
@@ -361,7 +360,7 @@ class _LoginpageState extends State<Loginpage> {
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => const Home(),
+                builder: (context) => const RemastedHome(),
               ));
         }
       } on FirebaseAuthException catch (e) {

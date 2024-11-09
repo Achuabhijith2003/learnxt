@@ -8,7 +8,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:learnxt/Screen/home.dart';
+import 'package:learnxt/Screen/Remasted_home.dart';
+import 'package:learnxt/Screen/user_profile.dart';
 import 'package:learnxt/Services/Hive/chatid.dart';
 import 'package:learnxt/Services/gadsmob.dart';
 import '../Services/data_embedded.dart';
@@ -93,58 +94,41 @@ class _ChatcreateState extends State<Chatcreate> {
       child: Scaffold(
         key: _globalKey,
         // backgroundColor: const Color(0xFF171717),
-        body: Container(
+        body: SizedBox(
           width: double.infinity,
-          decoration: BoxDecoration(
-              gradient: LinearGradient(begin: Alignment.topCenter, colors: [
-            Colors.grey.shade900,
-            Colors.grey.shade800,
-            Colors.grey.shade400
-          ])),
           child: Stack(
             children: [
               Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 36, left: 5, right: 5),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        IconButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            icon: const Icon(
-                              Icons.arrow_back_ios_new,
-                              color: Colors.white,
-                              shadows: <Shadow>[
-                                Shadow(
-                                  offset: Offset(1.0, 1.0),
-                                  blurRadius: 2.0,
-                                  color: Color.fromARGB(255, 14, 60, 13),
-                                ),
-                              ],
-                            )),
-                        Text(
-                          "Create AI Bot",
-                          style: GoogleFonts.ptSerif(
-                            color: Colors.white,
-                            fontSize: 40,
-                            fontWeight: FontWeight.bold,
-                            shadows: <Shadow>[
-                              const Shadow(
-                                offset: Offset(1.0, 1.0),
-                                blurRadius: 2.0,
-                                color: Color.fromARGB(255, 14, 60, 13),
-                              ),
-                            ],
-                          ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 40, left: 15),
+                        child: Text(
+                          "Create Chats",
+                          style: GoogleFonts.dmSerifDisplay(
+                              fontSize: 40,
+                              letterSpacing: 3,
+                              color: Colors.grey.shade800),
                           textAlign: TextAlign.center,
                         ),
-                        const Divider(),
-                        const Divider()
-                      ],
-                    ),
+                      ),
+                      // Profile
+                      Padding(
+                        padding: const EdgeInsets.only(top: 40, right: 10),
+                        child: IconButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const UserProfile()));
+                          },
+                          icon: const Icon(Icons.account_circle_rounded),
+                          iconSize: 30,
+                        ),
+                      )
+                    ],
                   ),
                   const SizedBox(
                     width: 35,
@@ -162,7 +146,6 @@ class _ChatcreateState extends State<Chatcreate> {
                       borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(40),
                           topRight: Radius.circular(40)),
-                      color: Color(0xFFEFFFFC),
                     ),
                     child: Column(
                       children: [
@@ -190,7 +173,7 @@ class _ChatcreateState extends State<Chatcreate> {
                                     borderRadius: BorderRadius.circular(25),
                                     color: Colors.white),
                                 child: FadeInUp(
-                                  duration: const Duration(milliseconds: 1500),
+                                  duration: const Duration(milliseconds: 550),
                                   child: TextField(
                                     controller: botnamecontroller,
                                     decoration: const InputDecoration(
@@ -230,7 +213,7 @@ class _ChatcreateState extends State<Chatcreate> {
                                     },
                                     height: 50,
                                     // margin: EdgeInsets.symmetric(horizontal: 50),
-                                    color: Colors.grey[900],
+                                    color: Colors.grey[800],
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(50),
                                     ),
@@ -257,7 +240,7 @@ class _ChatcreateState extends State<Chatcreate> {
                                     },
                                     height: 50,
                                     // margin: EdgeInsets.symmetric(horizontal: 50),
-                                    color: Colors.grey[900],
+                                    color: Colors.grey[800],
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(50),
                                     ),
@@ -412,7 +395,7 @@ class _ChatcreateState extends State<Chatcreate> {
       Navigator.pushReplacement(
           // ignore: use_build_context_synchronously
           context,
-          MaterialPageRoute(builder: (context) => const Home()));
+          MaterialPageRoute(builder: (context) => const RemastedHome()));
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Bot Created sucessfully'),

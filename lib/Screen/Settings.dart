@@ -62,7 +62,7 @@ class _SettingsState extends State<Settings> {
             padding: const EdgeInsets.only(top: 40, left: 15),
             child: Text(
               "Settings",
-              style: GoogleFonts.dmSerifDisplay(fontSize: 40),
+              style: GoogleFonts.dmSerifDisplay(fontSize: 40, letterSpacing: 4),
             ),
           ),
           Padding(
@@ -179,6 +179,10 @@ class _SettingsState extends State<Settings> {
                           }
                         },
                       ),
+                      const ListTile(
+                        title: Text('V0.0.7'),
+                        leading: Icon(Icons.app_shortcut_sharp),
+                      ),
                     ],
                   ),
                 );
@@ -186,7 +190,7 @@ class _SettingsState extends State<Settings> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(top: 458),
+            padding: const EdgeInsets.only(top: 488),
             child: isNativeAdAdLoaded
                 ? SizedBox(
                     child: AdWidget(ad: nativeAd),

@@ -7,14 +7,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:learnxt/Auth/loginpage.dart';
 import 'package:learnxt/Screen/aichatadd.dart';
 import 'package:learnxt/Screen/chatai.dart';
 import 'package:learnxt/Screen/user_profile.dart';
 import 'package:learnxt/Services/data_embedded.dart';
 import 'package:learnxt/Services/gadsmob.dart';
-import 'package:share_plus/share_plus.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -61,289 +58,151 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _globalKey,
-      body: Container(
+      body: SizedBox(
         width: double.infinity,
-        decoration: BoxDecoration(
-            gradient: LinearGradient(begin: Alignment.topCenter, colors: [
-          Colors.grey.shade900,
-          Colors.grey.shade800,
-          Colors.grey.shade400
-        ])),
         child: Stack(
           children: [
-            Column(
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(top: 36, left: 5, right: 5),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Center(
-                        child: Text(
-                          "LearnXT",
-                          style: GoogleFonts.ptSerif(
-                            color: Colors.white,
-                            fontSize: 40,
-                            fontWeight: FontWeight.bold,
-                            shadows: <Shadow>[
-                              const Shadow(
-                                offset: Offset(1.0, 1.0),
-                                blurRadius: 2.0,
-                                color: Color.fromARGB(255, 14, 60, 13),
-                              ),
-                            ],
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      )
-                    ],
+                  padding: const EdgeInsets.only(top: 40, left: 15),
+                  child: Text(
+                    "LearnXT",
+                    style: GoogleFonts.dmSerifDisplay(
+                        fontSize: 40,
+                        letterSpacing: 4,
+                        color: Colors.grey.shade800),
+                    textAlign: TextAlign.center,
                   ),
                 ),
-                // const SizedBox(
-                //   width: 35,
-                // ),
+                // Profile
                 Padding(
-                  padding: const EdgeInsets.only(
-                    top: 10,
-                    left: 42,
-                    right: 42,
-                  ),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      boxShadow: const <BoxShadow>[
-                        BoxShadow(
-                          offset: Offset(1.0, 1.0),
-                          blurRadius: 2.0,
-                          color: Color.fromARGB(255, 14, 60, 13),
-                        ),
-                      ],
-                      borderRadius: BorderRadius.circular(25),
-                      color: Colors.white,
-                    ),
-                    child: FadeInUp(
-                      duration: const Duration(milliseconds: 1500),
-                      child: TextField(
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          prefixIcon: const Icon(
-                            Icons.search_outlined,
-                            color: Colors.grey,
-                          ),
-                          // suffixIcon: IconButton(
-                          //     onPressed: () {
-                          //     },
-                          //     icon: Icon(
-                          //       Icons.arrow_right_alt_rounded,
-                          //       color: Colors.grey,
-                          //     )),
-                          hintText: "Search...",
-                          hintStyle: GoogleFonts.barlowSemiCondensed(
-                              fontSize: 16, color: Colors.grey),
-                          enabled: true,
-                        ),
-                        onChanged: (val) {
-                          setState(() {
-                            name = val;
-                          });
-                        },
-                      ),
-                    ),
+                  padding: const EdgeInsets.only(top: 40, right: 10),
+                  child: IconButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const UserProfile()));
+                    },
+                    icon: const Icon(Icons.account_circle_rounded),
+                    iconSize: 30,
                   ),
                 )
               ],
             ),
-            Positioned(
-                top: 155,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(40),
-                        topRight: Radius.circular(40)),
-                    color: Color(0xFFEFFFFC),
+            // Display banner ad if loaded
+            if (isbanneradsload)
+              SizedBox(
+                height: _bannerAd.size.height.toDouble(),
+                width: _bannerAd.size.width.toDouble(),
+                child: AdWidget(ad: _bannerAd),
+              ),
+            // Searching panal
+            Padding(
+              padding: const EdgeInsets.only(top: 120, left: 15),
+              child: Container(
+                decoration: BoxDecoration(
+                  boxShadow: const <BoxShadow>[
+                    BoxShadow(
+                      offset: Offset(1.0, 1.0),
+                      blurRadius: 2.0,
+                      color: Color.fromARGB(255, 14, 60, 13),
+                    ),
+                  ],
+                  borderRadius: BorderRadius.circular(25),
+                  color: Colors.white,
+                ),
+                child: FadeInUp(
+                  duration: const Duration(milliseconds: 550),
+                  child: TextField(
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      prefixIcon: const Icon(
+                        Icons.search_outlined,
+                        color: Colors.grey,
+                      ),
+                      hintText: "Search...",
+                      hintStyle: GoogleFonts.barlowSemiCondensed(
+                          fontSize: 16, color: Colors.grey),
+                      enabled: true,
+                    ),
+                    onChanged: (val) {
+                      setState(() {
+                        name = val;
+                      });
+                    },
                   ),
-                  child: FutureBuilder(
-                    future: fetchData(), // Initial fetch with limit
-                    builder: (context, snapshot) {
-                      if (snapshot.hasError) {
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child:
-                              Center(child: Text('Error: ${snapshot.error}')),
-                        );
-                      }
+                ),
+              ),
+            ),
+            Column(
+              children: [
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        top: 190,
+                        left: 20,
+                      ),
+                      child: Text(
+                        "Chats",
+                        style: GoogleFonts.dmSerifDisplay(
+                            fontSize: 30, color: Colors.grey),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            Positioned(
+              top: 225,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: FutureBuilder(
+                future: fetchData(), // Initial fetch with limit
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Center(child: Text('Error: ${snapshot.error}')),
+                    );
+                  }
 
-                      if (!snapshot.hasData) {
-                        return const Center(
-                          child: CircularProgressIndicator(
-                            color: Colors.grey,
-                          ),
-                        ); // Show loading indicator
-                      }
+                  if (!snapshot.hasData) {
+                    return const Center(
+                      child: CircularProgressIndicator(
+                        color: Colors.grey,
+                      ),
+                    ); // Show loading indicator
+                  }
 
-                      final data = snapshot.data as List<Map<String, dynamic>>;
-
-                      return ListView.builder(
-                          itemCount: data.length,
-                          itemBuilder: (context, index) {
-                            final botData = data[index];
-                            if (name.isEmpty) {
-                              return FadeIn(
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 10, right: 10, bottom: 10),
-                                  child: Column(
-                                    children: [
-                                      ListTile(
-                                        onTap: () {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) => Chatai(
-                                                        botname:
-                                                            botData["Bot Name"],
-                                                        docId: botData["docId"],
-                                                      )));
-                                        },
-                                        onLongPress: () {
-                                          showDialog(
-                                            context: context,
-                                            builder: (context) {
-                                              return AlertDialog(
-                                                shadowColor: Colors.grey,
-                                                title: Text(
-                                                  botData["Bot Name"],
-                                                  textAlign: TextAlign.center,
-                                                  style: const TextStyle(
-                                                      color: Colors.grey),
-                                                ),
-                                                // content: const Text("errorMessage"),
-                                                actions: [
-                                                  Center(
-                                                    child: TextButton(
-                                                        onPressed: () {
-                                                          addpdfs(
-                                                              botData["docId"]);
-                                                        },
-                                                        child: const Text(
-                                                          "Add PDFs",
-                                                        )),
-                                                  ),
-                                                  Center(
-                                                    //Delete the bot
-                                                    child: TextButton(
-                                                        onPressed: () async {
-                                                          showDialog(
-                                                            context: context,
-                                                            barrierDismissible:
-                                                                false, // Disable user interaction while uploading
-                                                            builder: (context) =>
-                                                                const Center(
-                                                              child: Column(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .center,
-                                                                children: [
-                                                                  CircularProgressIndicator(
-                                                                    color: Colors
-                                                                        .grey,
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            ),
-                                                          );
-                                                          final deletionSuccessful =
-                                                              await deletebot(
-                                                                  botData[
-                                                                      "docId"]);
-                                                          if (deletionSuccessful) {
-                                                            // Show a success notification (e.g., Snackbar)
-                                                            setState(() {
-                                                              fetchData();
-                                                            }); // Show loading indicator
-                                                            ScaffoldMessenger
-                                                                    .of(context)
-                                                                .showSnackBar(
-                                                              const SnackBar(
-                                                                content: Text(
-                                                                    'Bot deleted successfully!'),
-                                                                backgroundColor:
-                                                                    Colors.grey,
-                                                              ),
-                                                            );
-
-                                                            // Potentially refresh the list of bots after successful deletion
-                                                          } else {
-                                                            // Show an error notification (e.g., Snackbar)
-                                                            ScaffoldMessenger
-                                                                    .of(context)
-                                                                .showSnackBar(
-                                                              const SnackBar(
-                                                                content: Text(
-                                                                    'Error deleting bot!'),
-                                                                backgroundColor:
-                                                                    Colors.red,
-                                                              ),
-                                                            );
-                                                          }
-                                                          Navigator.pop(
-                                                              context);
-                                                          Navigator.pop(
-                                                              context);
-                                                        },
-                                                        child: const Text(
-                                                          'Delete the bot',
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.red),
-                                                        )),
-                                                  ),
-                                                ],
-                                              );
-                                            },
-                                          );
-                                        },
-                                        title: Text(
-                                          botData['Bot Name'],
-                                          style: GoogleFonts.publicSans(
-                                              fontSize: 20,
-                                              color: Colors.black87,
-                                              fontWeight: FontWeight.w700),
-                                        ), // Access data for each bot
-                                        // trailing: const Text(
-                                        //   "lastmess",
-                                        //   style: TextStyle(
-                                        //       color: Colors.white, fontSize: 14),
-                                        // ),
-                                        leading: const CircleAvatar(
-                                          maxRadius: 30,
-                                          backgroundImage:
-                                              AssetImage("assets/ai logo.jpeg"),
-                                        ),
-                                        horizontalTitleGap: 16,
-                                        minVerticalPadding: 5,
-                                        selectedTileColor: Colors.black87,
-                                        textColor: Colors.black,
-                                      ),
-                                      const Divider()
-                                    ],
-                                  ),
-                                ),
-                              );
-                            }
-                            if (botData['Bot Name']
-                                .toString()
-                                .toLowerCase()
-                                .startsWith(name.toLowerCase())) {
-                              return Card(
-                                color: Colors.grey.shade800,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 10, right: 10, bottom: 10),
-                                  child: ListTile(
+                  final data = snapshot.data as List<Map<String, dynamic>>;
+                  if (data.isEmpty) {
+                    return TextButton.icon(
+                      onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const Chatcreate())),
+                      label: const Text("Create Chat"),
+                      icon: const Icon(Icons.add_box_rounded),
+                    );
+                  }
+                  return ListView.builder(
+                      itemCount: data.length,
+                      itemBuilder: (context, index) {
+                        final botData = data[index];
+                        if (name.isEmpty) {
+                          return FadeIn(
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 10, right: 10, bottom: 10),
+                              child: Column(
+                                children: [
+                                  ListTile(
                                     onTap: () {
                                       Navigator.push(
                                           context,
@@ -359,9 +218,12 @@ class _HomeState extends State<Home> {
                                         context: context,
                                         builder: (context) {
                                           return AlertDialog(
+                                            shadowColor: Colors.grey,
                                             title: Text(
                                               botData["Bot Name"],
                                               textAlign: TextAlign.center,
+                                              style: const TextStyle(
+                                                  color: Colors.grey),
                                             ),
                                             // content: const Text("errorMessage"),
                                             actions: [
@@ -404,7 +266,7 @@ class _HomeState extends State<Home> {
                                                         // Show a success notification (e.g., Snackbar)
                                                         setState(() {
                                                           fetchData();
-                                                        });
+                                                        }); // Show loading indicator
                                                         ScaffoldMessenger.of(
                                                                 context)
                                                             .showSnackBar(
@@ -438,7 +300,7 @@ class _HomeState extends State<Home> {
                                                       style: TextStyle(
                                                           color: Colors.red),
                                                     )),
-                                              )
+                                              ),
                                             ],
                                           );
                                         },
@@ -447,37 +309,168 @@ class _HomeState extends State<Home> {
                                     title: Text(
                                       botData['Bot Name'],
                                       style: GoogleFonts.publicSans(
-                                        fontSize: 20,
-                                        color: Colors.white,
-                                        shadows: <Shadow>[
-                                          const Shadow(
-                                            offset: Offset(1.0, 1.0),
-                                            blurRadius: 1.0,
-                                            color:
-                                                Color.fromARGB(255, 14, 60, 13),
-                                          ),
-                                        ],
-                                      ),
+                                          fontSize: 20,
+                                          color: Colors.black87,
+                                          fontWeight: FontWeight.w700),
                                     ), // Access data for each bot
+                                    // trailing: const Text(
+                                    //   "lastmess",
+                                    //   style: TextStyle(
+                                    //       color: Colors.white, fontSize: 14),
+                                    // ),
                                     leading: const CircleAvatar(
                                       maxRadius: 30,
                                       backgroundImage:
-                                          AssetImage("assets/ai pro pic.jpeg"),
+                                          AssetImage("assets/ai logo.jpeg"),
                                     ),
-                                    horizontalTitleGap: 10,
-                                    minVerticalPadding: 25,
-                                    selectedTileColor: Colors.white,
+                                    horizontalTitleGap: 16,
+                                    minVerticalPadding: 5,
+                                    selectedTileColor: Colors.black87,
                                     textColor: Colors.black,
                                   ),
-                                ),
-                              );
-                              // Add a "Load More" button or implement infinite scrolling if needed
-                            }
-                            return Container();
-                          });
-                    },
-                  ),
-                ))
+                                  const Divider()
+                                ],
+                              ),
+                            ),
+                          );
+                        }
+                        if (botData['Bot Name']
+                            .toString()
+                            .toLowerCase()
+                            .startsWith(name.toLowerCase())) {
+                          return Padding(
+                            padding: const EdgeInsets.only(
+                                left: 10, right: 10, bottom: 10),
+                            child: ListTile(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => Chatai(
+                                              botname: botData["Bot Name"],
+                                              docId: botData["docId"],
+                                            )));
+                              },
+                              onLongPress: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      shadowColor: Colors.grey,
+                                      title: Text(
+                                        botData["Bot Name"],
+                                        textAlign: TextAlign.center,
+                                        style:
+                                            const TextStyle(color: Colors.grey),
+                                      ),
+                                      // content: const Text("errorMessage"),
+                                      actions: [
+                                        Center(
+                                          child: TextButton(
+                                              onPressed: () {
+                                                addpdfs(botData["docId"]);
+                                              },
+                                              child: const Text(
+                                                "Add PDFs",
+                                              )),
+                                        ),
+                                        Center(
+                                          //Delete the bot
+                                          child: TextButton(
+                                              onPressed: () async {
+                                                showDialog(
+                                                  context: context,
+                                                  barrierDismissible:
+                                                      false, // Disable user interaction while uploading
+                                                  builder: (context) =>
+                                                      const Center(
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        CircularProgressIndicator(
+                                                          color: Colors.grey,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                );
+                                                final deletionSuccessful =
+                                                    await deletebot(
+                                                        botData["docId"]);
+                                                if (deletionSuccessful) {
+                                                  // Show a success notification (e.g., Snackbar)
+                                                  setState(() {
+                                                    fetchData();
+                                                  }); // Show loading indicator
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                    const SnackBar(
+                                                      content: Text(
+                                                          'Bot deleted successfully!'),
+                                                      backgroundColor:
+                                                          Colors.grey,
+                                                    ),
+                                                  );
+
+                                                  // Potentially refresh the list of bots after successful deletion
+                                                } else {
+                                                  // Show an error notification (e.g., Snackbar)
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                    const SnackBar(
+                                                      content: Text(
+                                                          'Error deleting bot!'),
+                                                      backgroundColor:
+                                                          Colors.red,
+                                                    ),
+                                                  );
+                                                }
+                                                Navigator.pop(context);
+                                                Navigator.pop(context);
+                                              },
+                                              child: const Text(
+                                                'Delete the bot',
+                                                style: TextStyle(
+                                                    color: Colors.red),
+                                              )),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
+                              title: Text(
+                                botData['Bot Name'],
+                                style: GoogleFonts.publicSans(
+                                    fontSize: 20,
+                                    color: Colors.black87,
+                                    fontWeight: FontWeight.w700),
+                              ), // Access data for each bot
+                              // trailing: const Text(
+                              //   "lastmess",
+                              //   style: TextStyle(
+                              //       color: Colors.white, fontSize: 14),
+                              // ),
+                              leading: const CircleAvatar(
+                                maxRadius: 30,
+                                backgroundImage:
+                                    AssetImage("assets/ai logo.jpeg"),
+                              ),
+                              horizontalTitleGap: 16,
+                              minVerticalPadding: 5,
+                              selectedTileColor: Colors.black87,
+                              textColor: Colors.black,
+                            ),
+                          );
+                          // Add a "Load More" button or implement infinite scrolling if needed
+                        }
+                        return Container();
+                      });
+                },
+              ),
+            )
           ],
         ),
       ),
