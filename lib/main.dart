@@ -38,6 +38,7 @@ class Learnxt extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      themeMode: ThemeMode.system,
       debugShowCheckedModeBanner: false,
       home: const Splash(),
       theme: ThemeData(

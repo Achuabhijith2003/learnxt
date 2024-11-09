@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:another_flutter_splash_screen/another_flutter_splash_screen.dart';
 import 'package:learnxt/Auth/loginpage.dart';
-import 'package:learnxt/Screen/home.dart';
+import 'package:learnxt/Screen/Remasted_home.dart';
 // import 'package:learnxt/Services/Gadsmob.dart';
 
 class Splash extends StatelessWidget {
@@ -16,12 +16,13 @@ class Splash extends StatelessWidget {
     return Scaffold(
       body: Center(
         child: FlutterSplashScreen.gif(
-          backgroundColor: Color(int.parse("#f5f3ef".substring(1, 7), radix: 16) + 0xFF000000),
+          backgroundColor: Color(
+              int.parse("#f5f3ef".substring(1, 7), radix: 16) + 0xFF000000),
           gifPath: 'assets/XT.gif',
           gifWidth: 269,
           gifHeight: 474,
           nextScreen: (FirebaseAuth.instance.currentUser != null)
-              ? const Home()
+              ? const RemastedHome()
               : const Loginpage(),
           duration: const Duration(milliseconds: 3515),
           onInit: () async {

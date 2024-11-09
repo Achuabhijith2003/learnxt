@@ -57,7 +57,7 @@ class _ChatcreateState extends State<Chatcreate> {
   // native_ads
   late NativeAd nativeAd;
   bool isNativeAdAdLoaded = false;
-  final String adUnitId = "ca-app-pub-3940256099942544/2247696110";
+  final String adUnitId = "ca-app-pub-8568607330093795/3077653778";
 
   // Native advanced
   nativeadvancedadloader() {

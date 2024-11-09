@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:learnxt/Auth/loginpage.dart';
-import 'package:learnxt/Screen/aichatadd.dart';
 import 'package:learnxt/Screen/chatai.dart';
 import 'package:learnxt/Screen/user_profile.dart';
 import 'package:learnxt/Services/data_embedded.dart';
@@ -500,26 +499,6 @@ class _HomeState extends State<Home> {
           ],
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: SizedBox(
-        height: 65,
-        width: 65,
-        child: FloatingActionButton(
-          backgroundColor: Colors.grey.shade800,
-          child: const Icon(
-            Icons.add_box_outlined,
-            color: Colors.white,
-            size: 30,
-          ),
-          onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const Chatcreate(),
-                ));
-          },
-        ),
-      ),
       drawer: FutureBuilder(
         future: fetch_user_profile(),
         builder: (context, snapshot) {
@@ -684,13 +663,6 @@ class _HomeState extends State<Home> {
           );
         },
       ),
-      bottomNavigationBar: isbanneradsload
-          ? SizedBox(
-              height: _bannerAd.size.height.toDouble(),
-              width: _bannerAd.size.width.toDouble(),
-              child: AdWidget(ad: _bannerAd),
-            )
-          : const SizedBox(),
     );
   }
 
