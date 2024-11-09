@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:learnxt/Auth/Authservices.dart';
 import 'package:learnxt/Auth/loginpage.dart';
 import 'package:learnxt/Screen/home.dart';
@@ -7,8 +8,49 @@ import 'package:learnxt/Screen/user_profile.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class Settings extends StatelessWidget {
+class Settings extends StatefulWidget {
   const Settings({super.key});
+
+  @override
+  State<Settings> createState() => _SettingsState();
+}
+
+class _SettingsState extends State<Settings> {
+  void initState() {
+    super.initState();
+    nativeadvancedadloader();
+  }
+
+  // native_ads
+  late NativeAd nativeAd;
+  bool isNativeAdAdLoaded = false;
+  final String adUnitId = "ca-app-pub-8568607330093795/3077653778";
+
+  // Native advanced
+  nativeadvancedadloader() {
+    nativeAd = NativeAd(
+        adUnitId: adUnitId,
+        listener: NativeAdListener(
+          onAdLoaded: (ad) {
+            setState(() {
+              isNativeAdAdLoaded = true;
+            });
+
+            print("native advanced adloader: Ad Loaded");
+          },
+          onAdFailedToLoad: (ad, error) {
+            setState(() {
+              isNativeAdAdLoaded = false;
+              ad.dispose();
+            });
+            print("native advanced adloader: Ad Loaded is failed");
+          },
+        ),
+        request: const AdManagerAdRequest(),
+        nativeTemplateStyle:
+            NativeTemplateStyle(templateType: TemplateType.small));
+    nativeAd.load();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -107,7 +149,7 @@ class Settings extends StatelessWidget {
                         leading: const Icon(Icons.share),
                         onTap: () async {
                           await Share.share(
-                              "Check out this link: https://github.com/Achuabhijith2003/learnxt/releases,");
+                              "Check out this link: https://play.google.com/store/apps/details?id=com.gurudha.learnxt");
                         },
                       ),
                       ListTile(
@@ -136,12 +178,20 @@ class Settings extends StatelessWidget {
                                 ));
                           }
                         },
-                      )
+                      ),
                     ],
                   ),
                 );
               },
             ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 458),
+            child: isNativeAdAdLoaded
+                ? SizedBox(
+                    child: AdWidget(ad: nativeAd),
+                  )
+                : const SizedBox(),
           ),
         ],
       ),
