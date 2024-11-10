@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:learnxt/Services/Hive/chat.dart';
@@ -115,14 +116,14 @@ class _ChataiState extends State<Chatai> {
   Widget build(BuildContext context) {
     return Scaffold(
       // backgroundColor: const Color(0xFF171717),
-      body: Container(
+      body: SizedBox(
         width: double.infinity,
-        decoration: BoxDecoration(
-            gradient: LinearGradient(begin: Alignment.topCenter, colors: [
-          Colors.grey.shade900,
-          Colors.grey.shade800,
-          Colors.grey.shade400
-        ])),
+        // decoration: BoxDecoration(
+        //     gradient: LinearGradient(begin: Alignment.topCenter, colors: [
+        //   Colors.grey.shade900,
+        //   Colors.grey.shade800,
+        //   Colors.grey.shade400
+        // ])),
         child: Stack(
           children: [
             Column(
@@ -130,7 +131,7 @@ class _ChataiState extends State<Chatai> {
                 Padding(
                   padding: const EdgeInsets.only(top: 32, left: 5, right: 5),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       IconButton(
                           onPressed: () {
@@ -138,7 +139,7 @@ class _ChataiState extends State<Chatai> {
                           },
                           icon: const Icon(
                             Icons.arrow_back_ios_new,
-                            color: Colors.white,
+                            color: Colors.black,
                             shadows: <Shadow>[
                               Shadow(
                                 offset: Offset(1.0, 1.0),
@@ -147,32 +148,15 @@ class _ChataiState extends State<Chatai> {
                               ),
                             ],
                           )),
-                      TextButton(
-                        onPressed: () {
-                          // Navigate to bot profile
-                          // Navigator.push(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //         builder: (context) => const BotProfile()));
-                        },
-                        child: Text(
-                          widget.botname,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 29,
-                            fontWeight: FontWeight.bold,
-                            shadows: <Shadow>[
-                              Shadow(
-                                offset: Offset(1.0, 1.0),
-                                blurRadius: 2.0,
-                                color: Color.fromARGB(255, 14, 60, 13),
-                              ),
-                            ],
-                          ),
-                        ),
+                      const SizedBox(
+                        width: 10,
                       ),
-                      const Divider(),
-                      const Divider()
+                      Text(
+                        widget.botname,
+                        style: GoogleFonts.dmSerifDisplay(
+                            fontSize: 30, letterSpacing: 4),
+                        textAlign: TextAlign.center,
+                      ),
                     ],
                   ),
                 ),
@@ -185,12 +169,6 @@ class _ChataiState extends State<Chatai> {
                 bottom: 0,
                 child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 0),
-                    decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(35),
-                          topRight: Radius.circular(35)),
-                      color: Color(0xFFEFFFFC),
-                    ),
                     child: Chat(
                       inputOptions: const InputOptions(
                         autocorrect: true,
@@ -200,7 +178,7 @@ class _ChataiState extends State<Chatai> {
                         inputClearMode: InputClearMode.always,
                       ),
                       theme: const DefaultChatTheme(
-                        backgroundColor: Color(0xFFEFFFFC),
+                        
                         inputBackgroundColor: Colors.grey,
                         inputTextDecoration:
                             InputDecoration(labelText: "Enter prompt"),

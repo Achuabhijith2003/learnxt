@@ -77,21 +77,21 @@ class _UserProfileState extends State<UserProfile> {
   Widget build(BuildContext context) {
     Authservices authservices = Authservices();
     return Scaffold(
-      body: Container(
+      body: SizedBox(
         width: double.infinity,
-        decoration: BoxDecoration(
-            gradient: LinearGradient(begin: Alignment.topCenter, colors: [
-          Colors.grey.shade900,
-          Colors.grey.shade800,
-          Colors.grey.shade400
-        ])),
+        // decoration: BoxDecoration(
+        //     gradient: LinearGradient(begin: Alignment.topCenter, colors: [
+        //   Colors.grey.shade900,
+        //   Colors.grey.shade800,
+        //   Colors.grey.shade400
+        // ])),
         child: Stack(children: [
           Column(
             children: [
               Padding(
                 padding: const EdgeInsets.only(top: 36, left: 5, right: 5),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     IconButton(
                         onPressed: () {
@@ -99,7 +99,7 @@ class _UserProfileState extends State<UserProfile> {
                         },
                         icon: const Icon(
                           Icons.arrow_back_ios_new,
-                          color: Colors.white,
+                          color: Colors.black,
                           shadows: <Shadow>[
                             Shadow(
                               offset: Offset(1.0, 1.0),
@@ -108,24 +108,15 @@ class _UserProfileState extends State<UserProfile> {
                             ),
                           ],
                         )),
+                    const SizedBox(
+                      width: 10,
+                    ),
                     Text(
                       "Profile",
-                      style: GoogleFonts.ptSerif(
-                        color: Colors.white,
-                        fontSize: 29,
-                        fontWeight: FontWeight.bold,
-                        shadows: <Shadow>[
-                          const Shadow(
-                            offset: Offset(1.0, 1.0),
-                            blurRadius: 2.0,
-                            color: Color.fromARGB(255, 14, 60, 13),
-                          ),
-                        ],
-                      ),
+                      style: GoogleFonts.dmSerifDisplay(
+                          fontSize: 40, letterSpacing: 4),
                       textAlign: TextAlign.center,
                     ),
-                    const Divider(),
-                    const Divider()
                   ],
                 ),
               ),
@@ -142,7 +133,6 @@ class _UserProfileState extends State<UserProfile> {
                   borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(40),
                       topRight: Radius.circular(40)),
-                  color: Color(0xFFEFFFFC),
                 ),
                 child: Stack(children: [
                   FutureBuilder(
