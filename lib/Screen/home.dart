@@ -26,6 +26,7 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
     BannerAdload();
+    BannerAdload2();
     fetch_user_profile();
   }
 
@@ -34,9 +35,12 @@ class _HomeState extends State<Home> {
   List<Map<String, dynamic>> data = [];
   late BannerAd _bannerAd;
   bool isbanneradsload = false;
+  late BannerAd _bannerAd2;
+  bool isbanneradsload2 = false;
   BannerAdload() {
     _bannerAd = BannerAd(
         size: AdSize.banner,
+        // adUnitId: 'ca-app-pub-3940256099942544/9214589741',
         adUnitId: "ca-app-pub-8568607330093795/5482884902",
         listener: BannerAdListener(
           onAdLoaded: (ad) {
@@ -51,6 +55,33 @@ class _HomeState extends State<Home> {
         ),
         request: const AdRequest());
     _bannerAd.load();
+  }
+
+  BannerAdload2() {
+    _bannerAd2 = BannerAd(
+        size: AdSize.banner,
+        // adUnitId: 'ca-app-pub-3940256099942544/9214589741',
+        adUnitId: "ca-app-pub-8568607330093795/5482884902",
+        listener: BannerAdListener(
+          onAdLoaded: (ad) {
+            setState(() {
+              isbanneradsload2 = true;
+            });
+          },
+          onAdFailedToLoad: (ad, error) {
+            ad.dispose();
+            print("Error in ads banner:$error");
+          },
+        ),
+        request: const AdRequest());
+    _bannerAd2.load();
+  }
+
+  @override
+  void dispose() {
+    _bannerAd.dispose();
+    _bannerAd2.dispose();
+    super.dispose();
   }
 
   final GlobalKey<ScaffoldState> _globalKey = GlobalKey();
@@ -92,13 +123,7 @@ class _HomeState extends State<Home> {
                 )
               ],
             ),
-            // Display banner ad if loaded
-            if (isbanneradsload)
-              SizedBox(
-                height: _bannerAd.size.height.toDouble(),
-                width: _bannerAd.size.width.toDouble(),
-                child: AdWidget(ad: _bannerAd),
-              ),
+
             // Searching panal
             Padding(
               padding: const EdgeInsets.only(top: 120, left: 15),
@@ -139,26 +164,51 @@ class _HomeState extends State<Home> {
             ),
             Column(
               children: [
+                // Display banner ad if loaded
+                // Display banner ad if loaded
+                if (isbanneradsload2)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 180),
+                    child: SizedBox(
+                      height: _bannerAd.size.height.toDouble(),
+                      width: _bannerAd.size.width.toDouble(),
+                      child: AdWidget(ad: _bannerAd2),
+                    ),
+                  ),
                 Row(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        top: 190,
-                        left: 20,
-                      ),
-                      child: Text(
-                        "Chats",
-                        style: GoogleFonts.dmSerifDisplay(
-                            fontSize: 30, color: Colors.grey),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
+                    // conditon to place chats text when ads is true /false
+                    isbanneradsload2
+                        ? Padding(
+                            padding: const EdgeInsets.only(
+                              top: 20,
+                              left: 20,
+                            ),
+                            child: Text(
+                              "Chats",
+                              style: GoogleFonts.dmSerifDisplay(
+                                  fontSize: 30, color: Colors.grey),
+                              textAlign: TextAlign.center,
+                            ),
+                          )
+                        : Padding(
+                            padding: const EdgeInsets.only(
+                              top: 210,
+                              left: 20,
+                            ),
+                            child: Text(
+                              "Chats",
+                              style: GoogleFonts.dmSerifDisplay(
+                                  fontSize: 30, color: Colors.grey),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
                   ],
                 ),
               ],
             ),
             Positioned(
-              top: 225,
+              top: 275,
               left: 0,
               right: 0,
               bottom: 0,

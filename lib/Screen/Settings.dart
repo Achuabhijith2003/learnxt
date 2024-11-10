@@ -16,6 +16,7 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingsState extends State<Settings> {
+  @override
   void initState() {
     super.initState();
     nativeadvancedadloader();
@@ -54,7 +55,7 @@ class _SettingsState extends State<Settings> {
 
   @override
   Widget build(BuildContext context) {
-    Authservices _authservices = Authservices();
+    Authservices authservices = Authservices();
     return Scaffold(
       body: Stack(
         children: [
@@ -169,7 +170,7 @@ class _SettingsState extends State<Settings> {
                         title: const Text('Logout'),
                         leading: const Icon(Icons.logout_outlined),
                         onTap: () async {
-                          if (await _authservices.logout()) {
+                          if (await authservices.logout()) {
                             Navigator.pushReplacement(
                                 // ignore: use_build_context_synchronously
                                 context,

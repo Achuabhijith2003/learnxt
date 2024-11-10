@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:learnxt/Auth/loginpage.dart';
+import 'package:learnxt/Auth/Authservices.dart';
 
 class UserProfile extends StatefulWidget {
   const UserProfile({super.key});
@@ -74,6 +75,7 @@ class _UserProfileState extends State<UserProfile> {
 
   @override
   Widget build(BuildContext context) {
+    Authservices authservices = Authservices();
     return Scaffold(
       body: Container(
         width: double.infinity,
@@ -232,7 +234,17 @@ class _UserProfileState extends State<UserProfile> {
                                         Icons.logout_outlined,
                                         color: Colors.white,
                                       ),
-                                      onTap: logout,
+                                      onTap: () async {
+                                        if (await authservices.logout()) {
+                                          Navigator.pushReplacement(
+                                              // ignore: use_build_context_synchronously
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const Loginpage(),
+                                              ));
+                                        }
+                                      },
                                     )),
                               ),
                             ],
@@ -261,18 +273,6 @@ class _UserProfileState extends State<UserProfile> {
             )
           : const SizedBox(),
     );
-  }
-
-  void logout() async {
-    //logout method
-    await FirebaseAuth.instance.signOut();
-    // ignore: use_build_context_synchronously
-    Navigator.pushReplacement(
-        // ignore: use_build_context_synchronously
-        context,
-        MaterialPageRoute(
-          builder: (context) => const Loginpage(),
-        ));
   }
 
   // ignore: non_constant_identifier_names
