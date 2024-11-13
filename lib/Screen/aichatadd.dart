@@ -12,7 +12,7 @@ import 'package:learnxt/Screen/Remasted_home.dart';
 import 'package:learnxt/Screen/user_profile.dart';
 import 'package:learnxt/Services/Hive/chatid.dart';
 import 'package:learnxt/Services/gadsmob.dart';
-import '../Services/data_embedded.dart';
+import '../Services/AI/data_embedded.dart';
 
 class Chatcreate extends StatefulWidget {
   const Chatcreate({super.key});

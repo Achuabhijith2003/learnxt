@@ -10,7 +10,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:learnxt/Screen/aichatadd.dart';
 import 'package:learnxt/Screen/chatai.dart';
 import 'package:learnxt/Screen/user_profile.dart';
-import 'package:learnxt/Services/data_embedded.dart';
+import 'package:learnxt/Services/AI/data_embedded.dart';
 import 'package:learnxt/Services/gadsmob.dart';
 
 class Home extends StatefulWidget {
