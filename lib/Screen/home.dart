@@ -181,7 +181,7 @@ class _HomeState extends State<Home> {
                     isbanneradsload2
                         ? Padding(
                             padding: const EdgeInsets.only(
-                              top: 20,
+                              top: 16,
                               left: 20,
                             ),
                             child: Text(
@@ -193,7 +193,7 @@ class _HomeState extends State<Home> {
                           )
                         : Padding(
                             padding: const EdgeInsets.only(
-                              top: 210,
+                              top: 204,
                               left: 20,
                             ),
                             child: Text(

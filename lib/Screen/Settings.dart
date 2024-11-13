@@ -181,7 +181,7 @@ class _SettingsState extends State<Settings> {
                         },
                       ),
                       const ListTile(
-                        title: Text('V0.0.7'),
+                        title: Text('V0.5.0'),
                         leading: Icon(Icons.app_shortcut_sharp),
                       ),
                     ],

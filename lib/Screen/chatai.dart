@@ -275,7 +275,7 @@ class _ChataiState extends State<Chatai> {
       gemini
           .streamGenerateContent(
         modelName: "models/gemini-1.5-flash",
-        "Based on the keywords: $keywords and answer the question: ${chatMessage.text}, explain the answer in a simple and easy-to-understand way for a student, breaking down any difficult concepts and using examples where possible.",
+        "Based on the keywords: $keywords and answer the question: ${chatMessage.text},  generate using only this keyword",
       )
           .listen((event) async {
         String response = event.content?.parts?.fold(
