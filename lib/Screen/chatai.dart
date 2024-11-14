@@ -131,7 +131,7 @@ class _ChataiState extends State<Chatai> {
                 Padding(
                   padding: const EdgeInsets.only(top: 32, left: 5, right: 5),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       IconButton(
                           onPressed: () {
@@ -156,6 +156,36 @@ class _ChataiState extends State<Chatai> {
                         style: GoogleFonts.dmSerifDisplay(
                             fontSize: 30, letterSpacing: 4),
                         textAlign: TextAlign.center,
+                      ),
+                      // menu button
+                      PopupMenuButton(
+                        child: const Icon(Icons.more_vert),
+                        itemBuilder: (context) => [
+                          const PopupMenuItem(
+                            value: 1,
+                            child: Text("Profile"), 
+                          ),
+                          const PopupMenuItem(
+                            value: 2,
+                            child: Text("Account"),
+                          ),
+                          const PopupMenuItem(
+                            value: 1,
+                            child: Text("Settings"),
+                          ),
+                          const PopupMenuItem(
+                            value: 1,
+                            child: Text("About GFG"),
+                          ),
+                          const PopupMenuItem(
+                            value: 1,
+                            child: Text("Go Premium"),
+                          ),
+                          const PopupMenuItem(
+                            value: 1,
+                            child: Text("Logout"),
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -275,44 +305,7 @@ class _ChataiState extends State<Chatai> {
       final aiRespoines =
           await _ai.geminirespones(chatMessage.text, widget.docId, keywords);
       print("Gemini Respones: ${aiRespoines.toString()}");
-      // Search for keywords and generate an answer
-      // final keywords =
-      //     await _dataEmbedded.searchAndAnswer(chatMessage.text, widget.docId);
-      // print('Generated answer: $keywords');
 
-      // gemini
-      //     .streamGenerateContent(
-      //   modelName: "models/gemini-1.5-flash",
-      //   "who Create Learnxt",
-      // )
-      //     .listen((event) async {
-      //   String response = event.content?.parts?.fold(
-      //           "", (previous, current) => "$previous ${current.text}") ??
-      //       "";
-
-      //   // Check for the last message from geminiuser
-      //   types.TextMessage? lastMessage =
-      //       _messages.firstOrNull as types.TextMessage?;
-      //   if (lastMessage != null && lastMessage.author == geminiuser) {
-      //     // Create an updated message by appending response
-      //     final updatedMessage = types.TextMessage(
-      //       author: lastMessage.author,
-      //       id: "$newId", // Keep the same ID
-      //       createdAt: lastMessage.createdAt,
-      //       text: lastMessage.text + response, // Append the response
-      //     );
-
-      //     print("lastMessage: $updatedMessage");
-      //     await chatstore.storechat(updatedMessage, widget.docId,
-      //         updatedMessage.text, widget.botname);
-      //     setState(() {
-      //       int index = _messages.indexOf(lastMessage);
-      //       if (index != -1) {
-      //         _messages[index] = updatedMessage; // Update in place
-      //       }
-      //     });
-      //   } else {
-      //     // No last message from geminiuser, create a new one
       types.TextMessage geminimessage = types.TextMessage(
         author: geminiuser,
         id: "$newId",
@@ -322,20 +315,9 @@ class _ChataiState extends State<Chatai> {
       await chatstore.storechat(
           geminimessage, widget.docId, geminimessage.text, widget.botname);
 
-      //     // Store the chat message
-      //     // int newId = chatid.getid(widget.docId) + 1;
-      //     // chatid.putid(newId, widget.docId);
-
-      //     // await chatstore.storechat(
-      //     //     widget.botname, geminiuser, geminimessage, widget.docId);
-      //     // Fetch the stored response and add it
-      //     print("Gemini respose: $geminimessage");
-
       setState(() {
         _addMessage(geminimessage, geminimessage.text);
       });
-      //   }
-      // });
     } catch (e) {
       print('Error sending message: $e');
     }
