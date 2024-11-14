@@ -1,12 +1,20 @@
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+import 'package:learnxt/Screen/Preminum/vip.dart';
+import 'package:learnxt/Screen/Settings.dart';
 import 'package:learnxt/Services/AI/data_embedded.dart';
 import 'package:learnxt/Services/AI/gemini.dart';
+import 'package:learnxt/Services/Chats/Chat_Operations.dart';
 import 'package:learnxt/Services/Hive/chat.dart';
 import 'package:learnxt/Services/Hive/chatid.dart';
+import 'package:learnxt/Services/gadsmob.dart';
 
 class Chatai extends StatefulWidget {
   final String botname;
@@ -18,10 +26,13 @@ class Chatai extends StatefulWidget {
 }
 
 class _ChataiState extends State<Chatai> {
+  admob ads = admob();
   final AI _ai = AI();
   final DataEmbedded _dataem = DataEmbedded();
   Chatputandget chatstore = Chatputandget();
   Chatidputandget chatid = Chatidputandget();
+  ChatOperations chatop = ChatOperations();
+  bool isLoading = false;
   @override
   void initState() {
     super.initState();
@@ -46,6 +57,82 @@ class _ChataiState extends State<Chatai> {
       _messages.clear();
     });
   }
+
+// add pdfs
+  addpdfs(docid) async {
+    List<File> files = [];
+// pick files
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      allowMultiple: true,
+    );
+
+    if (result != null) {
+      files = result.paths.map((path) => File(path!)).toList();
+
+      return showDialog(
+        context: context,
+        barrierDismissible: false, // Disable user interaction while uploading
+        builder: (context) {
+          return AlertDialog(
+            title: const Text("Selected PDF Files"),
+            content: SizedBox(
+              width: double.maxFinite,
+              child: ListView.builder(
+                shrinkWrap: true, // Make the list view wrap its content
+                itemCount: files.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text(files[index].path.split('/').last),
+                  );
+                },
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () async {
+                  ads.AppOpenAdload();
+                  showDialog(
+                    context: context,
+                    barrierDismissible:
+                        false, // Disable user interaction while uploading
+                    builder: (context) => const Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CircularProgressIndicator(
+                            color: Colors.grey,
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                  CollectionReference insertfilename =
+                      FirebaseFirestore.instance.collection('Bot');
+                  DataEmbedded dataEmbedded = DataEmbedded();
+                  final List<String> filenames = [];
+                  dataEmbedded.getDocId(docid);
+                  for (File file in files) {
+                    final fileName =
+                        file.path.split('/').last; // Extract file name
+                    filenames.add(fileName);
+                    await dataEmbedded.pdfextract(file);
+                  }
+                  await insertfilename.doc(docid).update({
+                    'pdfs_name': FieldValue.arrayUnion(filenames),
+                  });
+                  Navigator.of(context).pop(); // Close the dialog
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                },
+                child: const Text("ADD"),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+// ///////////////////////
 
   Future<void> _addMessage(types.Message message, String text) async {
     await chatstore.storechat(message, widget.docId, text, widget.botname);
@@ -118,12 +205,6 @@ class _ChataiState extends State<Chatai> {
       // backgroundColor: const Color(0xFF171717),
       body: SizedBox(
         width: double.infinity,
-        // decoration: BoxDecoration(
-        //     gradient: LinearGradient(begin: Alignment.topCenter, colors: [
-        //   Colors.grey.shade900,
-        //   Colors.grey.shade800,
-        //   Colors.grey.shade400
-        // ])),
         child: Stack(
           children: [
             Column(
@@ -149,7 +230,7 @@ class _ChataiState extends State<Chatai> {
                             ],
                           )),
                       const SizedBox(
-                        width: 10,
+                        width: 0,
                       ),
                       Text(
                         widget.botname,
@@ -157,33 +238,206 @@ class _ChataiState extends State<Chatai> {
                             fontSize: 30, letterSpacing: 4),
                         textAlign: TextAlign.center,
                       ),
+                      const Divider(),
+                      const Divider(),
                       // menu button
                       PopupMenuButton(
                         child: const Icon(Icons.more_vert),
                         itemBuilder: (context) => [
-                          const PopupMenuItem(
+                          PopupMenuItem(
                             value: 1,
-                            child: Text("Profile"), 
+                            child: const ListTile(
+                              title: Text("Add PDFs"),
+                              leading: Icon(Icons.add),
+                            ),
+                            onTap: () {
+                              addpdfs(widget.docId);
+                            },
                           ),
-                          const PopupMenuItem(
+                          PopupMenuItem(
                             value: 2,
-                            child: Text("Account"),
+                            child: const ListTile(
+                              title: Text("Clear Chats"),
+                              leading: Icon(Icons.clear_all_sharp),
+                            ),
+                            onTap: () async {
+                              return showDialog(
+                                context: context,
+                                barrierDismissible:
+                                    false, // Prevent dismissing while loading
+                                builder: (context) => AlertDialog(
+                                  title: const Text("Clear chats"),
+                                  content: const Text(
+                                      "Are you sure you want to Clear Chats?"),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context)
+                                            .pop(); // Close the dialog
+                                      },
+                                      child: const Text("Cancel"),
+                                    ),
+                                    TextButton(
+                                      onPressed: () async {
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) => const Center(
+                                            child: CircularProgressIndicator(
+                                              color: Colors.grey,
+                                            ),
+                                          ),
+                                        );
+
+                                        final clearsucessfully =
+                                            chatstore.clearchat(widget.docId);
+                                        loadChatMessages();
+
+                                        if (clearsucessfully) {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            const SnackBar(
+                                              content: Text(
+                                                  'Chats cleared successfully!'),
+                                              backgroundColor: Colors.grey,
+                                            ),
+                                          );
+                                        } else {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            const SnackBar(
+                                              content:
+                                                  Text('Chats cleared failed!'),
+                                              backgroundColor: Colors.grey,
+                                            ),
+                                          );
+                                        }
+                                        Navigator.of(context)
+                                            .pop(); // Close the dialog
+                                        Navigator.of(context)
+                                            .pop(); // Close the dialog
+                                        Navigator.of(context)
+                                            .pop(); // Close the dialog
+                                      },
+                                      child: const Text(
+                                        "clear",
+                                        style: TextStyle(color: Colors.red),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
                           ),
-                          const PopupMenuItem(
-                            value: 1,
-                            child: Text("Settings"),
+                          PopupMenuItem(
+                            value: 3,
+                            child: const ListTile(
+                              title: Text("Delete AI bot"),
+                              leading: Icon(Icons.delete),
+                            ),
+                            onTap: () async {
+                              return showDialog(
+                                context: context,
+                                barrierDismissible:
+                                    !isLoading, // Prevent dismissing while loading
+                                builder: (context) => AlertDialog(
+                                  title: const Text("Delete AI"),
+                                  content: const Text(
+                                      "Are you sure you want to delete the AI Bot?"),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context)
+                                            .pop(); // Close the dialog
+                                      },
+                                      child: const Text("Cancel"),
+                                    ),
+                                    TextButton(
+                                      onPressed: () async {
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) => const Center(
+                                            child: CircularProgressIndicator(
+                                              color: Colors.grey,
+                                            ),
+                                          ),
+                                        );
+
+                                        // setState(() {
+                                        //   isLoading = true; // Start loading
+                                        // });
+
+                                        final deletesuccessfully = await chatop
+                                            .deletebot(widget.docId);
+
+                                        // setState(() {
+                                        //   isLoading = false; // Stop loading
+                                        // });
+
+                                        if (deletesuccessfully) {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            const SnackBar(
+                                              content: Text(
+                                                  'Bot deleted successfully!'),
+                                              backgroundColor: Colors.grey,
+                                            ),
+                                          );
+                                        } else {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            const SnackBar(
+                                              content:
+                                                  Text('Bot deletion failed!'),
+                                              backgroundColor: Colors.grey,
+                                            ),
+                                          );
+                                        }
+                                        Navigator.of(context)
+                                            .pop(); // Close the dialog
+                                        Navigator.of(context)
+                                            .pop(); // Close the dialog
+                                        Navigator.of(context)
+                                            .pop(); // Close the dialog
+                                      },
+                                      child: const Text(
+                                        "Delete",
+                                        style: TextStyle(color: Colors.red),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
                           ),
-                          const PopupMenuItem(
-                            value: 1,
-                            child: Text("About GFG"),
+                          PopupMenuItem(
+                            value: 4,
+                            child: const ListTile(
+                              title: Text("Settings"),
+                              leading: Icon(Icons.settings),
+                            ),
+                            onTap: () {
+                              Navigator.push(
+                                  // ignore: use_build_context_synchronously
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const UiSettings(),
+                                  ));
+                            },
                           ),
-                          const PopupMenuItem(
-                            value: 1,
-                            child: Text("Go Premium"),
-                          ),
-                          const PopupMenuItem(
-                            value: 1,
-                            child: Text("Logout"),
+                          PopupMenuItem(
+                            value: 5,
+                            child: const ListTile(
+                              title: Text("Go Premium"),
+                              leading: Icon(Icons.workspace_premium_outlined),
+                            ),
+                            onTap: () {
+                              Navigator.push(
+                                  // ignore: use_build_context_synchronously
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const Vip(),
+                                  ));
+                            },
                           ),
                         ],
                       ),

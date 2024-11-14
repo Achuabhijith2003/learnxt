@@ -3,24 +3,26 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:learnxt/Auth/Authservices.dart';
 import 'package:learnxt/Auth/loginpage.dart';
-import 'package:learnxt/Screen/home.dart';
 import 'package:learnxt/Screen/user_profile.dart';
+import 'package:learnxt/Services/Chats/Chat_Operations.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class Settings extends StatefulWidget {
-  const Settings({super.key});
+class UiSettings extends StatefulWidget {
+  const UiSettings({super.key});
 
   @override
-  State<Settings> createState() => _SettingsState();
+  State<UiSettings> createState() => _UiSettingsState();
 }
 
-class _SettingsState extends State<Settings> {
+class _UiSettingsState extends State<UiSettings> {
   @override
   void initState() {
     super.initState();
     nativeadvancedadloader();
   }
+
+  ChatOperations chatop = ChatOperations();
 
   // native_ads
   late NativeAd nativeAd;
@@ -69,7 +71,7 @@ class _SettingsState extends State<Settings> {
           Padding(
             padding: const EdgeInsets.only(top: 45),
             child: FutureBuilder(
-              future: fetch_user_profile(),
+              future: chatop.fetch_user_profile(),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
                   return Padding(

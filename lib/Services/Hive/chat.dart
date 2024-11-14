@@ -111,7 +111,8 @@ class Chatputandget extends Chatidputandget {
       return "null"; // Or provide a more informative error message
     }
   }
-    Future<String> fetchChatai(String docId) async {
+
+  Future<String> fetchChatai(String docId) async {
     try {
       final chatCount = getid(docId);
       print("Chat count for docId $docId: ${chatCount - 2}");
@@ -174,5 +175,14 @@ class Chatputandget extends Chatidputandget {
     box.put("$docId/$id", chat);
 
     print("Modifed Chat message stored with ID: $id for docId: $docId");
+  }
+
+  clearchat(String docid) {
+    try {
+      putid(0, docid);
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 }

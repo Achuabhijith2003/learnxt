@@ -11,6 +11,7 @@ import 'package:learnxt/Screen/aichatadd.dart';
 import 'package:learnxt/Screen/chatai.dart';
 import 'package:learnxt/Screen/user_profile.dart';
 import 'package:learnxt/Services/AI/data_embedded.dart';
+import 'package:learnxt/Services/Chats/Chat_Operations.dart';
 import 'package:learnxt/Services/gadsmob.dart';
 
 class Home extends StatefulWidget {
@@ -22,12 +23,13 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  ChatOperations chatop = ChatOperations();
+
   @override
   void initState() {
     super.initState();
     BannerAdload();
     BannerAdload2();
-    fetch_user_profile();
   }
 
   admob ads = admob();
@@ -310,8 +312,10 @@ class _HomeState extends State<Home> {
                                                         ),
                                                       );
                                                       final deletionSuccessful =
-                                                          await deletebot(
-                                                              botData["docId"]);
+                                                          await chatop
+                                                              .deletebot(
+                                                                  botData[
+                                                                      "docId"]);
                                                       if (deletionSuccessful) {
                                                         // Show a success notification (e.g., Snackbar)
                                                         setState(() {
@@ -447,7 +451,7 @@ class _HomeState extends State<Home> {
                                                   ),
                                                 );
                                                 final deletionSuccessful =
-                                                    await deletebot(
+                                                    await chatop.deletebot(
                                                         botData["docId"]);
                                                 if (deletionSuccessful) {
                                                   // Show a success notification (e.g., Snackbar)
@@ -546,33 +550,6 @@ class _HomeState extends State<Home> {
 
 // here two times calling docId 1. passing the doc ID 2. Finding through firebase instance
 // in future try to remove Ok!
-  Future<bool> deletebot(String docId) async {
-    ads.AppOpenAdload();
-    try {
-      final docRef = FirebaseFirestore.instance.collection('Bot').doc(docId);
-      final subcollection = docRef.collection("dataEmbedded");
-      try {
-        await subcollection.get().then((querySnapshot) {
-          for (var doc in querySnapshot.docs) {
-            doc.reference.delete();
-          }
-        });
-        await docRef.delete();
-        setState(() {
-          fetchData();
-        });
-
-        print('Subcollection deleted successfully');
-        return true; // Deletion successful
-      } catch (e) {
-        print('Error deleting subcollection: $e');
-      }
-
-      return true; // Deletion successful
-    } catch (error) {
-      return false; // Deletion failed
-    }
-  }
 
 // add pdfs
   addpdfs(docid) async {
@@ -651,28 +628,3 @@ class _HomeState extends State<Home> {
 }
 
 insertpdfs(docid) {}
-
-// ignore: non_constant_identifier_names
-fetch_user_profile() async {
-  try {
-    final user = FirebaseAuth.instance.currentUser;
-    final firestore = FirebaseFirestore.instance;
-    final collection = firestore.collection('User');
-
-    final query =
-        collection.where('UID', isEqualTo: user?.uid); // Example condition
-
-    final querySnapshot = await query.get();
-    final data = querySnapshot.docs.map((doc) => doc.data()).toList();
-    return data;
-  } catch (e) {
-    print("Fetch prrofile error : $e");
-  }
-  // ... your existing fetchData logic ...
-
-  // Access data as a list of Maps
-  // print(data);
-  //
-  // Return the retrieved data list
-  return [];
-}

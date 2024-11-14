@@ -12,11 +12,12 @@ class RemastedHome extends StatefulWidget {
 }
 
 class _RemastedHomeState extends State<RemastedHome> {
-    @override
+  @override
   void initState() {
     super.initState();
     BannerAdload();
   }
+
   late BannerAd _bannerAd;
   bool isbanneradsload = false;
   BannerAdload() {
@@ -40,7 +41,7 @@ class _RemastedHomeState extends State<RemastedHome> {
 
   int _cureentindex = 0;
 
-  List<Widget> body = const [Home(), Chatcreate(), Settings()];
+  List<Widget> body = const [Home(), Chatcreate(), UiSettings()];
   @override
   Widget build(BuildContext context) {
     return Scaffold(

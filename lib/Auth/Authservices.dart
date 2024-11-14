@@ -5,19 +5,10 @@ class Authservices {
     //logout method
     try {
       await FirebaseAuth.instance.signOut();
-      FirebaseAuth.instance.userChanges();
       return true;
     } catch (e) {
       print("Error in LogOut:$e");
       return false;
     }
-
-    // ignore: use_build_context_synchronously
-    // Navigator.pushReplacement(
-    //     // ignore: use_build_context_synchronously
-    //     context,
-    //     MaterialPageRoute(
-    //       builder: (context) => const Loginpage(),
-    //     ));
   }
 }
