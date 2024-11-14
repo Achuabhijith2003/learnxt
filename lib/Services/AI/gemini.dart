@@ -3,16 +3,19 @@ import 'package:learnxt/Services/AI/data_embedded.dart';
 import 'package:learnxt/key.dart';
 
 class AI extends DataEmbedded {
-  geminirespones(String promt) async {
+  geminirespones(String promt, String docId, keywords) async {
     try {
-      // final apiKey = Platform.environment["AIzaSyCx9CV9Ca3AT4kAjUd6BDyPGBreMv5_u_g"];
-      // if (apiKey == null) {
-      //   stderr.writeln(r'No $GEMINI_API_KEY environment variable');
-      //   exit(1);
-      // }
+      List<Part> userparts = [];
+      List<Part> aiparts = [];
+      final user = await fetchChatuser(docId);
+      final ai = await fetchChatai(docId);
+      final userpart = TextPart(user);
+      final aipart = TextPart(ai);
+      userparts.add(userpart);
+      aiparts.add(aipart);
 
       final model = GenerativeModel(
-        model: 'tunedModels/learnxt-bdmo4k9pyl9x',
+        model: 'gemini-1.5-flash',
         apiKey: GEMINI_API_KEY,
         generationConfig: GenerationConfig(
           temperature: 1,
@@ -22,10 +25,14 @@ class AI extends DataEmbedded {
           responseMimeType: 'text/plain',
         ),
       );
-
-      final chat = model.startChat(history: []);
+      final chat = model.startChat(history: [
+        Content("User", userparts),
+        Content("model", aiparts),
+      ]);
       var message = promt;
-      final content = Content.text(message);
+      final content = Content.text(
+          "Here are some keywords related to your query: $keywords.\n\n"
+          "Please provide a comprehensive and informative response to the following query: $message");
 
       final response = await chat.sendMessage(content);
       // print(response.text);

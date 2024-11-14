@@ -3,6 +3,7 @@ import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+import 'package:learnxt/Services/AI/data_embedded.dart';
 import 'package:learnxt/Services/AI/gemini.dart';
 import 'package:learnxt/Services/Hive/chat.dart';
 import 'package:learnxt/Services/Hive/chatid.dart';
@@ -17,9 +18,8 @@ class Chatai extends StatefulWidget {
 }
 
 class _ChataiState extends State<Chatai> {
-  // final DataEmbedded _dataEmbedded = DataEmbedded();
-  // final Gemini gemini = Gemini.instance;
   final AI _ai = AI();
+  final DataEmbedded _dataem = DataEmbedded();
   Chatputandget chatstore = Chatputandget();
   Chatidputandget chatid = Chatidputandget();
   @override
@@ -268,7 +268,12 @@ class _ChataiState extends State<Chatai> {
     int newId = chatid.getid(widget.docId);
 
     try {
-      final aiRespoines = await _ai.geminirespones(chatMessage.text);
+      // Keyword generator
+      final keywords =
+          await _dataem.searchAndAnswer(chatMessage.text, widget.docId);
+      print('Generated answer: $keywords');
+      final aiRespoines =
+          await _ai.geminirespones(chatMessage.text, widget.docId, keywords);
       print("Gemini Respones: ${aiRespoines.toString()}");
       // Search for keywords and generate an answer
       // final keywords =

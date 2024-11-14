@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_chat_types/flutter_chat_types.dart';
 import 'package:hive/hive.dart';
 import 'package:learnxt/Services/Hive/chatid.dart';
 import 'package:learnxt/main.dart';
@@ -33,12 +32,10 @@ class CHathive {
   String userid;
 }
 
-Chatidputandget chatid = Chatidputandget();
-
-class Chatputandget {
+class Chatputandget extends Chatidputandget {
   Future<void> storechat(
       types.Message message, String docId, String text, String botname) async {
-    int newId = chatid.getid(docId);
+    int newId = getid(docId);
     // Store chat message with the updated ID
     final chat = CHathive(
       createdAt: message.createdAt,
@@ -59,8 +56,7 @@ class Chatputandget {
   Future<List<types.Message>> fechallchat(String docId) async {
     try {
       int i = 1;
-      Chatidputandget chatidget = Chatidputandget();
-      int totalMessages = chatidget.getid(docId);
+      int totalMessages = getid(docId);
 
       // Loop through and fetch messages
       while (i <= totalMessages) {
@@ -95,23 +91,44 @@ class Chatputandget {
     print("MEssage INserted");
   }
 
-  fechchat(docid) async {
+  Future<String> fetchChatuser(String docId) async {
     try {
-      // geting no of chats
+      final chatCount = getid(docId);
+      print("Chat count for docId $docId: ${chatCount - 3}");
 
-      Chatidputandget chatidget = Chatidputandget();
-      int j = chatidget.getid(docid);
-      print("Chatid put while fecht: $j");
+      CHathive chatData = box.get("$docId/${chatCount - 3}");
+      final text = chatData.text; // Use null-aware operator
 
-      CHathive chatdata = await box.get("$docid/$j") as CHathive;
-      TextMessage chathis = TextMessage(
-          text: chatdata.text,
-          author: types.User(id: chatdata.id),
-          id: chatdata.id);
-      print("While looping for fetch $j");
-      return chathis;
+      final chats = types.TextMessage(
+        createdAt: chatData.createdAt,
+        text: text,
+        author: types.User(id: chatData.userid, imageUrl: chatData.profileimg),
+        id: chatData.id,
+      );
+      return chats.text;
     } catch (e) {
-      print("Error: $e");
+      print("Error fetching chat: $e");
+      return "null"; // Or provide a more informative error message
+    }
+  }
+    Future<String> fetchChatai(String docId) async {
+    try {
+      final chatCount = getid(docId);
+      print("Chat count for docId $docId: ${chatCount - 2}");
+
+      CHathive chatData = box.get("$docId/${chatCount - 2}");
+      final text = chatData.text; // Use null-aware operator
+
+      final chats = types.TextMessage(
+        createdAt: chatData.createdAt,
+        text: text,
+        author: types.User(id: chatData.userid, imageUrl: chatData.profileimg),
+        id: chatData.id,
+      );
+      return chats.text;
+    } catch (e) {
+      print("Error fetching chat: $e");
+      return "null"; // Or provide a more informative error message
     }
   }
 
@@ -120,7 +137,6 @@ class Chatputandget {
     final user = FirebaseAuth.instance.currentUser;
     final firestore = FirebaseFirestore.instance;
     final collection = firestore.collection('Bot');
-    Chatidputandget chatidput = Chatidputandget();
 
     final query =
         collection.where('UID', isEqualTo: user?.uid); // Example condition
@@ -129,7 +145,7 @@ class Chatputandget {
       if (querySnapshot.docs.isNotEmpty) {
         for (var element in querySnapshot.docs) {
           final docId = element.get("docId");
-          chatidput.putid(0, docId);
+          putid(0, docId);
         }
       }
     } catch (e) {
