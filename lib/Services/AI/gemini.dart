@@ -1,18 +1,17 @@
+import 'package:flutter/material.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:learnxt/Services/AI/data_embedded.dart';
 import 'package:learnxt/key.dart';
 
 class AI extends DataEmbedded {
-  geminirespones(String promt, String docId, keywords) async {
+  geminirespones(
+      String promt, String docId, keywords, BuildContext context) async {
     try {
       List<Part> userparts = [];
       List<Part> aiparts = [];
       final user = await fetchChatuser(docId);
       final ai = await fetchChatai(docId);
-      final userpart = TextPart(user);
-      final aipart = TextPart(ai);
-      userparts.add(userpart);
-      aiparts.add(aipart);
+      late ChatSession chat;
 
       final model = GenerativeModel(
         model: 'gemini-1.5-flash',
@@ -25,10 +24,22 @@ class AI extends DataEmbedded {
           responseMimeType: 'text/plain',
         ),
       );
-      final chat = model.startChat(history: [
-        Content("User", userparts),
-        Content("model", aiparts),
-      ]);
+
+      // ignore: unnecessary_null_comparison
+      if (user != null || ai != null) {
+        final userpart = TextPart(user);
+        final aipart = TextPart(ai);
+        userparts.add(userpart);
+        aiparts.add(aipart);
+        final chats = model.startChat(history: [
+          Content("User", userparts),
+          Content("model", aiparts),
+        ]);
+        chat = chats;
+      } else {
+        final chats = model.startChat(history: []);
+        chat = chats;
+      }
       var message = promt;
       final content = Content.text(
           "Here are some keywords related to your query: $keywords.\n\n"
@@ -38,6 +49,16 @@ class AI extends DataEmbedded {
       // print(response.text);
       return response.text;
     } catch (e) {
+      if (e == "The model is overloaded. Please try again later.") {
+        BuildContext;
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("The model is overloaded. Please try again later."),
+            backgroundColor: Colors.grey,
+          ),
+        );
+      }
       print("Gemini Error: $e");
     }
   }

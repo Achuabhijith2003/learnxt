@@ -11,4 +11,12 @@ class Authservices {
       return false;
     }
   }
+
+  getuserID(){
+      final user = FirebaseAuth.instance.currentUser;
+      if (user!=null) {
+       return   user.uid;
+      }
+ 
+  }
 }

@@ -120,8 +120,11 @@ class _ChataiState extends State<Chatai> {
                   await insertfilename.doc(docid).update({
                     'pdfs_name': FieldValue.arrayUnion(filenames),
                   });
+                  // ignore: use_build_context_synchronously
                   Navigator.of(context).pop(); // Close the dialog
+                  // ignore: use_build_context_synchronously
                   Navigator.of(context).pop();
+                  // ignore: use_build_context_synchronously
                   Navigator.of(context).pop();
                 },
                 child: const Text("ADD"),
@@ -557,7 +560,7 @@ class _ChataiState extends State<Chatai> {
           await _dataem.searchAndAnswer(chatMessage.text, widget.docId);
       print('Generated answer: $keywords');
       final aiRespoines =
-          await _ai.geminirespones(chatMessage.text, widget.docId, keywords);
+          await _ai.geminirespones(chatMessage.text, widget.docId, keywords,context);
       print("Gemini Respones: ${aiRespoines.toString()}");
 
       types.TextMessage geminimessage = types.TextMessage(
@@ -568,6 +571,14 @@ class _ChataiState extends State<Chatai> {
 
       await chatstore.storechat(
           geminimessage, widget.docId, geminimessage.text, widget.botname);
+      if (aiRespoines == true) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Chats cleared successfully!'),
+            backgroundColor: Colors.grey,
+          ),
+        );
+      }
 
       setState(() {
         _addMessage(geminimessage, geminimessage.text);

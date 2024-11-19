@@ -7,11 +7,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:learnxt/Screen/Preminum/vip.dart';
 import 'package:learnxt/Screen/aichatadd.dart';
 import 'package:learnxt/Screen/chatai.dart';
 import 'package:learnxt/Screen/user_profile.dart';
 import 'package:learnxt/Services/AI/data_embedded.dart';
 import 'package:learnxt/Services/Chats/Chat_Operations.dart';
+import 'package:learnxt/Services/Hive/chat.dart';
+import 'package:learnxt/Services/Hive/chatid.dart';
 import 'package:learnxt/Services/gadsmob.dart';
 
 class Home extends StatefulWidget {
@@ -34,6 +37,8 @@ class _HomeState extends State<Home> {
 
   admob ads = admob();
   String name = "";
+  Chatputandget chatstore = Chatputandget();
+  Chatidputandget chatid = Chatidputandget();
   List<Map<String, dynamic>> data = [];
   late BannerAd _bannerAd;
   bool isbanneradsload = false;
@@ -165,50 +170,106 @@ class _HomeState extends State<Home> {
               ),
             ),
             Column(
+              // mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 // Display banner ad if loaded
                 // Display banner ad if loaded
                 if (isbanneradsload2)
                   Padding(
-                    padding: const EdgeInsets.only(top: 180),
+                    padding:
+                        const EdgeInsets.only(top: 180, left: Checkbox.width),
                     child: SizedBox(
                       height: _bannerAd.size.height.toDouble(),
                       width: _bannerAd.size.width.toDouble(),
                       child: AdWidget(ad: _bannerAd2),
                     ),
                   ),
-                Row(
-                  children: [
-                    // conditon to place chats text when ads is true /false
-                    isbanneradsload2
-                        ? Padding(
-                            padding: const EdgeInsets.only(
-                              top: 8,
-                              left: 20,
-                            ),
-                            child: Text(
-                              "Chats",
-                              style: GoogleFonts.dmSerifDisplay(
-                                  fontSize: 30, color: Colors.grey),
-                              textAlign: TextAlign.center,
-                            ),
-                          )
-                        : Padding(
-                            padding: const EdgeInsets.only(
-                              top: 204,
-                              left: 20,
-                            ),
-                            child: Text(
-                              "Chats",
-                              style: GoogleFonts.dmSerifDisplay(
-                                  fontSize: 30, color: Colors.grey),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                  ],
-                ),
               ],
             ),
+            Padding(
+              padding: const EdgeInsets.only(top: 230),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      top: 8,
+                      left: 20,
+                    ),
+                    child: Row(
+                      children: [
+                        Text(
+                          "Chats",
+                          style: GoogleFonts.dmSerifDisplay(
+                              fontSize: 30, color: Colors.grey),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      top: 8,
+                      left: 20,
+                    ),
+                    child: Row(
+                      children: [
+                        PopupMenuButton(
+                          itemBuilder: (context) => [
+                            PopupMenuItem(
+                              value: 1,
+                              child: const ListTile(
+                                title: Text("Delete All Chat Bot"),
+                                leading: Icon(Icons.delete_forever),
+                              ),
+                              onTap: () async {
+                                return showDialog(
+                                  context: context,
+                                  barrierDismissible:
+                                      false, // Prevent dismissing while loading
+                                  builder: (context) => AlertDialog(
+                                    title: const Text("Delete AI"),
+                                    content: const Text(
+                                        "Are you sure you want to delete the AI Bot?"),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context)
+                                              .pop(); // Close the dialog
+                                        },
+                                        child: const Text("Cancel"),
+                                      ),
+                                      TextButton(
+                                        onPressed: () async {
+                                          showDialog(
+                                            context: context,
+                                            builder: (context) => const Center(
+                                              child: CircularProgressIndicator(
+                                                color: Colors.grey,
+                                              ),
+                                            ),
+                                          );
+                                         
+                                        },
+                                        child: const Text(
+                                          "Delete",
+                                          style: TextStyle(color: Colors.red),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
+
             Positioned(
               top: 275,
               left: 0,
@@ -377,6 +438,119 @@ class _HomeState extends State<Home> {
                                       backgroundImage:
                                           AssetImage("assets/ai logo.jpeg"),
                                     ),
+                                    trailing: PopupMenuButton(
+                                      child: const Icon(Icons.more_vert),
+                                      itemBuilder: (context) => [
+                                        PopupMenuItem(
+                                          value: 1,
+                                          child: const ListTile(
+                                            title: Text("Add PDFs"),
+                                            leading: Icon(Icons.add),
+                                          ),
+                                          onTap: () {
+                                            addpdfs(botData["docId"]);
+                                          },
+                                        ),
+                                        PopupMenuItem(
+                                          value: 2,
+                                          child: const ListTile(
+                                            title: Text("Delete AI bot"),
+                                            leading: Icon(Icons.delete),
+                                          ),
+                                          onTap: () async {
+                                            return showDialog(
+                                              context: context,
+                                              barrierDismissible:
+                                                  false, // Prevent dismissing while loading
+                                              builder: (context) => AlertDialog(
+                                                title: const Text("Delete AI"),
+                                                content: const Text(
+                                                    "Are you sure you want to delete the AI Bot?"),
+                                                actions: [
+                                                  TextButton(
+                                                    onPressed: () {
+                                                      Navigator.of(context)
+                                                          .pop(); // Close the dialog
+                                                    },
+                                                    child: const Text("Cancel"),
+                                                  ),
+                                                  TextButton(
+                                                    onPressed: () async {
+                                                      showDialog(
+                                                        context: context,
+                                                        builder: (context) =>
+                                                            const Center(
+                                                          child:
+                                                              CircularProgressIndicator(
+                                                            color: Colors.grey,
+                                                          ),
+                                                        ),
+                                                      );
+                                                      final deletesuccessfully =
+                                                          await chatop
+                                                              .deletebot(
+                                                                  botData[
+                                                                      "docId"]);
+                                                      if (deletesuccessfully) {
+                                                        ScaffoldMessenger.of(
+                                                                context)
+                                                            .showSnackBar(
+                                                          const SnackBar(
+                                                            content: Text(
+                                                                'Bot deleted successfully!'),
+                                                            backgroundColor:
+                                                                Colors.grey,
+                                                          ),
+                                                        );
+                                                      } else {
+                                                        ScaffoldMessenger.of(
+                                                                context)
+                                                            .showSnackBar(
+                                                          const SnackBar(
+                                                            content: Text(
+                                                                'Bot deletion failed!'),
+                                                            backgroundColor:
+                                                                Colors.grey,
+                                                          ),
+                                                        );
+                                                      }
+                                                      Navigator.of(context)
+                                                          .pop(); // Close the dialog
+                                                      Navigator.of(context)
+                                                          .pop(); // Close the dialog
+                                                      Navigator.of(context)
+                                                          .pop(); // Close the dialog
+                                                    },
+                                                    child: const Text(
+                                                      "Delete",
+                                                      style: TextStyle(
+                                                          color: Colors.red),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                        PopupMenuItem(
+                                          value: 4,
+                                          child: const ListTile(
+                                            title: Text("Go Premium"),
+                                            leading: Icon(Icons
+                                                .workspace_premium_outlined),
+                                          ),
+                                          onTap: () {
+                                            Navigator.push(
+                                                // ignore: use_build_context_synchronously
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const Vip(),
+                                                ));
+                                          },
+                                        ),
+                                      ],
+                                    ),
                                     horizontalTitleGap: 16,
                                     minVerticalPadding: 5,
                                     selectedTileColor: Colors.black87,
@@ -512,6 +686,114 @@ class _HomeState extends State<Home> {
                                 backgroundImage:
                                     AssetImage("assets/ai logo.jpeg"),
                               ),
+                              trailing: PopupMenuButton(
+                                child: const Icon(Icons.more_vert),
+                                itemBuilder: (context) => [
+                                  PopupMenuItem(
+                                    value: 1,
+                                    child: const ListTile(
+                                      title: Text("Add PDFs"),
+                                      leading: Icon(Icons.add),
+                                    ),
+                                    onTap: () {
+                                      addpdfs(botData["docId"]);
+                                    },
+                                  ),
+                                  PopupMenuItem(
+                                    value: 2,
+                                    child: const ListTile(
+                                      title: Text("Delete AI bot"),
+                                      leading: Icon(Icons.delete),
+                                    ),
+                                    onTap: () async {
+                                      return showDialog(
+                                        context: context,
+                                        barrierDismissible:
+                                            false, // Prevent dismissing while loading
+                                        builder: (context) => AlertDialog(
+                                          title: const Text("Delete AI"),
+                                          content: const Text(
+                                              "Are you sure you want to delete the AI Bot?"),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context)
+                                                    .pop(); // Close the dialog
+                                              },
+                                              child: const Text("Cancel"),
+                                            ),
+                                            TextButton(
+                                              onPressed: () async {
+                                                showDialog(
+                                                  context: context,
+                                                  builder: (context) =>
+                                                      const Center(
+                                                    child:
+                                                        CircularProgressIndicator(
+                                                      color: Colors.grey,
+                                                    ),
+                                                  ),
+                                                );
+                                                final deletesuccessfully =
+                                                    await chatop.deletebot(
+                                                        botData["docId"]);
+                                                if (deletesuccessfully) {
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                    const SnackBar(
+                                                      content: Text(
+                                                          'Bot deleted successfully!'),
+                                                      backgroundColor:
+                                                          Colors.grey,
+                                                    ),
+                                                  );
+                                                } else {
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                    const SnackBar(
+                                                      content: Text(
+                                                          'Bot deletion failed!'),
+                                                      backgroundColor:
+                                                          Colors.grey,
+                                                    ),
+                                                  );
+                                                }
+                                                Navigator.of(context)
+                                                    .pop(); // Close the dialog
+                                                Navigator.of(context)
+                                                    .pop(); // Close the dialog
+                                                Navigator.of(context)
+                                                    .pop(); // Close the dialog
+                                              },
+                                              child: const Text(
+                                                "Delete",
+                                                style: TextStyle(
+                                                    color: Colors.red),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  PopupMenuItem(
+                                    value: 3,
+                                    child: const ListTile(
+                                      title: Text("Go Premium"),
+                                      leading: Icon(
+                                          Icons.workspace_premium_outlined),
+                                    ),
+                                    onTap: () {
+                                      Navigator.push(
+                                          // ignore: use_build_context_synchronously
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => const Vip(),
+                                          ));
+                                    },
+                                  ),
+                                ],
+                              ),
                               horizontalTitleGap: 16,
                               minVerticalPadding: 5,
                               selectedTileColor: Colors.black87,
@@ -626,5 +908,3 @@ class _HomeState extends State<Home> {
     }
   }
 }
-
-insertpdfs(docid) {}
