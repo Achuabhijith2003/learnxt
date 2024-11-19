@@ -249,7 +249,34 @@ class _HomeState extends State<Home> {
                                               ),
                                             ),
                                           );
-                                         
+                                          final deletesuccessfully =
+                                              await chatop.deleteAllBot();
+                                          if (deletesuccessfully) {
+                                            fetchData();
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              const SnackBar(
+                                                content: Text(
+                                                    'All Bot deleted successfully!'),
+                                                backgroundColor: Colors.grey,
+                                              ),
+                                            );
+                                          } else {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              const SnackBar(
+                                                content: Text(
+                                                    'Bot deletion failed!'),
+                                                backgroundColor: Colors.grey,
+                                              ),
+                                            );
+                                          }
+                                          Navigator.of(context)
+                                              .pop(); // Close the dialog
+                                          Navigator.of(context)
+                                              .pop(); // Close the dialog
+                                          Navigator.of(context)
+                                              .pop(); // Close the dialog
                                         },
                                         child: const Text(
                                           "Delete",
@@ -817,7 +844,7 @@ class _HomeState extends State<Home> {
     // ... your existing fetchData logic ...
     final user = FirebaseAuth.instance.currentUser;
     final firestore = FirebaseFirestore.instance;
-    final collection = firestore.collection('Bot');
+    final collection = firestore.collection('bot');
 
     final query =
         collection.where('UID', isEqualTo: user?.uid); // Example condition
@@ -882,7 +909,7 @@ class _HomeState extends State<Home> {
                     ),
                   );
                   CollectionReference insertfilename =
-                      FirebaseFirestore.instance.collection('Bot');
+                      FirebaseFirestore.instance.collection('bot');
                   DataEmbedded dataEmbedded = DataEmbedded();
                   final List<String> filenames = [];
                   dataEmbedded.getDocId(docid);

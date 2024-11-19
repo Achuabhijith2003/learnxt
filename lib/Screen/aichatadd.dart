@@ -361,7 +361,7 @@ class _ChatcreateState extends State<Chatcreate> {
       'Bot Name': botName,
     };
     final docRef =
-        await FirebaseFirestore.instance.collection('Bot').add(botData);
+        await FirebaseFirestore.instance.collection('bot').add(botData);
     final docId = docRef.id;
     // Update the document with the docId
     await docRef.update({'docId': docId});

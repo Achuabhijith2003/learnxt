@@ -107,7 +107,7 @@ class _ChataiState extends State<Chatai> {
                     ),
                   );
                   CollectionReference insertfilename =
-                      FirebaseFirestore.instance.collection('Bot');
+                      FirebaseFirestore.instance.collection('bot');
                   DataEmbedded dataEmbedded = DataEmbedded();
                   final List<String> filenames = [];
                   dataEmbedded.getDocId(docid);
@@ -559,8 +559,8 @@ class _ChataiState extends State<Chatai> {
       final keywords =
           await _dataem.searchAndAnswer(chatMessage.text, widget.docId);
       print('Generated answer: $keywords');
-      final aiRespoines =
-          await _ai.geminirespones(chatMessage.text, widget.docId, keywords,context);
+      final aiRespoines = await _ai.geminirespones(
+          chatMessage.text, widget.docId, keywords, context);
       print("Gemini Respones: ${aiRespoines.toString()}");
 
       types.TextMessage geminimessage = types.TextMessage(

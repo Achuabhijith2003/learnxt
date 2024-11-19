@@ -83,7 +83,7 @@ class DataEmbedded extends Chatputandget {
       }
 
       final parentDocRef =
-          FirebaseFirestore.instance.collection('Bot').doc(parentdocid);
+          FirebaseFirestore.instance.collection('bot').doc(parentdocid);
       final subcollectionRef = parentDocRef.collection('dataEmbedded');
       await subcollectionRef.add({
         'pdf_text': text,
@@ -128,7 +128,7 @@ class DataEmbedded extends Chatputandget {
       final queryEmbedding = await Generate_promptEmbedded(query);
 
       final subcollectionRef = FirebaseFirestore.instance
-          .collection('Bot')
+          .collection('bot')
           .doc(parentdocid)
           .collection('dataEmbedded');
 
