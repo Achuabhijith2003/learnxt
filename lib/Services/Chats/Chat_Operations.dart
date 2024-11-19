@@ -58,8 +58,8 @@ class ChatOperations {
   }
 
   Future<bool> deleteAllBot() async {
+    ads.RewardedAdload();
     String uid = _authservices.getuserID(); // Get the current user's UID
-    // ads.AppOpenAdload(); // Load ads if needed
     try {
       // Query the 'Bot' collection where the UID matches
       final getDocIDcollection = FirebaseFirestore.instance
@@ -69,19 +69,28 @@ class ChatOperations {
       // Fetch the matching documents
       final querySnapshot = await getDocIDcollection.get();
 
+      if (querySnapshot.docs.isEmpty) {
+        // No documents found
+        print("No data found for UID: $uid");
+        return false;
+      }
+
+      // Iterate through the documents and delete them
       for (var doc in querySnapshot.docs) {
         print("Deleting Document ID: ${doc.id}");
 
-        // Delete the subcollection ('embeded') if it exists
+        // Check and delete the subcollection ('embeded') if it exists
         final subcollectionRef = FirebaseFirestore.instance
-            .collection('Bot')
+            .collection('bot')
             .doc(doc.id)
             .collection('dataEmbedded');
         final subcollectionSnapshot = await subcollectionRef.get();
 
-        for (var subDoc in subcollectionSnapshot.docs) {
-          await subcollectionRef.doc(subDoc.id).delete();
-          print("Deleted Subcollection Document ID: ${subDoc.id}");
+        if (subcollectionSnapshot.docs.isNotEmpty) {
+          for (var subDoc in subcollectionSnapshot.docs) {
+            await subcollectionRef.doc(subDoc.id).delete();
+            print("Deleted Subcollection Document ID: ${subDoc.id}");
+          }
         }
 
         // Delete the main document in 'Bot' collection

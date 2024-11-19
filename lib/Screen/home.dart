@@ -40,6 +40,7 @@ class _HomeState extends State<Home> {
   Chatputandget chatstore = Chatputandget();
   Chatidputandget chatid = Chatidputandget();
   List<Map<String, dynamic>> data = [];
+  bool hasdata = true;
   late BannerAd _bannerAd;
   bool isbanneradsload = false;
   late BannerAd _bannerAd2;
@@ -173,7 +174,6 @@ class _HomeState extends State<Home> {
               // mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 // Display banner ad if loaded
-                // Display banner ad if loaded
                 if (isbanneradsload2)
                   Padding(
                     padding:
@@ -217,6 +217,7 @@ class _HomeState extends State<Home> {
                         PopupMenuButton(
                           itemBuilder: (context) => [
                             PopupMenuItem(
+                              enabled: hasdata,
                               value: 1,
                               child: const ListTile(
                                 title: Text("Delete All Chat Bot"),
@@ -230,7 +231,7 @@ class _HomeState extends State<Home> {
                                   builder: (context) => AlertDialog(
                                     title: const Text("Delete AI"),
                                     content: const Text(
-                                        "Are you sure you want to delete the AI Bot?"),
+                                        "Are you sure you want to delete the AI Bot? (Watch An Ads)"),
                                     actions: [
                                       TextButton(
                                         onPressed: () {
@@ -279,7 +280,7 @@ class _HomeState extends State<Home> {
                                               .pop(); // Close the dialog
                                         },
                                         child: const Text(
-                                          "Delete",
+                                          "Delete, Watch an ads",
                                           style: TextStyle(color: Colors.red),
                                         ),
                                       ),
@@ -322,6 +323,7 @@ class _HomeState extends State<Home> {
 
                   final data = snapshot.data as List<Map<String, dynamic>>;
                   if (data.isEmpty) {
+                    hasdata = false;
                     return TextButton.icon(
                       onPressed: () => Navigator.push(
                           context,
@@ -852,7 +854,10 @@ class _HomeState extends State<Home> {
     final querySnapshot = await query.get();
     final data = querySnapshot.docs.map((doc) => doc.data()).toList();
     // Access data as a list of Maps
-    // print(data);
+    print("total bot $data");
+    if (data.isEmpty) {
+      hasdata = false;
+    }
     //
     return data; // Return the retrieved data list
   }
