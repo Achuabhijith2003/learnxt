@@ -562,6 +562,15 @@ class _ChataiState extends State<Chatai> {
       final aiRespoines = await _ai.geminirespones(
           chatMessage.text, widget.docId, keywords, context);
       print("Gemini Respones: ${aiRespoines.toString()}");
+      if (aiRespoines.toString() == "null") {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content:
+                Text("The service is currently busy. Please try again later."),
+            backgroundColor: Colors.grey,
+          ),
+        );
+      }
 
       types.TextMessage geminimessage = types.TextMessage(
         author: geminiuser,
