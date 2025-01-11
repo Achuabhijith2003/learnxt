@@ -26,6 +26,14 @@ class AI extends DataEmbedded {
 
       // ignore: unnecessary_null_comparison
       if (user != null && ai != null) {
+        final userpart = TextPart(user);
+        final aipart = TextPart(ai);
+        userparts.add(userpart);
+        aiparts.add(aipart);
+        model.startChat(history: [
+          Content("User", userparts),
+          Content("model", aiparts),
+        ]);
         var message = promt;
         // final content = Content.text(
         //     "If the input indicates a friendly conversation, respond as a teacher with an engaging and conversational tone. If it is a question, analyze the provided keywords: $keywords and answer the question using only the context provided by these keywords, maintaining the perspective of a teacher. Input message: $message.");
@@ -36,6 +44,7 @@ class AI extends DataEmbedded {
         final response = await model.generateContent([Content.text(prompt)]);
         return response.text;
       } else {
+        model.startChat(history: []);
         var message = promt;
         // final content = Content.text(
         //     "If the input indicates a friendly conversation, respond as a teacher with an engaging and conversational tone. If it is a question, analyze the provided keywords: $keywords and answer the question using only the context provided by these keywords, maintaining the perspective of a teacher. Input message: $message.");
@@ -46,8 +55,6 @@ class AI extends DataEmbedded {
         final response = await model.generateContent([Content.text(prompt)]);
         return response.text;
       }
-
-      // return response.text;
     } catch (e) {
       print("Gemini Error: $e");
     }
