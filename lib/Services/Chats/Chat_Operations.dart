@@ -4,7 +4,7 @@ import 'package:learnxt/Auth/Authservices.dart';
 import 'package:learnxt/Services/gadsmob.dart';
 
 class ChatOperations {
-  Authservices _authservices = Authservices();
+  final Authservices _authservices = Authservices();
 
   admob ads = admob();
   // ignore: non_constant_identifier_names

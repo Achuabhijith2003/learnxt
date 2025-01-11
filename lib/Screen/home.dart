@@ -276,8 +276,6 @@ class _HomeState extends State<Home> {
                                               .pop(); // Close the dialog
                                           Navigator.of(context)
                                               .pop(); // Close the dialog
-                                          Navigator.of(context)
-                                              .pop(); // Close the dialog
                                         },
                                         child: const Text(
                                           "Delete, Watch an ads",
