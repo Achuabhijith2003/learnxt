@@ -87,7 +87,7 @@ class DataEmbedded extends Chatputandget {
       final subcollectionRef = parentDocRef.collection('dataEmbedded');
       await subcollectionRef.add({
         'pdf_text': text,
-        'embeddings': embeddings,
+        'embeddings': FieldValue.arrayUnion(embeddings),
       });
     } catch (e) {
       print('Error storing data: $e');
@@ -100,6 +100,7 @@ class DataEmbedded extends Chatputandget {
 
     int start = 0;
     while (start < words.length) {
+      // int end = chunkSize;
       int end = min(start + chunkSize, words.length);
       chunks.add(words.sublist(start, end).join(' '));
       start = end;
@@ -132,10 +133,8 @@ class DataEmbedded extends Chatputandget {
           .doc(parentdocid)
           .collection('dataEmbedded');
 
-      final querySnapshot = await subcollectionRef
-          .orderBy('embeddings', descending: true)
-          .limit(20)
-          .get();
+      final querySnapshot =
+          await subcollectionRef.orderBy('embeddings', descending: true).get();
 
       if (querySnapshot.docs.isEmpty) {
         return "No results found.";
@@ -171,23 +170,56 @@ class DataEmbedded extends Chatputandget {
         return "No results after ranking.";
       }
 
-      final topResult = rankedResults.first;
+// Find the index of the top result
+      int topResultIndex = 0; // Default to the first result
+      final topResult = rankedResults[topResultIndex];
       final topDocId = topResult['docId'] as String;
 
+// Get the previous and next document IDs if available
+      String? previousDocId;
+      String? nextDocId;
+
+      // if (topResultIndex > 0) {
+      previousDocId = rankedResults[topResultIndex + 2]['docId'] as String?;
+      // }
+
+      if (topResultIndex < rankedResults.length - 1) {
+        nextDocId = rankedResults[topResultIndex + 1]['docId'] as String?;
+      }
+
       final topDoc = await subcollectionRef.doc(topDocId).get();
+      final prevdoc = await subcollectionRef.doc(previousDocId).get();
+      final nextdoc = await subcollectionRef.doc(nextDocId).get();
 
       if (!topDoc.exists) {
         return "Top document not found.";
       }
-
-      final originalText = topDoc.data()?['pdf_text'] as String?;
-      if (originalText == null) {
+      final originalTextbefore = prevdoc.data()?['pdf_text'] as String?;
+      final originalTextnow = topDoc.data()?['pdf_text'] as String?;
+      final originalTextafter = nextdoc.data()?['pdf_text'] as String?;
+      final originalText =
+          "$originalTextbefore $originalTextnow $originalTextafter";
+      print("Searched anw from firebase :$originalText");
+      if (originalText == "") {
         return "No text found in the document.";
       }
 
-      // final generatedAnswer = generateAnswer(originalText);
+// Log or return the surrounding document IDs for additional context
+      print('Previous Document ID: $previousDocId');
+      print('Next Document ID: $nextDocId');
 
+// You can include this information in the response if needed
+      // return "Top Document Text: $originalText\nPrevious Document ID: $previousDocId\nNext Document ID: $nextDocId";
       return originalText;
+
+      // final originalText = topDoc.data()?['pdf_text'] as String?;
+      // if (originalText == null) {
+      //   return "No text found in the document.";
+      // }
+
+      // // final generatedAnswer = generateAnswer(originalText);
+
+      // return originalText;
     } catch (e) {
       print('Error in searchAndAnswer: $e');
       return "An error occurred.";
