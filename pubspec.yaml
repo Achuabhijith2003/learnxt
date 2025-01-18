@@ -50,8 +50,8 @@ dependencies:
   flutter_gemini: ^2.0.5
   google_generative_ai: ^0.4.6
   pdf: ^3.0.1
-  pdf_text:
-    path: ../
+  # pdf_text:
+  #   path: ../
   http: ^1.2.2
   google_mobile_ads: ^5.1.0
   share_plus: ^10.0.0
@@ -64,6 +64,7 @@ dependencies:
   flutter_chat_types: ^3.6.2
   shared_preferences: ^2.3.5
   smooth_page_indicator: ^1.2.0+3
+  flutter_pdf_text: ^0.8.1
 
 dev_dependencies:
   flutter_test:

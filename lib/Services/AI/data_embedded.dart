@@ -6,7 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:learnxt/Services/Hive/chat.dart';
 import 'package:learnxt/key.dart';
-import 'package:pdf_text/pdf_text.dart';
+import 'package:flutter_pdf_text/flutter_pdf_text.dart';
 
 class DataEmbedded extends Chatputandget {
   String? parentdocid;
