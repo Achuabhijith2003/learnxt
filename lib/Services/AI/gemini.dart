@@ -31,6 +31,10 @@ class AI extends DataEmbedded {
         userparts.add(userpart);
         aiparts.add(aipart);
         model.startChat(history: [
+          // Content.multi([
+          //   TextPart(
+          //       'Analyze the sentiment of the following Tweets and classify them as POSITIVE, NEGATIVE, or NEUTRAL. "It\'s so beautiful today!"'),
+          // ]),
           Content("User", userparts),
           Content("model", aiparts),
         ]);
