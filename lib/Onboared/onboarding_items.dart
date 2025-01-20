@@ -3,24 +3,23 @@ import 'onboarding_info.dart';
 class OnboardingItems {
   List<OnboardingInfo> items = [
     OnboardingInfo(
-        title: "📈 Empowering Farmers",
+        title: "📈 PDF+AI",
         descriptions:
-            "Join thousands of farmers and buyers in a smart, fair, and profitable marketplace for fresh fruits, vegetables, and grains.",
-        image: "assets/ai logo.jpeg"),
+            "Summarize your PDFs and get AI-generated notes for better learning.",
+        image: "assets/Onboarded1.jpg"),
     OnboardingInfo(
-        title: "Sell Fresh, Earn More, \n Grow Together",
-        descriptions:
-            "Join the fastest-growing marketplace for fresh fruits, vegetables, and grains.",
-        image: "assets/ai pro pic.jpeg"),
-    OnboardingInfo(
-        title: "Get Paid Faster",
-        descriptions:
-            "Instant payments with UPI, digital wallets, and secure bank transfers.",
-        image: "assets/ai profile pic.png"),
+        title: "Your learning mentor",
+        descriptions: "Get personalized learning with help of AI",
+        image: "assets/Onboarded2.jpg"),
+    // OnboardingInfo(
+    //     title: "Get Paid Faster",
+    //     descriptions:
+    //         "Instant payments with UPI, digital wallets, and secure bank transfers.",
+    //     image: "assets/ai profile pic.png"),
     OnboardingInfo(
         title: "Let’s Get Started!",
         descriptions:
-            "Grow your business and profit. Join thousands of farmers today!",
-        image: "assets/ai profile pic.png"),
+            "Grow your knowledge with Learnxt and get AI-generated notes.",
+        image: "assets/xt_logo.png"),
   ];
 }
