@@ -183,7 +183,7 @@ class _UiSettingsState extends State<UiSettings> {
                         },
                       ),
                       const ListTile(
-                        title: Text('V0.5.7'),
+                        title: Text('V0.5.8'),
                         leading: Icon(Icons.app_shortcut_sharp),
                       ),
                     ],

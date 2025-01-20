@@ -554,46 +554,51 @@ class _ChataiState extends State<Chatai> {
   void sendChatMessage(types.PartialText chatMessage) async {
     int newId = chatid.getid(widget.docId);
 
-    try {
-      // Keyword generator
-      final keywords =
-          await _dataem.searchAndAnswer(chatMessage.text, widget.docId);
-      print('Generated answer: $keywords');
-      final aiRespoines = await _ai.geminirespones(
-          chatMessage.text, widget.docId, keywords, context);
-      print("Gemini Respones: ${aiRespoines.toString()}");
-      if (aiRespoines.toString() == "null") {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content:
-                Text("The service is currently busy. Please try again later."),
-            backgroundColor: Colors.grey,
-          ),
+    bool haswordSummary = chatMessage.text.contains("Summary");
+
+    if (haswordSummary) {
+    } else {
+      try {
+        // Keyword generator
+        final keywords =
+            await _dataem.searchAndAnswer(chatMessage.text, widget.docId);
+        print('Generated answer: $keywords');
+        final aiRespoines = await _ai.geminirespones(
+            chatMessage.text, widget.docId, keywords, context);
+        print("Gemini Respones: ${aiRespoines.toString()}");
+        if (aiRespoines.toString() == "null") {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(
+                  "The service is currently busy. Please try again later."),
+              backgroundColor: Colors.grey,
+            ),
+          );
+        }
+
+        types.TextMessage geminimessage = types.TextMessage(
+          author: geminiuser,
+          id: "$newId",
+          text: aiRespoines,
         );
+
+        await chatstore.storechat(
+            geminimessage, widget.docId, geminimessage.text, widget.botname);
+        if (aiRespoines == true) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Chats cleared successfully!'),
+              backgroundColor: Colors.grey,
+            ),
+          );
+        }
+
+        setState(() {
+          _addMessage(geminimessage, geminimessage.text);
+        });
+      } catch (e) {
+        print('Error sending message: $e');
       }
-
-      types.TextMessage geminimessage = types.TextMessage(
-        author: geminiuser,
-        id: "$newId",
-        text: aiRespoines,
-      );
-
-      await chatstore.storechat(
-          geminimessage, widget.docId, geminimessage.text, widget.botname);
-      if (aiRespoines == true) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Chats cleared successfully!'),
-            backgroundColor: Colors.grey,
-          ),
-        );
-      }
-
-      setState(() {
-        _addMessage(geminimessage, geminimessage.text);
-      });
-    } catch (e) {
-      print('Error sending message: $e');
     }
   }
 }

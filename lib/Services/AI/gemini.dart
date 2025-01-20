@@ -31,10 +31,9 @@ class AI extends DataEmbedded {
         userparts.add(userpart);
         aiparts.add(aipart);
         model.startChat(history: [
-          // Content.multi([
-          //   TextPart(
-          //       'Analyze the sentiment of the following Tweets and classify them as POSITIVE, NEGATIVE, or NEUTRAL. "It\'s so beautiful today!"'),
-          // ]),
+          Content.multi([
+            TextPart(userparts.toString()),
+          ]),
           Content("User", userparts),
           Content("model", aiparts),
         ]);
@@ -44,8 +43,9 @@ class AI extends DataEmbedded {
 
         final prompt =
             "If the input indicates a friendly conversation or start hi or hey like not use keywords give a friendly conversation , respond as a teacher with an engaging and conversational tone. If it is a question, analyze the provided keywords: $keywords and answer the question using only the context provided by these keywords, maintaining the perspective of a teacher and provide answer with simple way to understand like an bot . Input message: $message.";
+        final chats = await model.startChat();
+        final response = await chats.sendMessage(Content.text(prompt));
 
-        final response = await model.generateContent([Content.text(prompt)]);
         return response.text;
       } else {
         model.startChat(history: []);
@@ -54,8 +54,7 @@ class AI extends DataEmbedded {
         //     "If the input indicates a friendly conversation, respond as a teacher with an engaging and conversational tone. If it is a question, analyze the provided keywords: $keywords and answer the question using only the context provided by these keywords, maintaining the perspective of a teacher. Input message: $message.");
 
         final prompt =
-            "If the input indicates a friendly conversation or start hi or hey like not use keywords give a friendly conversation , respond as a teacher with an engaging and conversational tone. If it is a question, analyze the provided keywords: $keywords and answer the question using only the context provided by these keywords, maintaining the perspective of a teacher and provide answer with simple way to understand like an bot . Input message: $message.";
-
+            "If the input indicates a friendly conversation or start hi or hey like not use keywords give a friendly conversation , respond with an engaging and conversational tone. If it is a question, analyze the provided sentence: $keywords and answer the question using only the context provided by these keywords, provide answer with simple way to understand for students. Input message: $message.";
         final response = await model.generateContent([Content.text(prompt)]);
         return response.text;
       }

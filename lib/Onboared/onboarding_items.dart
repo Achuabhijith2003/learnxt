@@ -20,6 +20,6 @@ class OnboardingItems {
         title: "Let’s Get Started!",
         descriptions:
             "Grow your knowledge with Learnxt and get AI-generated notes.",
-        image: "assets/xt_logo.png"),
+        image: "assets/Onboarded3.jpg"),
   ];
 }
