@@ -14,6 +14,9 @@ import 'package:learnxt/Services/Hive/chatid.dart';
 import 'package:learnxt/Services/gadsmob.dart';
 import '../Services/AI/data_embedded.dart';
 
+import 'package:learnxt/theme/theme_model.dart';
+import 'package:provider/provider.dart';
+
 class Chatcreate extends StatefulWidget {
   const Chatcreate({super.key});
 
@@ -90,210 +93,216 @@ class _ChatcreateState extends State<Chatcreate> {
   @override
   Widget build(BuildContext context) {
     TextEditingController botnamecontroller = TextEditingController();
-    return SafeArea(
-      child: Scaffold(
-        key: _globalKey,
-        // backgroundColor: const Color(0xFF171717),
-        body: SizedBox(
-          width: double.infinity,
-          child: Stack(
-            children: [
-              Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 40, left: 15),
-                        child: Text(
-                          "Create Chats",
-                          style: GoogleFonts.dmSerifDisplay(
-                              fontSize: 40,
-                              letterSpacing: 3,
-                              color: Colors.grey.shade800),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                      // Profile
-                      Padding(
-                        padding: const EdgeInsets.only(top: 40, right: 10),
-                        child: IconButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const UserProfile()));
-                          },
-                          icon: const Icon(Icons.account_circle_rounded),
-                          iconSize: 30,
-                        ),
-                      )
-                    ],
-                  ),
-                  const SizedBox(
-                    width: 35,
-                  ),
-                ],
-              ),
-              Positioned(
-                  top: 100,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 15),
-                    decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(40),
-                          topRight: Radius.circular(40)),
-                    ),
-                    child: Column(
+    return Consumer<ThemeModel>(
+        builder: (context, ThemeModel themeNotifier, child) {
+      return SafeArea(
+        child: Scaffold(
+          key: _globalKey,
+          // backgroundColor: const Color(0xFF171717),
+          body: SizedBox(
+            width: double.infinity,
+            child: Stack(
+              children: [
+                Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const SizedBox(
-                          height: 10,
+                        Padding(
+                          padding: const EdgeInsets.only(top: 40, left: 15),
+                          child: Text(
+                            "Create Chats",
+                            style: GoogleFonts.dmSerifDisplay(
+                                fontSize: 40,
+                                letterSpacing: 3,
+                                color: Colors.grey.shade800),
+                            textAlign: TextAlign.center,
+                          ),
                         ),
-                        FadeIn(
-                          duration: const Duration(milliseconds: 1600),
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                                left: 20, top: 5, right: 20),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(23),
-                                  border: Border.all(color: Colors.white)),
+                        // Profile
+                        Padding(
+                          padding: const EdgeInsets.only(top: 40, right: 10),
+                          child: IconButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const UserProfile()));
+                            },
+                            icon: const Icon(Icons.account_circle_rounded),
+                            iconSize: 30,
+                          ),
+                        )
+                      ],
+                    ),
+                    const SizedBox(
+                      width: 35,
+                    ),
+                  ],
+                ),
+                Positioned(
+                    top: 100,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 15),
+                      decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(40),
+                            topRight: Radius.circular(40)),
+                      ),
+                      child: Column(
+                        children: [
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          FadeIn(
+                            duration: const Duration(milliseconds: 1600),
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 20, top: 5, right: 20),
                               child: Container(
                                 decoration: BoxDecoration(
-                                    boxShadow: const <BoxShadow>[
-                                      BoxShadow(
-                                        offset: Offset(1.0, 1.0),
-                                        blurRadius: 2.0,
-                                        color: Color.fromARGB(255, 14, 60, 13),
+                                    borderRadius: BorderRadius.circular(23),
+                                    border: Border.all(color: Colors.white)),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      boxShadow: const <BoxShadow>[
+                                        BoxShadow(
+                                          offset: Offset(1.0, 1.0),
+                                          blurRadius: 2.0,
+                                          color:
+                                              Color.fromARGB(255, 14, 60, 13),
+                                        ),
+                                      ],
+                                      borderRadius: BorderRadius.circular(25),
+                                      color: Colors.white),
+                                  child: FadeInUp(
+                                    duration: const Duration(milliseconds: 550),
+                                    child: TextField(
+                                      controller: botnamecontroller,
+                                      decoration: const InputDecoration(
+                                        border: InputBorder.none,
+                                        hintStyle:
+                                            TextStyle(color: Colors.grey),
+                                        prefixIcon: Icon(
+                                          Icons.group_add_outlined,
+                                          color: Colors.grey,
+                                        ),
+                                        hintText: "Name of the bot",
+                                        // hintStyle: GoogleFonts.barlowSemiCondensed(
+                                        //   fontSize: 16,
+                                        // ),
+                                        enabled: true,
                                       ),
-                                    ],
-                                    borderRadius: BorderRadius.circular(25),
-                                    color: Colors.white),
-                                child: FadeInUp(
-                                  duration: const Duration(milliseconds: 550),
-                                  child: TextField(
-                                    controller: botnamecontroller,
-                                    decoration: const InputDecoration(
-                                      border: InputBorder.none,
-                                      hintStyle: TextStyle(color: Colors.grey),
-                                      prefixIcon: Icon(
-                                        Icons.group_add_outlined,
-                                        color: Colors.grey,
-                                      ),
-                                      hintText: "Name of the bot",
-                                      // hintStyle: GoogleFonts.barlowSemiCondensed(
-                                      //   fontSize: 16,
-                                      // ),
-                                      enabled: true,
                                     ),
                                   ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        FadeIn(
-                            duration: const Duration(milliseconds: 1600),
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 20, top: 5, right: 20),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  MaterialButton(
-                                    onPressed: () async {
-                                      uploadPdf();
-                                    },
-                                    height: 50,
-                                    // margin: EdgeInsets.symmetric(horizontal: 50),
-                                    color: Colors.grey[800],
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(50),
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          FadeIn(
+                              duration: const Duration(milliseconds: 1600),
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 20, top: 5, right: 20),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    MaterialButton(
+                                      onPressed: () async {
+                                        uploadPdf();
+                                      },
+                                      height: 50,
+                                      // margin: EdgeInsets.symmetric(horizontal: 50),
+                                      color: Colors.grey[800],
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(50),
+                                      ),
+                                      // decoration: BoxDecoration(
+                                      // ),
+                                      child: const Row(
+                                        children: [
+                                          Text(
+                                            "Upload PDFs",
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Icon(
+                                            Icons.upload_file,
+                                            color: Colors.white,
+                                          )
+                                        ],
+                                      ),
                                     ),
-                                    // decoration: BoxDecoration(
-                                    // ),
-                                    child: const Row(
-                                      children: [
-                                        Text(
-                                          "Upload PDFs",
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        Icon(
-                                          Icons.upload_file,
-                                          color: Colors.white,
-                                        )
-                                      ],
+                                    MaterialButton(
+                                      onPressed: () {
+                                        createBot(botnamecontroller);
+                                      },
+                                      height: 50,
+                                      // margin: EdgeInsets.symmetric(horizontal: 50),
+                                      color: Colors.grey[800],
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(50),
+                                      ),
+                                      // decoration: BoxDecoration(
+                                      // ),
+                                      child: const Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: [
+                                          Text(
+                                            "Create Bot",
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Icon(
+                                            Icons.add_chart_outlined,
+                                            color: Colors.white,
+                                          )
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                  MaterialButton(
-                                    onPressed: () {
-                                      createBot(botnamecontroller);
-                                    },
-                                    height: 50,
-                                    // margin: EdgeInsets.symmetric(horizontal: 50),
-                                    color: Colors.grey[800],
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(50),
-                                    ),
-                                    // decoration: BoxDecoration(
-                                    // ),
-                                    child: const Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: [
-                                        Text(
-                                          "Create Bot",
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        Icon(
-                                          Icons.add_chart_outlined,
-                                          color: Colors.white,
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            )),
-                        // const Divider(),
-                      ],
-                    ),
-                  )),
-              Padding(
-                padding: const EdgeInsets.only(top: 258),
-                child: isNativeAdAdLoaded
-                    ? SizedBox(
-                        child: AdWidget(ad: nativeAd),
-                      )
-                    : const SizedBox(),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 368),
-                child: displaypdf(),
-              )
-            ],
+                                  ],
+                                ),
+                              )),
+                          // const Divider(),
+                        ],
+                      ),
+                    )),
+                Padding(
+                  padding: const EdgeInsets.only(top: 258),
+                  child: isNativeAdAdLoaded
+                      ? SizedBox(
+                          child: AdWidget(ad: nativeAd),
+                        )
+                      : const SizedBox(),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 368),
+                  child: displaypdf(),
+                )
+              ],
+            ),
           ),
+          bottomNavigationBar: isbanneradsload
+              ? SizedBox(
+                  height: _bannerAd.size.height.toDouble(),
+                  width: _bannerAd.size.width.toDouble(),
+                  child: AdWidget(ad: _bannerAd),
+                )
+              : const SizedBox(),
         ),
-        bottomNavigationBar: isbanneradsload
-            ? SizedBox(
-                height: _bannerAd.size.height.toDouble(),
-                width: _bannerAd.size.width.toDouble(),
-                child: AdWidget(ad: _bannerAd),
-              )
-            : const SizedBox(),
-      ),
-    );
+      );
+    });
   }
 
   List<File> files = [];

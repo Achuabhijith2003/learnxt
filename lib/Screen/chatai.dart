@@ -16,6 +16,9 @@ import 'package:learnxt/Services/Hive/chat.dart';
 import 'package:learnxt/Services/Hive/chatid.dart';
 import 'package:learnxt/Services/gadsmob.dart';
 
+import 'package:learnxt/theme/theme_model.dart';
+import 'package:provider/provider.dart';
+
 class Chatai extends StatefulWidget {
   final String botname;
   final String docId;
@@ -204,351 +207,355 @@ class _ChataiState extends State<Chatai> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      // backgroundColor: const Color(0xFF171717),
-      body: SizedBox(
-        width: double.infinity,
-        child: Stack(
-          children: [
-            Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 32, left: 5, right: 5),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      IconButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          icon: const Icon(
-                            Icons.arrow_back_ios_new,
-                            color: Colors.black,
-                            shadows: <Shadow>[
-                              Shadow(
-                                offset: Offset(1.0, 1.0),
-                                blurRadius: 2.0,
-                                color: Color.fromARGB(255, 14, 60, 13),
+    return Consumer<ThemeModel>(
+        builder: (context, ThemeModel themeNotifier, child) {
+      return Scaffold(
+        // backgroundColor: const Color(0xFF171717),
+        body: SizedBox(
+          width: double.infinity,
+          child: Stack(
+            children: [
+              Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 32, left: 5, right: 5),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        IconButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            icon: const Icon(
+                              Icons.arrow_back_ios_new,
+                              color: Colors.black,
+                              shadows: <Shadow>[
+                                Shadow(
+                                  offset: Offset(1.0, 1.0),
+                                  blurRadius: 2.0,
+                                  color: Color.fromARGB(255, 14, 60, 13),
+                                ),
+                              ],
+                            )),
+                        const SizedBox(
+                          width: 0,
+                        ),
+                        Text(
+                          widget.botname,
+                          style: GoogleFonts.dmSerifDisplay(
+                              fontSize: 30, letterSpacing: 4),
+                          textAlign: TextAlign.center,
+                        ),
+                        const Divider(),
+                        const Divider(),
+                        // menu button
+                        PopupMenuButton(
+                          child: const Icon(Icons.more_vert),
+                          itemBuilder: (context) => [
+                            PopupMenuItem(
+                              value: 1,
+                              child: const ListTile(
+                                title: Text("Add PDFs"),
+                                leading: Icon(Icons.add),
                               ),
-                            ],
-                          )),
-                      const SizedBox(
-                        width: 0,
-                      ),
-                      Text(
-                        widget.botname,
-                        style: GoogleFonts.dmSerifDisplay(
-                            fontSize: 30, letterSpacing: 4),
-                        textAlign: TextAlign.center,
-                      ),
-                      const Divider(),
-                      const Divider(),
-                      // menu button
-                      PopupMenuButton(
-                        child: const Icon(Icons.more_vert),
-                        itemBuilder: (context) => [
-                          PopupMenuItem(
-                            value: 1,
-                            child: const ListTile(
-                              title: Text("Add PDFs"),
-                              leading: Icon(Icons.add),
+                              onTap: () {
+                                addpdfs(widget.docId);
+                              },
                             ),
-                            onTap: () {
-                              addpdfs(widget.docId);
-                            },
-                          ),
-                          PopupMenuItem(
-                            value: 2,
-                            child: const ListTile(
-                              title: Text("Clear Chats"),
-                              leading: Icon(Icons.clear_all_sharp),
-                            ),
-                            onTap: () async {
-                              return showDialog(
-                                context: context,
-                                barrierDismissible:
-                                    false, // Prevent dismissing while loading
-                                builder: (context) => AlertDialog(
-                                  title: const Text("Clear chats"),
-                                  content: const Text(
-                                      "Are you sure you want to Clear Chats?"),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context)
-                                            .pop(); // Close the dialog
-                                      },
-                                      child: const Text("Cancel"),
-                                    ),
-                                    TextButton(
-                                      onPressed: () async {
-                                        showDialog(
-                                          context: context,
-                                          builder: (context) => const Center(
-                                            child: CircularProgressIndicator(
-                                              color: Colors.grey,
-                                            ),
-                                          ),
-                                        );
-
-                                        final clearsucessfully =
-                                            chatstore.clearchat(widget.docId);
-                                        loadChatMessages();
-
-                                        if (clearsucessfully) {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            const SnackBar(
-                                              content: Text(
-                                                  'Chats cleared successfully!'),
-                                              backgroundColor: Colors.grey,
-                                            ),
-                                          );
-                                        } else {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            const SnackBar(
-                                              content:
-                                                  Text('Chats cleared failed!'),
-                                              backgroundColor: Colors.grey,
-                                            ),
-                                          );
-                                        }
-                                        Navigator.of(context)
-                                            .pop(); // Close the dialog
-                                        Navigator.of(context)
-                                            .pop(); // Close the dialog
-                                        Navigator.of(context)
-                                            .pop(); // Close the dialog
-                                      },
-                                      child: const Text(
-                                        "clear",
-                                        style: TextStyle(color: Colors.red),
+                            PopupMenuItem(
+                              value: 2,
+                              child: const ListTile(
+                                title: Text("Clear Chats"),
+                                leading: Icon(Icons.clear_all_sharp),
+                              ),
+                              onTap: () async {
+                                return showDialog(
+                                  context: context,
+                                  barrierDismissible:
+                                      false, // Prevent dismissing while loading
+                                  builder: (context) => AlertDialog(
+                                    title: const Text("Clear chats"),
+                                    content: const Text(
+                                        "Are you sure you want to Clear Chats?"),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context)
+                                              .pop(); // Close the dialog
+                                        },
+                                        child: const Text("Cancel"),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
-                          ),
-                          PopupMenuItem(
-                            value: 3,
-                            child: const ListTile(
-                              title: Text("Delete AI bot"),
-                              leading: Icon(Icons.delete),
-                            ),
-                            onTap: () async {
-                              return showDialog(
-                                context: context,
-                                barrierDismissible:
-                                    !isLoading, // Prevent dismissing while loading
-                                builder: (context) => AlertDialog(
-                                  title: const Text("Delete AI"),
-                                  content: const Text(
-                                      "Are you sure you want to delete the AI Bot?"),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context)
-                                            .pop(); // Close the dialog
-                                      },
-                                      child: const Text("Cancel"),
-                                    ),
-                                    TextButton(
-                                      onPressed: () async {
-                                        showDialog(
-                                          context: context,
-                                          builder: (context) => const Center(
-                                            child: CircularProgressIndicator(
-                                              color: Colors.grey,
-                                            ),
-                                          ),
-                                        );
-
-                                        // setState(() {
-                                        //   isLoading = true; // Start loading
-                                        // });
-
-                                        final deletesuccessfully = await chatop
-                                            .deletebot(widget.docId);
-
-                                        // setState(() {
-                                        //   isLoading = false; // Stop loading
-                                        // });
-
-                                        if (deletesuccessfully) {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            const SnackBar(
-                                              content: Text(
-                                                  'Bot deleted successfully!'),
-                                              backgroundColor: Colors.grey,
+                                      TextButton(
+                                        onPressed: () async {
+                                          showDialog(
+                                            context: context,
+                                            builder: (context) => const Center(
+                                              child: CircularProgressIndicator(
+                                                color: Colors.grey,
+                                              ),
                                             ),
                                           );
-                                        } else {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            const SnackBar(
-                                              content:
-                                                  Text('Bot deletion failed!'),
-                                              backgroundColor: Colors.grey,
-                                            ),
-                                          );
-                                        }
-                                        Navigator.of(context)
-                                            .pop(); // Close the dialog
-                                        Navigator.of(context)
-                                            .pop(); // Close the dialog
-                                        Navigator.of(context)
-                                            .pop(); // Close the dialog
-                                      },
-                                      child: const Text(
-                                        "Delete",
-                                        style: TextStyle(color: Colors.red),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
-                          ),
-                          PopupMenuItem(
-                            value: 4,
-                            child: const ListTile(
-                              title: Text("Settings"),
-                              leading: Icon(Icons.settings),
-                            ),
-                            onTap: () {
-                              Navigator.push(
-                                  // ignore: use_build_context_synchronously
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const UiSettings(),
-                                  ));
-                            },
-                          ),
-                          PopupMenuItem(
-                            value: 5,
-                            child: const ListTile(
-                              title: Text("Go Premium"),
-                              leading: Icon(Icons.workspace_premium_outlined),
-                            ),
-                            onTap: () {
-                              Navigator.push(
-                                  // ignore: use_build_context_synchronously
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const Vip(),
-                                  ));
-                            },
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            Positioned(
-                top: 85,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 0),
-                    child: Chat(
-                      inputOptions: const InputOptions(
-                        autocorrect: true,
-                        enableSuggestions: true,
-                        sendButtonVisibilityMode:
-                            SendButtonVisibilityMode.always,
-                        inputClearMode: InputClearMode.always,
-                      ),
-                      theme: const DefaultChatTheme(
-                        inputBackgroundColor: Colors.grey,
-                        inputTextDecoration:
-                            InputDecoration(labelText: "Enter prompt"),
-                        messageBorderRadius: 35,
-                      ),
-                      messages: _messages,
-                      onSendPressed: (p0) async {
-                        // Update chat ID
-                        int newId = chatid.getid(widget.docId) + 1;
-                        chatid.putid(newId, widget.docId);
 
-                        final textMessage = types.TextMessage(
-                          author: cureentUser,
-                          createdAt: DateTime.now().millisecondsSinceEpoch,
-                          id: "$newId", // Ensuring a unique ID for each message
-                          text: p0.text,
-                        );
-                        print("before sd to chatfunction");
-                        // Store chat message
-                        // await chatstore.storechat(widget.botname, cureentUser,
-                        //     textMessage, widget.docId);
-                        setState(() {
-                          _addMessage(textMessage, textMessage.text);
-                        });
-                        print("after sd to chatfunction");
-                        newId = chatid.getid(widget.docId) + 1;
-                        chatid.putid(newId, widget.docId);
-                        sendChatMessage(p0);
-                      },
-                      showUserAvatars: true,
-                      showUserNames: true,
-                      user: cureentUser,
-                      onMessageLongPress: (context, p1) {
-                        showDialog(
-                          context: context,
-                          barrierDismissible: true,
-                          builder: (context) => AlertDialog(
-                            title: const Center(child: Text("Options")),
-                            actions: [
-                              Column(
-                                children: [
-                                  Center(
-                                    child: TextButton(
-                                      onPressed: () async {
-                                        // Convert id to integer and handle any errors
-                                        var newId = int.tryParse(p1.id);
-                                        if (newId == null) {
-                                          print("Invalid ID: ${p1.id}");
-                                          return;
-                                        } else {
-                                          print(
-                                              "Parsed ID successfully: $newId");
-                                        }
+                                          final clearsucessfully =
+                                              chatstore.clearchat(widget.docId);
+                                          loadChatMessages();
 
-                                        deleteMessageAndReplace(newId);
-                                        Navigator.pop(context);
-                                      },
-                                      child: const Text(
-                                        "Delete Chat",
-                                        style: TextStyle(color: Colors.red),
+                                          if (clearsucessfully) {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              const SnackBar(
+                                                content: Text(
+                                                    'Chats cleared successfully!'),
+                                                backgroundColor: Colors.grey,
+                                              ),
+                                            );
+                                          } else {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              const SnackBar(
+                                                content: Text(
+                                                    'Chats cleared failed!'),
+                                                backgroundColor: Colors.grey,
+                                              ),
+                                            );
+                                          }
+                                          Navigator.of(context)
+                                              .pop(); // Close the dialog
+                                          Navigator.of(context)
+                                              .pop(); // Close the dialog
+                                          Navigator.of(context)
+                                              .pop(); // Close the dialog
+                                        },
+                                        child: const Text(
+                                          "clear",
+                                          style: TextStyle(color: Colors.red),
+                                        ),
                                       ),
-                                    ),
+                                    ],
                                   ),
-                                ],
+                                );
+                              },
+                            ),
+                            PopupMenuItem(
+                              value: 3,
+                              child: const ListTile(
+                                title: Text("Delete AI bot"),
+                                leading: Icon(Icons.delete),
                               ),
-                            ],
-                          ),
-                        );
+                              onTap: () async {
+                                return showDialog(
+                                  context: context,
+                                  barrierDismissible:
+                                      !isLoading, // Prevent dismissing while loading
+                                  builder: (context) => AlertDialog(
+                                    title: const Text("Delete AI"),
+                                    content: const Text(
+                                        "Are you sure you want to delete the AI Bot?"),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context)
+                                              .pop(); // Close the dialog
+                                        },
+                                        child: const Text("Cancel"),
+                                      ),
+                                      TextButton(
+                                        onPressed: () async {
+                                          showDialog(
+                                            context: context,
+                                            builder: (context) => const Center(
+                                              child: CircularProgressIndicator(
+                                                color: Colors.grey,
+                                              ),
+                                            ),
+                                          );
 
-                        print("P1 ID: ${p1.id}");
-                        print("Context: $context");
-                      },
-                    )))
-          ],
+                                          // setState(() {
+                                          //   isLoading = true; // Start loading
+                                          // });
+
+                                          final deletesuccessfully =
+                                              await chatop
+                                                  .deletebot(widget.docId);
+
+                                          // setState(() {
+                                          //   isLoading = false; // Stop loading
+                                          // });
+
+                                          if (deletesuccessfully) {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              const SnackBar(
+                                                content: Text(
+                                                    'Bot deleted successfully!'),
+                                                backgroundColor: Colors.grey,
+                                              ),
+                                            );
+                                          } else {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              const SnackBar(
+                                                content: Text(
+                                                    'Bot deletion failed!'),
+                                                backgroundColor: Colors.grey,
+                                              ),
+                                            );
+                                          }
+                                          Navigator.of(context)
+                                              .pop(); // Close the dialog
+                                          Navigator.of(context)
+                                              .pop(); // Close the dialog
+                                          Navigator.of(context)
+                                              .pop(); // Close the dialog
+                                        },
+                                        child: const Text(
+                                          "Delete",
+                                          style: TextStyle(color: Colors.red),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+                            PopupMenuItem(
+                              value: 4,
+                              child: const ListTile(
+                                title: Text("Settings"),
+                                leading: Icon(Icons.settings),
+                              ),
+                              onTap: () {
+                                Navigator.push(
+                                    // ignore: use_build_context_synchronously
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const UiSettings(),
+                                    ));
+                              },
+                            ),
+                            PopupMenuItem(
+                              value: 5,
+                              child: const ListTile(
+                                title: Text("Go Premium"),
+                                leading: Icon(Icons.workspace_premium_outlined),
+                              ),
+                              onTap: () {
+                                Navigator.push(
+                                    // ignore: use_build_context_synchronously
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const Vip(),
+                                    ));
+                              },
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              Positioned(
+                  top: 85,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 0),
+                      child: Chat(
+                        inputOptions: const InputOptions(
+                          autocorrect: true,
+                          enableSuggestions: true,
+                          sendButtonVisibilityMode:
+                              SendButtonVisibilityMode.always,
+                          inputClearMode: InputClearMode.always,
+                        ),
+                        theme: const DefaultChatTheme(
+                          inputBackgroundColor: Colors.grey,
+                          inputTextDecoration:
+                              InputDecoration(labelText: "Enter prompt"),
+                          messageBorderRadius: 35,
+                        ),
+                        messages: _messages,
+                        onSendPressed: (p0) async {
+                          // Update chat ID
+                          int newId = chatid.getid(widget.docId) + 1;
+                          chatid.putid(newId, widget.docId);
+
+                          final textMessage = types.TextMessage(
+                            author: cureentUser,
+                            createdAt: DateTime.now().millisecondsSinceEpoch,
+                            id: "$newId", // Ensuring a unique ID for each message
+                            text: p0.text,
+                          );
+                          print("before sd to chatfunction");
+                          // Store chat message
+                          // await chatstore.storechat(widget.botname, cureentUser,
+                          //     textMessage, widget.docId);
+                          setState(() {
+                            _addMessage(textMessage, textMessage.text);
+                          });
+                          print("after sd to chatfunction");
+                          newId = chatid.getid(widget.docId) + 1;
+                          chatid.putid(newId, widget.docId);
+                          sendChatMessage(p0);
+                        },
+                        showUserAvatars: true,
+                        showUserNames: true,
+                        user: cureentUser,
+                        onMessageLongPress: (context, p1) {
+                          showDialog(
+                            context: context,
+                            barrierDismissible: true,
+                            builder: (context) => AlertDialog(
+                              title: const Center(child: Text("Options")),
+                              actions: [
+                                Column(
+                                  children: [
+                                    Center(
+                                      child: TextButton(
+                                        onPressed: () async {
+                                          // Convert id to integer and handle any errors
+                                          var newId = int.tryParse(p1.id);
+                                          if (newId == null) {
+                                            print("Invalid ID: ${p1.id}");
+                                            return;
+                                          } else {
+                                            print(
+                                                "Parsed ID successfully: $newId");
+                                          }
+
+                                          deleteMessageAndReplace(newId);
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text(
+                                          "Delete Chat",
+                                          style: TextStyle(color: Colors.red),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          );
+
+                          print("P1 ID: ${p1.id}");
+                          print("Context: $context");
+                        },
+                      )))
+            ],
+          ),
         ),
-      ),
-      bottomNavigationBar: isbanneradsload
-          ? SizedBox(
-              height: _bannerAd.size.height.toDouble(),
-              width: _bannerAd.size.width.toDouble(),
-              child: AdWidget(ad: _bannerAd),
-            )
-          : const SizedBox(),
-    );
+        bottomNavigationBar: isbanneradsload
+            ? SizedBox(
+                height: _bannerAd.size.height.toDouble(),
+                width: _bannerAd.size.width.toDouble(),
+                child: AdWidget(ad: _bannerAd),
+              )
+            : const SizedBox(),
+      );
+    });
   }
 
   void sendChatMessage(types.PartialText chatMessage) async {

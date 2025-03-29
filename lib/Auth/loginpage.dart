@@ -221,19 +221,7 @@ class _LoginpageState extends State<Loginpage> {
                           const SizedBox(
                             height: 10,
                           ),
-                          IconButton(
-                              icon: Icon(
-                                  themeNotifier.isDark
-                                      ? Icons.nightlight_round
-                                      : Icons.wb_sunny,
-                                  color: themeNotifier.isDark
-                                      ? Colors.white
-                                      : Colors.grey.shade900),
-                              onPressed: () {
-                                themeNotifier.isDark
-                                    ? themeNotifier.isDark = false
-                                    : themeNotifier.isDark = true;
-                              }),
+                       
                           FadeInUp(
                               duration: const Duration(milliseconds: 1600),
                               child: MaterialButton(
