@@ -63,14 +63,20 @@ class _UiSettingsState extends State<UiSettings> {
     return Consumer<ThemeModel>(
         builder: (context, ThemeModel themeNotifier, child) {
       return Scaffold(
+        backgroundColor:
+            themeNotifier.isDark ? Colors.grey.shade900 : Colors.white,
         body: Stack(
           children: [
             Padding(
               padding: const EdgeInsets.only(top: 40, left: 15),
               child: Text(
                 "Settings",
-                style:
-                    GoogleFonts.dmSerifDisplay(fontSize: 40, letterSpacing: 4),
+                style: GoogleFonts.dmSerifDisplay(
+                    fontSize: 40,
+                    letterSpacing: 4,
+                    color: themeNotifier.isDark
+                        ? Colors.white
+                        : Colors.grey.shade900),
               ),
             ),
             Padding(
@@ -125,14 +131,17 @@ class _UiSettingsState extends State<UiSettings> {
                             children: [
                               const CircleAvatar(
                                 backgroundImage: AssetImage(
-                                  "assets/ai logo.jpeg",
+                                  "assets/xt_logo.png",
                                 ),
                                 maxRadius: 35,
                               ),
                               Text(
                                 profileData["Name"],
                                 style: GoogleFonts.dmSerifDisplay(
-                                    fontSize: 35, color: Colors.black),
+                                    fontSize: 35,
+                                    color: themeNotifier.isDark
+                                        ? Colors.white
+                                        : Colors.grey.shade900),
                               ),
                               const Icon(Icons.arrow_circle_right)
                             ],
@@ -140,7 +149,11 @@ class _UiSettingsState extends State<UiSettings> {
                         ),
                         const Divider(),
                         ListTile(
-                          title: const Text("Dark mode"),
+                          title: Text("Dark mode",
+                              style: TextStyle(
+                                  color: themeNotifier.isDark
+                                      ? Colors.white
+                                      : Colors.grey.shade900)),
                           leading: Icon(
                               themeNotifier.isDark
                                   ? Icons.nightlight_round
@@ -155,8 +168,15 @@ class _UiSettingsState extends State<UiSettings> {
                           },
                         ),
                         ListTile(
-                          title: const Text("Help"),
-                          leading: const Icon(Icons.help),
+                          title: Text("Help",
+                              style: TextStyle(
+                                  color: themeNotifier.isDark
+                                      ? Colors.white
+                                      : Colors.grey.shade900)),
+                          leading: Icon(Icons.help,
+                              color: themeNotifier.isDark
+                                  ? Colors.white
+                                  : Colors.grey.shade900),
                           onTap: () async {
                             final uri = Uri.parse(
                                 'https://www.developwithjr.info/blog/v0.0.3/');
@@ -168,16 +188,30 @@ class _UiSettingsState extends State<UiSettings> {
                           },
                         ),
                         ListTile(
-                          title: const Text('Invite friends'),
-                          leading: const Icon(Icons.share),
+                          title: Text('Invite friends',
+                              style: TextStyle(
+                                  color: themeNotifier.isDark
+                                      ? Colors.white
+                                      : Colors.grey.shade900)),
+                          leading: Icon(Icons.share,
+                              color: themeNotifier.isDark
+                                  ? Colors.white
+                                  : Colors.grey.shade900),
                           onTap: () async {
                             await Share.share(
                                 "Check out this link: https://play.google.com/store/apps/details?id=com.gurudha.learnxt");
                           },
                         ),
                         ListTile(
-                          title: const Text('Privacy Policy'),
-                          leading: const Icon(Icons.privacy_tip_outlined),
+                          title: Text('Privacy Policy',
+                              style: TextStyle(
+                                  color: themeNotifier.isDark
+                                      ? Colors.white
+                                      : Colors.grey.shade900)),
+                          leading: Icon(Icons.privacy_tip_outlined,
+                              color: themeNotifier.isDark
+                                  ? Colors.white
+                                  : Colors.grey.shade900),
                           onTap: () async {
                             final uri = Uri.parse(
                                 'https://www.developwithjr.info/privacy_policy/');
@@ -189,8 +223,15 @@ class _UiSettingsState extends State<UiSettings> {
                           },
                         ),
                         ListTile(
-                          title: const Text('Logout'),
-                          leading: const Icon(Icons.logout_outlined),
+                          title: Text('Logout',
+                              style: TextStyle(
+                                  color: themeNotifier.isDark
+                                      ? Colors.white
+                                      : Colors.grey.shade900)),
+                          leading: Icon(Icons.logout_outlined,
+                              color: themeNotifier.isDark
+                                  ? Colors.white
+                                  : Colors.grey.shade900),
                           onTap: () async {
                             if (await authservices.logout()) {
                               Navigator.pushReplacement(
@@ -202,9 +243,18 @@ class _UiSettingsState extends State<UiSettings> {
                             }
                           },
                         ),
-                        const ListTile(
-                          title: Text('V0.6.0'),
-                          leading: Icon(Icons.app_shortcut_sharp),
+                        ListTile(
+                          title: Text(
+                            'V0.6.0',
+                            style: TextStyle(
+                                color: themeNotifier.isDark
+                                    ? Colors.white
+                                    : Colors.grey.shade900),
+                          ),
+                          leading: Icon(Icons.app_shortcut_sharp,
+                              color: themeNotifier.isDark
+                                  ? Colors.white
+                                  : Colors.grey.shade900),
                         ),
                       ],
                     ),
@@ -213,7 +263,7 @@ class _UiSettingsState extends State<UiSettings> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 488),
+              padding: const EdgeInsets.only(top: 588),
               child: isNativeAdAdLoaded
                   ? SizedBox(
                       child: AdWidget(ad: nativeAd),

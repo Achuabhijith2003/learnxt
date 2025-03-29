@@ -19,6 +19,8 @@ class _BotProfileState extends State<BotProfile> {
     return Consumer<ThemeModel>(
         builder: (context, ThemeModel themeNotifier, child) {
       return Scaffold(
+        backgroundColor:
+            themeNotifier.isDark ? Colors.grey.shade900 : Colors.white,
         body: Container(
           width: double.infinity,
           decoration: BoxDecoration(

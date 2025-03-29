@@ -176,7 +176,7 @@ class _ChataiState extends State<Chatai> {
 
   final cureentUser = const types.User(id: '1', firstName: "You");
   final geminiuser = const types.User(
-      id: '0', firstName: "Learnxt", imageUrl: "assets/ai logo.jpeg");
+      id: '0', firstName: "Learnxt", imageUrl: "assets/xt_logo.png");
   final List<types.Message> _messages = [];
 
   Future<void> deleteMessageAndReplace(int messageId) async {
@@ -210,6 +210,8 @@ class _ChataiState extends State<Chatai> {
     return Consumer<ThemeModel>(
         builder: (context, ThemeModel themeNotifier, child) {
       return Scaffold(
+        backgroundColor:
+            themeNotifier.isDark ? Colors.grey.shade900 : Colors.white,
         // backgroundColor: const Color(0xFF171717),
         body: SizedBox(
           width: double.infinity,
@@ -226,10 +228,12 @@ class _ChataiState extends State<Chatai> {
                             onPressed: () {
                               Navigator.pop(context);
                             },
-                            icon: const Icon(
+                            icon: Icon(
                               Icons.arrow_back_ios_new,
-                              color: Colors.black,
-                              shadows: <Shadow>[
+                              color: themeNotifier.isDark
+                                  ? Colors.white
+                                  : Colors.grey.shade900,
+                              shadows: const <Shadow>[
                                 Shadow(
                                   offset: Offset(1.0, 1.0),
                                   blurRadius: 2.0,
@@ -243,20 +247,40 @@ class _ChataiState extends State<Chatai> {
                         Text(
                           widget.botname,
                           style: GoogleFonts.dmSerifDisplay(
-                              fontSize: 30, letterSpacing: 4),
+                            fontSize: 30,
+                            letterSpacing: 4,
+                            color: themeNotifier.isDark
+                                ? Colors.white
+                                : Colors.grey.shade900,
+                          ),
                           textAlign: TextAlign.center,
                         ),
                         const Divider(),
                         const Divider(),
                         // menu button
                         PopupMenuButton(
+                          iconColor: themeNotifier.isDark
+                              ? Colors.white
+                              : Colors.grey.shade900,
+                          color: themeNotifier.isDark
+                              ? Colors.grey.shade900
+                              : Colors.white,
                           child: const Icon(Icons.more_vert),
                           itemBuilder: (context) => [
                             PopupMenuItem(
                               value: 1,
-                              child: const ListTile(
-                                title: Text("Add PDFs"),
-                                leading: Icon(Icons.add),
+                              child: ListTile(
+                                title: Text(
+                                  "Add PDFs",
+                                  style: TextStyle(
+                                      color: themeNotifier.isDark
+                                          ? Colors.white
+                                          : Colors.grey.shade900),
+                                ),
+                                leading: Icon(Icons.add,
+                                    color: themeNotifier.isDark
+                                        ? Colors.white
+                                        : Colors.grey.shade900),
                               ),
                               onTap: () {
                                 addpdfs(widget.docId);
@@ -264,9 +288,18 @@ class _ChataiState extends State<Chatai> {
                             ),
                             PopupMenuItem(
                               value: 2,
-                              child: const ListTile(
-                                title: Text("Clear Chats"),
-                                leading: Icon(Icons.clear_all_sharp),
+                              child: ListTile(
+                                title: Text(
+                                  "Clear Chats",
+                                  style: TextStyle(
+                                      color: themeNotifier.isDark
+                                          ? Colors.white
+                                          : Colors.grey.shade900),
+                                ),
+                                leading: Icon(Icons.clear_all_sharp,
+                                    color: themeNotifier.isDark
+                                        ? Colors.white
+                                        : Colors.grey.shade900),
                               ),
                               onTap: () async {
                                 return showDialog(
@@ -338,9 +371,18 @@ class _ChataiState extends State<Chatai> {
                             ),
                             PopupMenuItem(
                               value: 3,
-                              child: const ListTile(
-                                title: Text("Delete AI bot"),
-                                leading: Icon(Icons.delete),
+                              child: ListTile(
+                                title: Text(
+                                  "Delete AI bot",
+                                  style: TextStyle(
+                                      color: themeNotifier.isDark
+                                          ? Colors.white
+                                          : Colors.grey.shade900),
+                                ),
+                                leading: Icon(Icons.delete,
+                                    color: themeNotifier.isDark
+                                        ? Colors.white
+                                        : Colors.grey.shade900),
                               ),
                               onTap: () async {
                                 return showDialog(
@@ -420,9 +462,18 @@ class _ChataiState extends State<Chatai> {
                             ),
                             PopupMenuItem(
                               value: 4,
-                              child: const ListTile(
-                                title: Text("Settings"),
-                                leading: Icon(Icons.settings),
+                              child: ListTile(
+                                title: Text(
+                                  "Settings",
+                                  style: TextStyle(
+                                      color: themeNotifier.isDark
+                                          ? Colors.white
+                                          : Colors.grey.shade900),
+                                ),
+                                leading: Icon(Icons.settings,
+                                    color: themeNotifier.isDark
+                                        ? Colors.white
+                                        : Colors.grey.shade900),
                               ),
                               onTap: () {
                                 Navigator.push(
@@ -435,9 +486,18 @@ class _ChataiState extends State<Chatai> {
                             ),
                             PopupMenuItem(
                               value: 5,
-                              child: const ListTile(
-                                title: Text("Go Premium"),
-                                leading: Icon(Icons.workspace_premium_outlined),
+                              child: ListTile(
+                                title: Text(
+                                  "Go Premium",
+                                  style: TextStyle(
+                                      color: themeNotifier.isDark
+                                          ? Colors.white
+                                          : Colors.grey.shade900),
+                                ),
+                                leading: Icon(Icons.workspace_premium_outlined,
+                                    color: themeNotifier.isDark
+                                        ? Colors.white
+                                        : Colors.grey.shade900),
                               ),
                               onTap: () {
                                 Navigator.push(
@@ -470,10 +530,13 @@ class _ChataiState extends State<Chatai> {
                               SendButtonVisibilityMode.always,
                           inputClearMode: InputClearMode.always,
                         ),
-                        theme: const DefaultChatTheme(
+                        theme: DefaultChatTheme(
+                          backgroundColor: themeNotifier.isDark
+                              ? Colors.grey.shade900
+                              : Colors.white,
                           inputBackgroundColor: Colors.grey,
                           inputTextDecoration:
-                              InputDecoration(labelText: "Enter prompt"),
+                              const InputDecoration(labelText: "Enter prompt"),
                           messageBorderRadius: 35,
                         ),
                         messages: _messages,

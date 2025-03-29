@@ -81,6 +81,8 @@ class _UserProfileState extends State<UserProfile> {
     return Consumer<ThemeModel>(
         builder: (context, ThemeModel themeNotifier, child) {
       return Scaffold(
+        backgroundColor:
+            themeNotifier.isDark ? Colors.grey.shade900 : Colors.white,
         body: SizedBox(
           width: double.infinity,
           // decoration: BoxDecoration(
@@ -118,7 +120,12 @@ class _UserProfileState extends State<UserProfile> {
                       Text(
                         "Profile",
                         style: GoogleFonts.dmSerifDisplay(
-                            fontSize: 40, letterSpacing: 4),
+                          fontSize: 40,
+                          letterSpacing: 4,
+                          color: themeNotifier.isDark
+                              ? Colors.white
+                              : Colors.grey.shade900,
+                        ),
                         textAlign: TextAlign.center,
                       ),
                     ],
@@ -173,7 +180,7 @@ class _UserProfileState extends State<UserProfile> {
                                         backgroundColor: Colors.grey,
                                         maxRadius: 35,
                                         backgroundImage:
-                                            AssetImage("assets/ai logo.jpeg"),
+                                            AssetImage("assets/xt_logo.png"),
                                       ),
                                       Column(
                                         children: [
@@ -185,13 +192,22 @@ class _UserProfileState extends State<UserProfile> {
                                                 Text(
                                                   profileData["Name"],
                                                   style: GoogleFonts.ptSerif(
-                                                    color: Colors.black,
+                                                    color: themeNotifier.isDark
+                                                        ? Colors.white
+                                                        : Colors.grey.shade900,
                                                     fontSize: 26,
                                                     fontWeight: FontWeight.bold,
                                                   ),
                                                   textAlign: TextAlign.center,
                                                 ),
-                                                Text(profileData["Email"])
+                                                Text(
+                                                  profileData["Email"],
+                                                  style: TextStyle(
+                                                    color: themeNotifier.isDark
+                                                        ? Colors.white
+                                                        : Colors.grey.shade900,
+                                                  ),
+                                                )
                                               ],
                                             ),
                                           ),

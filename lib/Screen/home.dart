@@ -101,6 +101,8 @@ class _HomeState extends State<Home> {
     return Consumer<ThemeModel>(
         builder: (context, ThemeModel themeNotifier, child) {
       return Scaffold(
+        backgroundColor:
+            themeNotifier.isDark ? Colors.grey.shade900 : Colors.white,
         key: _globalKey,
         body: SizedBox(
           width: double.infinity,
@@ -116,7 +118,9 @@ class _HomeState extends State<Home> {
                       style: GoogleFonts.dmSerifDisplay(
                           fontSize: 40,
                           letterSpacing: 4,
-                          color: Colors.grey.shade800),
+                          color: themeNotifier.isDark
+                              ? Colors.white
+                              : Colors.grey.shade900),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -130,7 +134,12 @@ class _HomeState extends State<Home> {
                             MaterialPageRoute(
                                 builder: (context) => const UserProfile()));
                       },
-                      icon: const Icon(Icons.account_circle_rounded),
+                      icon: Icon(
+                        Icons.account_circle_rounded,
+                        color: themeNotifier.isDark
+                            ? Colors.white
+                            : Colors.grey.shade900,
+                      ),
                       iconSize: 30,
                     ),
                   )
@@ -206,7 +215,10 @@ class _HomeState extends State<Home> {
                           Text(
                             "Chats",
                             style: GoogleFonts.dmSerifDisplay(
-                                fontSize: 30, color: Colors.grey),
+                                fontSize: 30,
+                                color: themeNotifier.isDark
+                                    ? Colors.white
+                                    : Colors.grey.shade900),
                             textAlign: TextAlign.center,
                           ),
                         ],
@@ -220,13 +232,25 @@ class _HomeState extends State<Home> {
                       child: Row(
                         children: [
                           PopupMenuButton(
+                            iconColor: themeNotifier.isDark
+                                ? Colors.white
+                                : Colors.grey.shade900,
+                            color: themeNotifier.isDark
+                                ? Colors.grey.shade900
+                                : Colors.white,
                             itemBuilder: (context) => [
                               PopupMenuItem(
                                 enabled: hasdata,
                                 value: 1,
-                                child: const ListTile(
-                                  title: Text("Delete All Chat Bot"),
-                                  leading: Icon(Icons.delete_forever),
+                                child: ListTile(
+                                  title: Text(
+                                    "Delete All Chat Bot",
+                                    style: TextStyle(
+                                        color: themeNotifier.isDark
+                                            ? Colors.white
+                                            : Colors.grey.shade900),
+                                  ),
+                                  leading: const Icon(Icons.delete_forever),
                                 ),
                                 onTap: () async {
                                   return showDialog(
@@ -234,9 +258,23 @@ class _HomeState extends State<Home> {
                                     barrierDismissible:
                                         false, // Prevent dismissing while loading
                                     builder: (context) => AlertDialog(
-                                      title: const Text("Delete AI"),
-                                      content: const Text(
-                                          "Are you sure you want to delete the AI Bot? (Watch An Ads)"),
+                                      backgroundColor: themeNotifier.isDark
+                                          ? Colors.grey.shade900
+                                          : Colors.white,
+                                      title: Text(
+                                        "Delete AI",
+                                        style: TextStyle(
+                                            color: themeNotifier.isDark
+                                                ? Colors.white
+                                                : Colors.grey.shade900),
+                                      ),
+                                      content: Text(
+                                        "Are you sure you want to delete the AI Bot? (Watch An Ads)",
+                                        style: TextStyle(
+                                            color: themeNotifier.isDark
+                                                ? Colors.white
+                                                : Colors.grey.shade900),
+                                      ),
                                       actions: [
                                         TextButton(
                                           onPressed: () {
@@ -369,8 +407,10 @@ class _HomeState extends State<Home> {
                                               title: Text(
                                                 botData["Bot Name"],
                                                 textAlign: TextAlign.center,
-                                                style: const TextStyle(
-                                                    color: Colors.grey),
+                                                style: TextStyle(
+                                                    color: themeNotifier.isDark
+                                                        ? Colors.white
+                                                        : Colors.grey.shade900),
                                               ),
                                               // content: const Text("errorMessage"),
                                               actions: [
@@ -460,7 +500,9 @@ class _HomeState extends State<Home> {
                                         botData['Bot Name'],
                                         style: GoogleFonts.publicSans(
                                             fontSize: 20,
-                                            color: Colors.black87,
+                                            color: themeNotifier.isDark
+                                                ? Colors.white
+                                                : Colors.grey.shade900,
                                             fontWeight: FontWeight.w700),
                                       ), // Access data for each bot
                                       // trailing: const Text(
@@ -471,16 +513,33 @@ class _HomeState extends State<Home> {
                                       leading: const CircleAvatar(
                                         maxRadius: 30,
                                         backgroundImage:
-                                            AssetImage("assets/ai logo.jpeg"),
+                                            AssetImage("assets/xt_logo.png"),
                                       ),
                                       trailing: PopupMenuButton(
+                                        iconColor: themeNotifier.isDark
+                                            ? Colors.white
+                                            : Colors.grey.shade900,
+                                        color: themeNotifier.isDark
+                                            ? Colors.grey.shade900
+                                            : Colors.white,
                                         child: const Icon(Icons.more_vert),
                                         itemBuilder: (context) => [
                                           PopupMenuItem(
                                             value: 1,
-                                            child: const ListTile(
-                                              title: Text("Add PDFs"),
-                                              leading: Icon(Icons.add),
+                                            child: ListTile(
+                                              title: Text(
+                                                "Add PDFs",
+                                                style: TextStyle(
+                                                    color: themeNotifier.isDark
+                                                        ? Colors.white
+                                                        : Colors.grey.shade900),
+                                              ),
+                                              leading: Icon(
+                                                Icons.add,
+                                                color: themeNotifier.isDark
+                                                    ? Colors.white
+                                                    : Colors.grey.shade900,
+                                              ),
                                             ),
                                             onTap: () {
                                               addpdfs(botData["docId"]);
@@ -488,9 +547,20 @@ class _HomeState extends State<Home> {
                                           ),
                                           PopupMenuItem(
                                             value: 2,
-                                            child: const ListTile(
-                                              title: Text("Delete AI bot"),
-                                              leading: Icon(Icons.delete),
+                                            child: ListTile(
+                                              title: Text(
+                                                "Delete AI bot",
+                                                style: TextStyle(
+                                                    color: themeNotifier.isDark
+                                                        ? Colors.white
+                                                        : Colors.grey.shade900),
+                                              ),
+                                              leading: Icon(
+                                                Icons.delete,
+                                                color: themeNotifier.isDark
+                                                    ? Colors.white
+                                                    : Colors.grey.shade900,
+                                              ),
                                             ),
                                             onTap: () async {
                                               return showDialog(
@@ -499,10 +569,28 @@ class _HomeState extends State<Home> {
                                                     false, // Prevent dismissing while loading
                                                 builder: (context) =>
                                                     AlertDialog(
-                                                  title:
-                                                      const Text("Delete AI"),
-                                                  content: const Text(
-                                                      "Are you sure you want to delete the AI Bot?"),
+                                                  backgroundColor:
+                                                      themeNotifier.isDark
+                                                          ? Colors.grey.shade900
+                                                          : Colors.white,
+                                                  title: Text(
+                                                    "Delete AI",
+                                                    style: TextStyle(
+                                                        color:
+                                                            themeNotifier.isDark
+                                                                ? Colors.white
+                                                                : Colors.grey
+                                                                    .shade900),
+                                                  ),
+                                                  content: Text(
+                                                    "Are you sure you want to delete the AI Bot?",
+                                                    style: TextStyle(
+                                                        color:
+                                                            themeNotifier.isDark
+                                                                ? Colors.white
+                                                                : Colors.grey
+                                                                    .shade900),
+                                                  ),
                                                   actions: [
                                                     TextButton(
                                                       onPressed: () {
@@ -573,21 +661,32 @@ class _HomeState extends State<Home> {
                                           ),
                                           PopupMenuItem(
                                             value: 4,
-                                            child: const ListTile(
-                                              title: Text("Go Premium"),
-                                              leading: Icon(Icons
-                                                  .workspace_premium_outlined),
+                                            child: ListTile(
+                                              title: Text(
+                                                "Go Premium",
+                                                style: TextStyle(
+                                                    color: themeNotifier.isDark
+                                                        ? Colors.white
+                                                        : Colors.grey.shade900),
+                                              ),
+                                              leading: Icon(
+                                                Icons
+                                                    .workspace_premium_outlined,
+                                                color: themeNotifier.isDark
+                                                    ? Colors.white
+                                                    : Colors.grey.shade900,
+                                              ),
+                                              onTap: () {
+                                                Navigator.push(
+                                                    // ignore: use_build_context_synchronously
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          const Vip(),
+                                                    ));
+                                              },
                                             ),
-                                            onTap: () {
-                                              Navigator.push(
-                                                  // ignore: use_build_context_synchronously
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        const Vip(),
-                                                  ));
-                                            },
-                                          ),
+                                          )
                                         ],
                                       ),
                                       horizontalTitleGap: 16,
@@ -725,7 +824,7 @@ class _HomeState extends State<Home> {
                                 leading: const CircleAvatar(
                                   maxRadius: 30,
                                   backgroundImage:
-                                      AssetImage("assets/ai logo.jpeg"),
+                                      AssetImage("assets/xt_logo.png"),
                                 ),
                                 trailing: PopupMenuButton(
                                   child: const Icon(Icons.more_vert),

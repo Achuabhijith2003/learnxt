@@ -49,7 +49,7 @@ class Learnxt extends StatelessWidget {
 
         // Define the default brightness and colors.
         colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.grey.shade400,
+          seedColor: Colors.white,
           // ···
           brightness: Brightness.light,
         ),

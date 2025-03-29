@@ -97,6 +97,8 @@ class _ChatcreateState extends State<Chatcreate> {
         builder: (context, ThemeModel themeNotifier, child) {
       return SafeArea(
         child: Scaffold(
+          backgroundColor:
+              themeNotifier.isDark ? Colors.grey.shade900 : Colors.white,
           key: _globalKey,
           // backgroundColor: const Color(0xFF171717),
           body: SizedBox(
@@ -115,7 +117,9 @@ class _ChatcreateState extends State<Chatcreate> {
                             style: GoogleFonts.dmSerifDisplay(
                                 fontSize: 40,
                                 letterSpacing: 3,
-                                color: Colors.grey.shade800),
+                                color: themeNotifier.isDark
+                                    ? Colors.white
+                                    : Colors.grey.shade900),
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -130,7 +134,9 @@ class _ChatcreateState extends State<Chatcreate> {
                                       builder: (context) =>
                                           const UserProfile()));
                             },
-                            icon: const Icon(Icons.account_circle_rounded),
+                            icon:  Icon(Icons.account_circle_rounded, color: themeNotifier.isDark
+                          ? Colors.white
+                          : Colors.grey.shade900,),
                             iconSize: 30,
                           ),
                         )
@@ -227,15 +233,17 @@ class _ChatcreateState extends State<Chatcreate> {
                                       ),
                                       // decoration: BoxDecoration(
                                       // ),
-                                      child: const Row(
+                                      child: Row(
                                         children: [
                                           Text(
                                             "Upload PDFs",
                                             style: TextStyle(
-                                                color: Colors.white,
+                                                color: themeNotifier.isDark
+                                                    ? Colors.white
+                                                    : Colors.grey.shade900,
                                                 fontWeight: FontWeight.bold),
                                           ),
-                                          Icon(
+                                          const Icon(
                                             Icons.upload_file,
                                             color: Colors.white,
                                           )
@@ -254,17 +262,19 @@ class _ChatcreateState extends State<Chatcreate> {
                                       ),
                                       // decoration: BoxDecoration(
                                       // ),
-                                      child: const Row(
+                                      child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceAround,
                                         children: [
                                           Text(
                                             "Create Bot",
                                             style: TextStyle(
-                                                color: Colors.white,
+                                                color: themeNotifier.isDark
+                                                    ? Colors.white
+                                                    : Colors.grey.shade900,
                                                 fontWeight: FontWeight.bold),
                                           ),
-                                          Icon(
+                                          const Icon(
                                             Icons.add_chart_outlined,
                                             color: Colors.white,
                                           )
@@ -432,38 +442,57 @@ class _ChatcreateState extends State<Chatcreate> {
         child: ListView.builder(
             itemCount: files.length,
             itemBuilder: (context, index) {
-              return ListTile(
-                  leading: const Icon(Icons.picture_as_pdf_rounded),
-                  title: Text(
-                      files[index].path.split('/').last), // Extract file name
-                  trailing: Row(
-                    mainAxisSize:
-                        MainAxisSize.min, // Ensures trailing icons fit
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.delete_forever_rounded),
-                        onPressed: () {
-                          // Handle potential errors during deletion
-                          try {
-                            setState(() {
-                              files.removeAt(
-                                  index); // More efficient for large lists
-                            });
-                          } catch (error) {
-                            // Show a snackbar or other error notification
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('Error deleting file: $error'),
-                              ),
-                            );
-                          }
-                        },
+              return Consumer<ThemeModel>(
+                  builder: (context, ThemeModel themeNotifier, child) {
+                return ListTile(
+                    leading: Icon(
+                      Icons.picture_as_pdf_rounded,
+                      color: themeNotifier.isDark
+                          ? Colors.white
+                          : Colors.grey.shade900,
+                    ),
+                    title: Text(
+                      files[index].path.split('/').last,
+                      style: TextStyle(
+                        color: themeNotifier.isDark
+                            ? Colors.white
+                            : Colors.grey.shade900,
                       ),
-                    ],
-                  ),
-                  onTap: () {
-                    // Optional: Handle tap action on the entire ListTile
-                  });
+                    ), // Extract file name
+                    trailing: Row(
+                      mainAxisSize:
+                          MainAxisSize.min, // Ensures trailing icons fit
+                      children: [
+                        IconButton(
+                          icon: Icon(
+                            Icons.delete_forever_rounded,
+                            color: themeNotifier.isDark
+                                ? Colors.white
+                                : Colors.grey.shade900,
+                          ),
+                          onPressed: () {
+                            // Handle potential errors during deletion
+                            try {
+                              setState(() {
+                                files.removeAt(
+                                    index); // More efficient for large lists
+                              });
+                            } catch (error) {
+                              // Show a snackbar or other error notification
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Error deleting file: $error'),
+                                ),
+                              );
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                    onTap: () {
+                      // Optional: Handle tap action on the entire ListTile
+                    });
+              });
             }));
   }
 
