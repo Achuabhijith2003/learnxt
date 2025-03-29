@@ -557,6 +557,7 @@ class _ChataiState extends State<Chatai> {
     bool haswordSummary = chatMessage.text.contains("Summary");
 
     if (haswordSummary) {
+      print("Summary found");
     } else {
       try {
         // Keyword generator

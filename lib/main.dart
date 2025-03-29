@@ -6,7 +6,8 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:learnxt/Auth/splash.dart';
 import 'package:learnxt/Services/Hive/chat.dart';
 import 'package:learnxt/Services/Hive/chatid.dart';
-
+import 'package:learnxt/theme/theme_model.dart';
+import 'package:provider/provider.dart';
 import 'package:learnxt/key.dart';
 import 'package:learnxt/firebase_options.dart';
 
@@ -37,7 +38,9 @@ class Learnxt extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return ChangeNotifierProvider( // Wrap with ChangeNotifierProvider
+      create: (context) => ThemeModel(), // Create ThemeModel instance
+      child:MaterialApp(
       themeMode: ThemeMode.system,
       debugShowCheckedModeBanner: false,
       home: const Splash(),
@@ -63,7 +66,7 @@ class Learnxt extends StatelessWidget {
         //   bodyMedium: GoogleFonts.merriweather(),
         //   displaySmall: GoogleFonts.pacifico(),
         // ),
-      ),
+      ),)
     );
   }
 }

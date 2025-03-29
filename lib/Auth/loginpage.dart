@@ -1,5 +1,5 @@
 import 'dart:developer';
-
+import 'package:learnxt/theme/theme_model.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
@@ -10,6 +10,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:learnxt/Screen/Remasted_home.dart';
 import 'package:learnxt/Services/Hive/chat.dart';
+import 'package:provider/provider.dart';
 
 Chatputandget chatmodif = Chatputandget();
 
@@ -64,282 +65,314 @@ class _LoginpageState extends State<Loginpage> {
   Widget build(BuildContext context) {
     TextEditingController emailcontroller = TextEditingController();
     TextEditingController passwordcontroller = TextEditingController();
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Container(
-        width: double.infinity,
-        decoration: BoxDecoration(
-            gradient: LinearGradient(begin: Alignment.topCenter, colors: [
-          Colors.grey.shade900,
-          Colors.grey.shade800,
-          Colors.grey.shade400
-        ])),
-        child: Padding(
-          padding: const EdgeInsets.all(.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              const SizedBox(
-                height: 50,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    FadeInUp(
-                        duration: const Duration(milliseconds: 1000),
-                        child: const Text(
-                          "Login",
-                          style: TextStyle(color: Colors.white, fontSize: 40),
-                        )),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    FadeInUp(
-                        duration: const Duration(milliseconds: 1300),
-                        child: const Text(
-                          "Welcome Back",
-                          style: TextStyle(color: Colors.white, fontSize: 18),
-                        )),
-                  ],
+    return Consumer<ThemeModel>(
+        builder: (context, ThemeModel themeNotifier, child) {
+      return Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+              color:
+                  themeNotifier.isDark ? Colors.white : Colors.grey.shade900),
+          child: Padding(
+            padding: const EdgeInsets.all(.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                const SizedBox(
+                  height: 50,
                 ),
-              ),
-              const SizedBox(height: 0),
-              Expanded(
-                child: Container(
-                  decoration: const BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(60),
-                          topRight: Radius.circular(60))),
-                  child: Padding(
-                    padding: const EdgeInsets.all(30),
-                    child: Column(
-                      children: <Widget>[
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        FadeInUp(
-                            duration: const Duration(milliseconds: 1400),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(10),
-                                  boxShadow: const [
-                                    BoxShadow(
-                                        color: Color.fromRGBO(225, 95, 27, .3),
-                                        blurRadius: 20,
-                                        offset: Offset(0, 10))
-                                  ]),
-                              child: Column(
-                                children: <Widget>[
-                                  Container(
-                                    padding: const EdgeInsets.all(10),
-                                    decoration: BoxDecoration(
-                                        border: Border(
-                                            bottom: BorderSide(
-                                                color: Colors.grey.shade200))),
-                                    child: TextField(
-                                      controller: emailcontroller,
-                                      keyboardType: TextInputType.emailAddress,
-                                      decoration: const InputDecoration(
-                                          hintText: "Email or Phone number",
-                                          hintStyle:
-                                              TextStyle(color: Colors.grey),
-                                          border: InputBorder.none),
-                                    ),
-                                  ),
-                                  Container(
-                                    padding: const EdgeInsets.all(10),
-                                    decoration: BoxDecoration(
-                                        border: Border(
-                                            bottom: BorderSide(
-                                                color: Colors.grey.shade200))),
-                                    child: TextField(
-                                      controller: passwordcontroller,
-                                      obscureText: true,
-                                      decoration: const InputDecoration(
-                                          hintText: "Password",
-                                          hintStyle:
-                                              TextStyle(color: Colors.grey),
-                                          border: InputBorder.none),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            )),
-                        const SizedBox(
-                          height: 0,
-                        ),
-                        Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              FadeInUp(
-                                  duration: const Duration(milliseconds: 1500),
-                                  child: TextButton(
-                                      onPressed: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const SignUp()));
-                                      },
-                                      child: const Text(
-                                        "Create Account",
-                                        style: TextStyle(color: Colors.grey),
-                                      ))),
-                              FadeInUp(
-                                  duration: const Duration(milliseconds: 1500),
-                                  child: TextButton(
-                                      onPressed: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const Recovery()));
-                                      },
-                                      child: const Text(
-                                        "Forgot Password?",
-                                        style: TextStyle(color: Colors.grey),
-                                      ))),
-                            ]),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        FadeInUp(
-                            duration: const Duration(milliseconds: 1600),
-                            child: MaterialButton(
-                              onPressed: () {
-                                showDialog(
-                                  context: context,
-                                  barrierDismissible:
-                                      false, // Disable user interaction while uploading
-                                  builder: (context) => const Center(
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        CircularProgressIndicator(
-                                          color: Colors.grey,
-                                        ),
-                                        SizedBox(
-                                            height:
-                                                10), // Add spacing between indicator and text
-                                        // Text(
-                                        //   "Welcome Back",
-                                        //   style: GoogleFonts
-                                        //       .barlowSemiCondensed(
-                                        //           fontSize: 16,
-                                        //           color: Colors.grey),
-                                        // ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                                login(emailcontroller, passwordcontroller);
-                              },
-                              height: 50,
-                              // margin: EdgeInsets.symmetric(horizontal: 50),
-                              color: Colors.grey[900],
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(50),
-                              ),
-                              // decoration: BoxDecoration(
-                              // ),
-                              child: const Center(
-                                child: Text(
-                                  "Login",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                            )),
-                        const SizedBox(
-                          height: 0,
-                        ),
-                        // FadeInUp(
-                        //     duration: const Duration(milliseconds: 1700),
-                        //     child: const Text(
-                        //       "Continue with social media",
-                        //       style: TextStyle(color: Colors.grey),
-                        //     )),
-                        const SizedBox(
-                          height: 25,
-                        ),
-                        Row(
-                          children: <Widget>[
-                            Expanded(
-                              child: FadeInUp(
-                                  duration: const Duration(milliseconds: 1800),
-                                  child: SignInButton(Buttons.Google,
-                                      text: "Sign up with Google",
-                                      onPressed: () {
-                                    showDialog(
-                                      context: context,
-                                      barrierDismissible:
-                                          false, // Disable user interaction while uploading
-                                      builder: (context) => const Center(
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            CircularProgressIndicator(
-                                              color: Colors.grey,
-                                            ),
-                                            SizedBox(
-                                                height:
-                                                    10), // Add spacing between indicator and text
-                                            // Text(
-                                            //   "Welcome Back",
-                                            //   style: GoogleFonts
-                                            //       .barlowSemiCondensed(
-                                            //           fontSize: 16,
-                                            //           color: Colors.grey),
-                                            // ),
-                                          ],
-                                        ),
-                                      ),
-                                    );
-                                    _signInWithGoogle();
-                                  })),
-                            ),
-                            const SizedBox(
-                              width: 0,
-                            ),
-                            // Expanded(
-                            //   child: FadeInUp(
-                            //       duration: const Duration(milliseconds: 1900),
-                            //       child: MaterialButton(
-                            //         onPressed: () {},
-                            //         height: 50,
-                            //         shape: RoundedRectangleBorder(
-                            //           borderRadius: BorderRadius.circular(50),
-                            //         ),
-                            //         color: Colors.black,
-                            //         child: const Center(
-                            //           child: Text(
-                            //             "Github",
-                            //             style: TextStyle(
-                            //                 color: Colors.white,
-                            //                 fontWeight: FontWeight.bold),
-                            //           ),
-                            //         ),
-                            //       )),
-                            // )
-                          ],
-                        )
-                      ],
-                    ),
+                Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      FadeInUp(
+                          duration: const Duration(milliseconds: 1000),
+                          child: Text(
+                            "Login",
+                            style: TextStyle(
+                                color: themeNotifier.isDark
+                                    ? Colors.grey.shade900
+                                    : Colors.white,
+                                fontSize: 40),
+                          )),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      FadeInUp(
+                          duration: const Duration(milliseconds: 1300),
+                          child: Text(
+                            "Welcome Back",
+                            style: TextStyle(
+                                color: themeNotifier.isDark
+                                    ? Colors.grey.shade900
+                                    : Colors.white,
+                                fontSize: 18),
+                          )),
+                    ],
                   ),
                 ),
-              )
-            ],
+                const SizedBox(height: 0),
+                Expanded(
+                  child: Container(
+                    decoration: const BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(60),
+                            topRight: Radius.circular(60))),
+                    child: Padding(
+                      padding: const EdgeInsets.all(30),
+                      child: Column(
+                        children: <Widget>[
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          FadeInUp(
+                              duration: const Duration(milliseconds: 1400),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10),
+                                    boxShadow: const [
+                                      BoxShadow(
+                                          color:
+                                              Color.fromRGBO(225, 95, 27, .3),
+                                          blurRadius: 20,
+                                          offset: Offset(0, 10))
+                                    ]),
+                                child: Column(
+                                  children: <Widget>[
+                                    Container(
+                                      padding: const EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                          border: Border(
+                                              bottom: BorderSide(
+                                                  color:
+                                                      Colors.grey.shade200))),
+                                      child: TextField(
+                                        controller: emailcontroller,
+                                        keyboardType:
+                                            TextInputType.emailAddress,
+                                        decoration: const InputDecoration(
+                                            hintText: "Email or Phone number",
+                                            hintStyle:
+                                                TextStyle(color: Colors.grey),
+                                            border: InputBorder.none),
+                                      ),
+                                    ),
+                                    Container(
+                                      padding: const EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                          border: Border(
+                                              bottom: BorderSide(
+                                                  color:
+                                                      Colors.grey.shade200))),
+                                      child: TextField(
+                                        controller: passwordcontroller,
+                                        obscureText: true,
+                                        decoration: const InputDecoration(
+                                            hintText: "Password",
+                                            hintStyle:
+                                                TextStyle(color: Colors.grey),
+                                            border: InputBorder.none),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )),
+                          const SizedBox(
+                            height: 0,
+                          ),
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                FadeInUp(
+                                    duration:
+                                        const Duration(milliseconds: 1500),
+                                    child: TextButton(
+                                        onPressed: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const SignUp()));
+                                        },
+                                        child: const Text(
+                                          "Create Account",
+                                          style: TextStyle(color: Colors.grey),
+                                        ))),
+                                FadeInUp(
+                                    duration:
+                                        const Duration(milliseconds: 1500),
+                                    child: TextButton(
+                                        onPressed: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const Recovery()));
+                                        },
+                                        child: const Text(
+                                          "Forgot Password?",
+                                          style: TextStyle(color: Colors.grey),
+                                        ))),
+                              ]),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          IconButton(
+                              icon: Icon(
+                                  themeNotifier.isDark
+                                      ? Icons.nightlight_round
+                                      : Icons.wb_sunny,
+                                  color: themeNotifier.isDark
+                                      ? Colors.white
+                                      : Colors.grey.shade900),
+                              onPressed: () {
+                                themeNotifier.isDark
+                                    ? themeNotifier.isDark = false
+                                    : themeNotifier.isDark = true;
+                              }),
+                          FadeInUp(
+                              duration: const Duration(milliseconds: 1600),
+                              child: MaterialButton(
+                                onPressed: () {
+                                  showDialog(
+                                    context: context,
+                                    barrierDismissible:
+                                        false, // Disable user interaction while uploading
+                                    builder: (context) => const Center(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          CircularProgressIndicator(
+                                            color: Colors.grey,
+                                          ),
+                                          SizedBox(
+                                              height:
+                                                  10), // Add spacing between indicator and text
+                                          // Text(
+                                          //   "Welcome Back",
+                                          //   style: GoogleFonts
+                                          //       .barlowSemiCondensed(
+                                          //           fontSize: 16,
+                                          //           color: Colors.grey),
+                                          // ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                  login(emailcontroller, passwordcontroller);
+                                },
+                                height: 50,
+                                // margin: EdgeInsets.symmetric(horizontal: 50),
+                                color: themeNotifier.isDark
+                                    ? Colors.white54
+                                    : Colors.grey.shade900,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(50),
+                                ),
+                                // decoration: BoxDecoration(
+                                // ),
+                                child: Center(
+                                  child: Text(
+                                    "Login",
+                                    style: TextStyle(
+                                        color: themeNotifier.isDark
+                                            ? Colors.grey.shade900
+                                            : Colors.white,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              )),
+                          const SizedBox(
+                            height: 0,
+                          ),
+                          // FadeInUp(
+                          //     duration: const Duration(milliseconds: 1700),
+                          //     child: const Text(
+                          //       "Continue with social media",
+                          //       style: TextStyle(color: Colors.grey),
+                          //     )),
+                          const SizedBox(
+                            height: 25,
+                          ),
+                          Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: FadeInUp(
+                                    duration:
+                                        const Duration(milliseconds: 1800),
+                                    child: SignInButton(Buttons.Google,
+                                        text: "Sign up with Google",
+                                        onPressed: () {
+                                      showDialog(
+                                        context: context,
+                                        barrierDismissible:
+                                            false, // Disable user interaction while uploading
+                                        builder: (context) => const Center(
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              CircularProgressIndicator(
+                                                color: Colors.grey,
+                                              ),
+                                              SizedBox(
+                                                  height:
+                                                      10), // Add spacing between indicator and text
+                                              // Text(
+                                              //   "Welcome Back",
+                                              //   style: GoogleFonts
+                                              //       .barlowSemiCondensed(
+                                              //           fontSize: 16,
+                                              //           color: Colors.grey),
+                                              // ),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                      _signInWithGoogle();
+                                    })),
+                              ),
+                              const SizedBox(
+                                width: 0,
+                              ),
+                              // Expanded(
+                              //   child: FadeInUp(
+                              //       duration: const Duration(milliseconds: 1900),
+                              //       child: MaterialButton(
+                              //         onPressed: () {},
+                              //         height: 50,
+                              //         shape: RoundedRectangleBorder(
+                              //           borderRadius: BorderRadius.circular(50),
+                              //         ),
+                              //         color: Colors.black,
+                              //         child: const Center(
+                              //           child: Text(
+                              //             "Github",
+                              //             style: TextStyle(
+                              //                 color: Colors.white,
+                              //                 fontWeight: FontWeight.bold),
+                              //           ),
+                              //         ),
+                              //       )),
+                              // )
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   void login(TextEditingController emailcontroller,

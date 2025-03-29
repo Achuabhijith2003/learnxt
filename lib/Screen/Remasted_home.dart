@@ -91,12 +91,12 @@ class _RemastedHomeState extends State<RemastedHome> {
             },
           ),
           // Display banner ad if loaded
-          if (isbanneradsload)
-            SizedBox(
-              height: _bannerAd.size.height.toDouble(),
-              width: _bannerAd.size.width.toDouble(),
-              child: AdWidget(ad: _bannerAd),
-            )
+            if (isbanneradsload)
+              SizedBox(
+                height: _bannerAd.size.height.toDouble(),
+                width: _bannerAd.size.width.toDouble(),
+                child: AdWidget(ad: _bannerAd),
+              )
         ],
       ),
     );
