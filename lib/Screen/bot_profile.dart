@@ -197,7 +197,6 @@ class _BotProfileState extends State<BotProfile> {
   }
 
   // ignore: non_constant_identifier_names
-
   Future<List<Map<String, dynamic>>> fetch_bot_profile() async {
     // ... your existing fetchData logic ...
     final user = FirebaseAuth.instance.currentUser;
