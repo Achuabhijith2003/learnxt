@@ -7,9 +7,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:learnxt/Screen/Preminum/vip.dart';
 import 'package:learnxt/Screen/aichatadd.dart';
-import 'package:learnxt/Screen/chatai.dart';
+import 'package:learnxt/Screen/compoments/material.dart';
 import 'package:learnxt/Screen/user_profile.dart';
 import 'package:learnxt/Services/AI/data_embedded.dart';
 import 'package:learnxt/Services/Chats/Chat_Operations.dart';
@@ -29,8 +28,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  ChatOperations chatop = ChatOperations();
-
   @override
   void initState() {
     super.initState();
@@ -42,6 +39,7 @@ class _HomeState extends State<Home> {
   String name = "";
   Chatputandget chatstore = Chatputandget();
   Chatidputandget chatid = Chatidputandget();
+  ChatOperations chatop = ChatOperations();
   List<Map<String, dynamic>> data = [];
   bool hasdata = true;
   late BannerAd _bannerAd;
@@ -108,13 +106,50 @@ class _HomeState extends State<Home> {
           width: double.infinity,
           child: Stack(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 40, left: 15),
+                        child: Text(
+                          "LearnXT",
+                          style: GoogleFonts.dmSerifDisplay(
+                              fontSize: 27,
+                              letterSpacing: 4,
+                              color: themeNotifier.isDark
+                                  ? Colors.white
+                                  : Colors.grey.shade900),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      // Profile
+                      Padding(
+                        padding: const EdgeInsets.only(top: 40, right: 10),
+                        child: IconButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const UserProfile()));
+                          },
+                          icon: Icon(
+                            Icons.account_circle_rounded,
+                            color: themeNotifier.isDark
+                                ? Colors.white
+                                : Colors.grey.shade900,
+                          ),
+                          iconSize: 30,
+                        ),
+                      )
+                    ],
+                  ),
                   Padding(
-                    padding: const EdgeInsets.only(top: 40, left: 15),
+                    padding: const EdgeInsets.only(left: 15),
                     child: Text(
-                      "LearnXT",
+                      "Welcome",
                       style: GoogleFonts.dmSerifDisplay(
                           fontSize: 40,
                           letterSpacing: 4,
@@ -124,68 +159,19 @@ class _HomeState extends State<Home> {
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  // Profile
-                  Padding(
-                    padding: const EdgeInsets.only(top: 40, right: 10),
-                    child: IconButton(
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const UserProfile()));
-                      },
-                      icon: Icon(
-                        Icons.account_circle_rounded,
-                        color: themeNotifier.isDark
-                            ? Colors.white
-                            : Colors.grey.shade900,
-                      ),
-                      iconSize: 30,
-                    ),
-                  )
                 ],
               ),
-
               // Searching panal
               Padding(
-                padding: const EdgeInsets.only(top: 120, left: 15),
-                child: Container(
-                  decoration: BoxDecoration(
-                    boxShadow: const <BoxShadow>[
-                      BoxShadow(
-                        offset: Offset(1.0, 1.0),
-                        blurRadius: 2.0,
-                        color: Color.fromARGB(255, 14, 60, 13),
-                      ),
-                    ],
-                    borderRadius: BorderRadius.circular(25),
-                    color: Colors.white,
-                  ),
-                  child: FadeInUp(
-                    duration: const Duration(milliseconds: 550),
-                    child: TextField(
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        prefixIcon: const Icon(
-                          Icons.search_outlined,
-                          color: Colors.grey,
-                        ),
-                        hintText: "Search...",
-                        hintStyle: GoogleFonts.barlowSemiCondensed(
-                            fontSize: 16, color: Colors.grey),
-                        enabled: true,
-                      ),
+                  padding: const EdgeInsets.only(top: 150, left: 15, right: 15),
+                  child: SearchBar(
+                      hintText: "Search....",
                       onChanged: (val) {
                         setState(() {
                           name = val;
                         });
-                      },
-                    ),
-                  ),
-                ),
-              ),
+                      })),
               Column(
-                // mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   // Display banner ad if loaded
                   if (isbanneradsload2)
@@ -197,7 +183,7 @@ class _HomeState extends State<Home> {
                         width: _bannerAd.size.width.toDouble(),
                         child: AdWidget(ad: _bannerAd2),
                       ),
-                    ),
+                    )
                 ],
               ),
               Padding(
@@ -207,13 +193,13 @@ class _HomeState extends State<Home> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(
-                        top: 8,
+                        top: 5,
                         left: 20,
                       ),
                       child: Row(
                         children: [
                           Text(
-                            "Chats",
+                            "My notebooks",
                             style: GoogleFonts.dmSerifDisplay(
                                 fontSize: 30,
                                 color: themeNotifier.isDark
@@ -226,7 +212,7 @@ class _HomeState extends State<Home> {
                     ),
                     Padding(
                       padding: const EdgeInsets.only(
-                        top: 8,
+                        top: 4,
                         left: 20,
                       ),
                       child: Row(
@@ -387,312 +373,8 @@ class _HomeState extends State<Home> {
                                     left: 10, right: 10, bottom: 10),
                                 child: Column(
                                   children: [
-                                    ListTile(
-                                      onTap: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) => Chatai(
-                                                      botname:
-                                                          botData["Bot Name"],
-                                                      docId: botData["docId"],
-                                                    )));
-                                      },
-                                      onLongPress: () {
-                                        showDialog(
-                                          context: context,
-                                          builder: (context) {
-                                            return AlertDialog(
-                                              shadowColor: Colors.grey,
-                                              title: Text(
-                                                botData["Bot Name"],
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                    color: themeNotifier.isDark
-                                                        ? Colors.white
-                                                        : Colors.grey.shade900),
-                                              ),
-                                              // content: const Text("errorMessage"),
-                                              actions: [
-                                                Center(
-                                                  child: TextButton(
-                                                      onPressed: () {
-                                                        addpdfs(
-                                                            botData["docId"]);
-                                                      },
-                                                      child: const Text(
-                                                        "Add PDFs",
-                                                      )),
-                                                ),
-                                                Center(
-                                                  //Delete the bot
-                                                  child: TextButton(
-                                                      onPressed: () async {
-                                                        showDialog(
-                                                          context: context,
-                                                          barrierDismissible:
-                                                              false, // Disable user interaction while uploading
-                                                          builder: (context) =>
-                                                              const Center(
-                                                            child: Column(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .center,
-                                                              children: [
-                                                                CircularProgressIndicator(
-                                                                  color: Colors
-                                                                      .grey,
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ),
-                                                        );
-                                                        final deletionSuccessful =
-                                                            await chatop
-                                                                .deletebot(
-                                                                    botData[
-                                                                        "docId"]);
-                                                        if (deletionSuccessful) {
-                                                          // Show a success notification (e.g., Snackbar)
-                                                          setState(() {
-                                                            fetchData();
-                                                          }); // Show loading indicator
-                                                          ScaffoldMessenger.of(
-                                                                  context)
-                                                              .showSnackBar(
-                                                            const SnackBar(
-                                                              content: Text(
-                                                                  'Bot deleted successfully!'),
-                                                              backgroundColor:
-                                                                  Colors.grey,
-                                                            ),
-                                                          );
-
-                                                          // Potentially refresh the list of bots after successful deletion
-                                                        } else {
-                                                          // Show an error notification (e.g., Snackbar)
-                                                          ScaffoldMessenger.of(
-                                                                  context)
-                                                              .showSnackBar(
-                                                            const SnackBar(
-                                                              content: Text(
-                                                                  'Error deleting bot!'),
-                                                              backgroundColor:
-                                                                  Colors.red,
-                                                            ),
-                                                          );
-                                                        }
-                                                        Navigator.pop(context);
-                                                        Navigator.pop(context);
-                                                      },
-                                                      child: const Text(
-                                                        'Delete the bot',
-                                                        style: TextStyle(
-                                                            color: Colors.red),
-                                                      )),
-                                                ),
-                                              ],
-                                            );
-                                          },
-                                        );
-                                      },
-                                      title: Text(
-                                        botData['Bot Name'],
-                                        style: GoogleFonts.publicSans(
-                                            fontSize: 20,
-                                            color: themeNotifier.isDark
-                                                ? Colors.white
-                                                : Colors.grey.shade900,
-                                            fontWeight: FontWeight.w700),
-                                      ), // Access data for each bot
-                                      // trailing: const Text(
-                                      //   "lastmess",
-                                      //   style: TextStyle(
-                                      //       color: Colors.white, fontSize: 14),
-                                      // ),
-                                      leading: const CircleAvatar(
-                                        maxRadius: 30,
-                                        backgroundImage:
-                                            AssetImage("assets/xt_logo.png"),
-                                      ),
-                                      trailing: PopupMenuButton(
-                                        iconColor: themeNotifier.isDark
-                                            ? Colors.white
-                                            : Colors.grey.shade900,
-                                        color: themeNotifier.isDark
-                                            ? Colors.grey.shade900
-                                            : Colors.white,
-                                        child: const Icon(Icons.more_vert),
-                                        itemBuilder: (context) => [
-                                          PopupMenuItem(
-                                            value: 1,
-                                            child: ListTile(
-                                              title: Text(
-                                                "Add PDFs",
-                                                style: TextStyle(
-                                                    color: themeNotifier.isDark
-                                                        ? Colors.white
-                                                        : Colors.grey.shade900),
-                                              ),
-                                              leading: Icon(
-                                                Icons.add,
-                                                color: themeNotifier.isDark
-                                                    ? Colors.white
-                                                    : Colors.grey.shade900,
-                                              ),
-                                            ),
-                                            onTap: () {
-                                              addpdfs(botData["docId"]);
-                                            },
-                                          ),
-                                          PopupMenuItem(
-                                            value: 2,
-                                            child: ListTile(
-                                              title: Text(
-                                                "Delete AI bot",
-                                                style: TextStyle(
-                                                    color: themeNotifier.isDark
-                                                        ? Colors.white
-                                                        : Colors.grey.shade900),
-                                              ),
-                                              leading: Icon(
-                                                Icons.delete,
-                                                color: themeNotifier.isDark
-                                                    ? Colors.white
-                                                    : Colors.grey.shade900,
-                                              ),
-                                            ),
-                                            onTap: () async {
-                                              return showDialog(
-                                                context: context,
-                                                barrierDismissible:
-                                                    false, // Prevent dismissing while loading
-                                                builder: (context) =>
-                                                    AlertDialog(
-                                                  backgroundColor:
-                                                      themeNotifier.isDark
-                                                          ? Colors.grey.shade900
-                                                          : Colors.white,
-                                                  title: Text(
-                                                    "Delete AI",
-                                                    style: TextStyle(
-                                                        color:
-                                                            themeNotifier.isDark
-                                                                ? Colors.white
-                                                                : Colors.grey
-                                                                    .shade900),
-                                                  ),
-                                                  content: Text(
-                                                    "Are you sure you want to delete the AI Bot?",
-                                                    style: TextStyle(
-                                                        color:
-                                                            themeNotifier.isDark
-                                                                ? Colors.white
-                                                                : Colors.grey
-                                                                    .shade900),
-                                                  ),
-                                                  actions: [
-                                                    TextButton(
-                                                      onPressed: () {
-                                                        Navigator.of(context)
-                                                            .pop(); // Close the dialog
-                                                      },
-                                                      child:
-                                                          const Text("Cancel"),
-                                                    ),
-                                                    TextButton(
-                                                      onPressed: () async {
-                                                        showDialog(
-                                                          context: context,
-                                                          builder: (context) =>
-                                                              const Center(
-                                                            child:
-                                                                CircularProgressIndicator(
-                                                              color:
-                                                                  Colors.grey,
-                                                            ),
-                                                          ),
-                                                        );
-                                                        final deletesuccessfully =
-                                                            await chatop
-                                                                .deletebot(
-                                                                    botData[
-                                                                        "docId"]);
-                                                        if (deletesuccessfully) {
-                                                          ScaffoldMessenger.of(
-                                                                  context)
-                                                              .showSnackBar(
-                                                            const SnackBar(
-                                                              content: Text(
-                                                                  'Bot deleted successfully!'),
-                                                              backgroundColor:
-                                                                  Colors.grey,
-                                                            ),
-                                                          );
-                                                        } else {
-                                                          ScaffoldMessenger.of(
-                                                                  context)
-                                                              .showSnackBar(
-                                                            const SnackBar(
-                                                              content: Text(
-                                                                  'Bot deletion failed!'),
-                                                              backgroundColor:
-                                                                  Colors.grey,
-                                                            ),
-                                                          );
-                                                        }
-                                                        Navigator.of(context)
-                                                            .pop(); // Close the dialog
-                                                        Navigator.of(context)
-                                                            .pop(); // Close the dialog
-                                                        Navigator.of(context)
-                                                            .pop(); // Close the dialog
-                                                      },
-                                                      child: const Text(
-                                                        "Delete",
-                                                        style: TextStyle(
-                                                            color: Colors.red),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              );
-                                            },
-                                          ),
-                                          PopupMenuItem(
-                                            value: 4,
-                                            child: ListTile(
-                                              title: Text(
-                                                "Go Premium",
-                                                style: TextStyle(
-                                                    color: themeNotifier.isDark
-                                                        ? Colors.white
-                                                        : Colors.grey.shade900),
-                                              ),
-                                              leading: Icon(
-                                                Icons
-                                                    .workspace_premium_outlined,
-                                                color: themeNotifier.isDark
-                                                    ? Colors.white
-                                                    : Colors.grey.shade900,
-                                              ),
-                                              onTap: () {
-                                                Navigator.push(
-                                                    // ignore: use_build_context_synchronously
-                                                    context,
-                                                    MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          const Vip(),
-                                                    ));
-                                              },
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                      horizontalTitleGap: 16,
-                                      minVerticalPadding: 5,
-                                      selectedTileColor: Colors.black87,
-                                      textColor: Colors.black,
+                                    Materialcoures(
+                                      botData: botData,
                                     ),
                                     const Divider()
                                   ],
@@ -707,239 +389,13 @@ class _HomeState extends State<Home> {
                             return Padding(
                               padding: const EdgeInsets.only(
                                   left: 10, right: 10, bottom: 10),
-                              child: ListTile(
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => Chatai(
-                                                botname: botData["Bot Name"],
-                                                docId: botData["docId"],
-                                              )));
-                                },
-                                onLongPress: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return AlertDialog(
-                                        shadowColor: Colors.grey,
-                                        title: Text(
-                                          botData["Bot Name"],
-                                          textAlign: TextAlign.center,
-                                          style: const TextStyle(
-                                              color: Colors.grey),
-                                        ),
-                                        // content: const Text("errorMessage"),
-                                        actions: [
-                                          Center(
-                                            child: TextButton(
-                                                onPressed: () {
-                                                  addpdfs(botData["docId"]);
-                                                },
-                                                child: const Text(
-                                                  "Add PDFs",
-                                                )),
-                                          ),
-                                          Center(
-                                            //Delete the bot
-                                            child: TextButton(
-                                                onPressed: () async {
-                                                  showDialog(
-                                                    context: context,
-                                                    barrierDismissible:
-                                                        false, // Disable user interaction while uploading
-                                                    builder: (context) =>
-                                                        const Center(
-                                                      child: Column(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          CircularProgressIndicator(
-                                                            color: Colors.grey,
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  );
-                                                  final deletionSuccessful =
-                                                      await chatop.deletebot(
-                                                          botData["docId"]);
-                                                  if (deletionSuccessful) {
-                                                    // Show a success notification (e.g., Snackbar)
-                                                    setState(() {
-                                                      fetchData();
-                                                    }); // Show loading indicator
-                                                    ScaffoldMessenger.of(
-                                                            context)
-                                                        .showSnackBar(
-                                                      const SnackBar(
-                                                        content: Text(
-                                                            'Bot deleted successfully!'),
-                                                        backgroundColor:
-                                                            Colors.grey,
-                                                      ),
-                                                    );
-
-                                                    // Potentially refresh the list of bots after successful deletion
-                                                  } else {
-                                                    // Show an error notification (e.g., Snackbar)
-                                                    ScaffoldMessenger.of(
-                                                            context)
-                                                        .showSnackBar(
-                                                      const SnackBar(
-                                                        content: Text(
-                                                            'Error deleting bot!'),
-                                                        backgroundColor:
-                                                            Colors.red,
-                                                      ),
-                                                    );
-                                                  }
-                                                  Navigator.pop(context);
-                                                  Navigator.pop(context);
-                                                },
-                                                child: const Text(
-                                                  'Delete the bot',
-                                                  style: TextStyle(
-                                                      color: Colors.red),
-                                                )),
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
-                                },
-                                title: Text(
-                                  botData['Bot Name'],
-                                  style: GoogleFonts.publicSans(
-                                      fontSize: 20,
-                                      color: Colors.black87,
-                                      fontWeight: FontWeight.w700),
-                                ), // Access data for each bot
-                                // trailing: const Text(
-                                //   "lastmess",
-                                //   style: TextStyle(
-                                //       color: Colors.white, fontSize: 14),
-                                // ),
-                                leading: const CircleAvatar(
-                                  maxRadius: 30,
-                                  backgroundImage:
-                                      AssetImage("assets/xt_logo.png"),
-                                ),
-                                trailing: PopupMenuButton(
-                                  child: const Icon(Icons.more_vert),
-                                  itemBuilder: (context) => [
-                                    PopupMenuItem(
-                                      value: 1,
-                                      child: const ListTile(
-                                        title: Text("Add PDFs"),
-                                        leading: Icon(Icons.add),
-                                      ),
-                                      onTap: () {
-                                        addpdfs(botData["docId"]);
-                                      },
-                                    ),
-                                    PopupMenuItem(
-                                      value: 2,
-                                      child: const ListTile(
-                                        title: Text("Delete AI bot"),
-                                        leading: Icon(Icons.delete),
-                                      ),
-                                      onTap: () async {
-                                        return showDialog(
-                                          context: context,
-                                          barrierDismissible:
-                                              false, // Prevent dismissing while loading
-                                          builder: (context) => AlertDialog(
-                                            title: const Text("Delete AI"),
-                                            content: const Text(
-                                                "Are you sure you want to delete the AI Bot?"),
-                                            actions: [
-                                              TextButton(
-                                                onPressed: () {
-                                                  Navigator.of(context)
-                                                      .pop(); // Close the dialog
-                                                },
-                                                child: const Text("Cancel"),
-                                              ),
-                                              TextButton(
-                                                onPressed: () async {
-                                                  showDialog(
-                                                    context: context,
-                                                    builder: (context) =>
-                                                        const Center(
-                                                      child:
-                                                          CircularProgressIndicator(
-                                                        color: Colors.grey,
-                                                      ),
-                                                    ),
-                                                  );
-                                                  final deletesuccessfully =
-                                                      await chatop.deletebot(
-                                                          botData["docId"]);
-                                                  if (deletesuccessfully) {
-                                                    ScaffoldMessenger.of(
-                                                            context)
-                                                        .showSnackBar(
-                                                      const SnackBar(
-                                                        content: Text(
-                                                            'Bot deleted successfully!'),
-                                                        backgroundColor:
-                                                            Colors.grey,
-                                                      ),
-                                                    );
-                                                  } else {
-                                                    ScaffoldMessenger.of(
-                                                            context)
-                                                        .showSnackBar(
-                                                      const SnackBar(
-                                                        content: Text(
-                                                            'Bot deletion failed!'),
-                                                        backgroundColor:
-                                                            Colors.grey,
-                                                      ),
-                                                    );
-                                                  }
-                                                  Navigator.of(context)
-                                                      .pop(); // Close the dialog
-                                                  Navigator.of(context)
-                                                      .pop(); // Close the dialog
-                                                  Navigator.of(context)
-                                                      .pop(); // Close the dialog
-                                                },
-                                                child: const Text(
-                                                  "Delete",
-                                                  style: TextStyle(
-                                                      color: Colors.red),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                    PopupMenuItem(
-                                      value: 3,
-                                      child: const ListTile(
-                                        title: Text("Go Premium"),
-                                        leading: Icon(
-                                            Icons.workspace_premium_outlined),
-                                      ),
-                                      onTap: () {
-                                        Navigator.push(
-                                            // ignore: use_build_context_synchronously
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) => const Vip(),
-                                            ));
-                                      },
-                                    ),
-                                  ],
-                                ),
-                                horizontalTitleGap: 16,
-                                minVerticalPadding: 5,
-                                selectedTileColor: Colors.black87,
-                                textColor: Colors.black,
+                              child: Column(
+                                children: [
+                                  Materialcoures(
+                                    botData: botData,
+                                  ),
+                                  const Divider()
+                                ],
                               ),
                             );
                             // Add a "Load More" button or implement infinite scrolling if needed
