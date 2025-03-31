@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:learnxt/Screen/Preminum/vip.dart';
@@ -14,7 +13,6 @@ import 'package:provider/provider.dart';
 
 import '../../Services/AI/data_embedded.dart';
 
-bool hasdata = true;
 admob ads = admob();
 ChatOperations chatop = ChatOperations();
 
@@ -200,25 +198,21 @@ class _MaterialcouresState extends State<Materialcoures> {
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(right: 240, top: 20),
-                child: Text(
-                  widget.botData["Bot Name"],
-                  style: GoogleFonts.dmSerifDisplay(
-                      fontSize: 30,
-                      color:
-                          themeNotifier.isDark ? Colors.white : Colors.white),
-                ),
+              Text(
+                widget.botData["Bot Name"],
+                style: GoogleFonts.dmSerifDisplay(
+                    fontSize: 30,
+                    color: themeNotifier.isDark ? Colors.white : Colors.white),
               ),
-              Padding(
-                padding: const EdgeInsets.only(right: 240, top: 15),
-                child: Text(
-                  _getPdfsNameCount(
-                      widget.botData["pdfs_name"]), // Call a helper function
-                  style: GoogleFonts.dmSerifDisplay(
-                    fontSize: 15,
-                    color: themeNotifier.isDark ? Colors.white : Colors.white,
-                  ),
+              const SizedBox(
+                height: 10,
+              ),
+              Text(
+                _getPdfsNameCount(
+                    widget.botData["pdfs_name"]), // Call a helper function
+                style: GoogleFonts.dmSerifDisplay(
+                  fontSize: 15,
+                  color: themeNotifier.isDark ? Colors.white : Colors.white,
                 ),
               )
             ],
@@ -311,26 +305,3 @@ class _MaterialcouresState extends State<Materialcoures> {
     }
   }
 }
-
-Future<List<Map<String, dynamic>>> fetchData() async {
-  // ... your existing fetchData logic ...
-  final user = FirebaseAuth.instance.currentUser;
-  final firestore = FirebaseFirestore.instance;
-  final collection = firestore.collection('bot');
-
-  final query =
-      collection.where('UID', isEqualTo: user?.uid); // Example condition
-
-  final querySnapshot = await query.get();
-  final data = querySnapshot.docs.map((doc) => doc.data()).toList();
-  // Access data as a list of Maps
-  print("total bot $data");
-  if (data.isEmpty) {
-    hasdata = false;
-  }
-  //
-  return data; // Return the retrieved data list
-}
-
-// here two times calling docId 1. passing the doc ID 2. Finding through firebase instance
-// in future try to remove Ok!

@@ -5,13 +5,13 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 class admob {
   AppOpenAd? _appOpenAd;
   RewardedAd? _rewardedAd;
-  RewardedInterstitialAd? _rewardedInterstitialAd; 
+  RewardedInterstitialAd? _rewardedInterstitialAd;
 
   // Appopen ads
   // ignore: non_constant_identifier_names
   AppOpenAdload() {
     AppOpenAd.load(
-        adUnitId: "ca-app-pub-8568607330093795/5253465407",
+        adUnitId: "", //ca-app-pub-8568607330093795/5253465407
         request: const AdRequest(),
         adLoadCallback: AppOpenAdLoadCallback(
           onAdLoaded: (ad) {
@@ -28,7 +28,7 @@ class admob {
   // ignore: non_constant_identifier_names
   RewardedAdload() {
     RewardedAd.load(
-        adUnitId: "ca-app-pub-8568607330093795/5897817876",
+        adUnitId: "", //ca-app-pub-8568607330093795/5897817876
         request: const AdRequest(),
         rewardedAdLoadCallback: RewardedAdLoadCallback(
           onAdLoaded: (ad) {
@@ -64,8 +64,7 @@ class admob {
 
   void RewardedInterstitialAdload() {
     RewardedInterstitialAd.load(
-      adUnitId:
-          "ca-app-pub-8568607330093795/7490088802", // Replace with your actual Ad Unit ID
+      adUnitId: "", //ca-app-pub-8568607330093795/7490088802
       request: const AdRequest(),
       rewardedInterstitialAdLoadCallback: RewardedInterstitialAdLoadCallback(
         onAdLoaded: (RewardedInterstitialAd ad) {
@@ -101,6 +100,4 @@ class admob {
       ),
     );
   }
-
-
 }

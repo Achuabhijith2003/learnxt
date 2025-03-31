@@ -26,7 +26,7 @@ class _RemastedHomeState extends State<RemastedHome> {
   BannerAdload() {
     _bannerAd = BannerAd(
         size: AdSize.banner,
-        adUnitId: "ca-app-pub-8568607330093795/5482884902",
+        adUnitId: "", //ca-app-pub-8568607330093795/5482884902
         listener: BannerAdListener(
           onAdLoaded: (ad) {
             setState(() {
@@ -56,7 +56,9 @@ class _RemastedHomeState extends State<RemastedHome> {
         bottomNavigationBar: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Divider(),
+            Divider(
+              color: themeNotifier.isDark ? Colors.grey.shade900 : Colors.white,
+            ),
             CurvedNavigationBar(
               index: 0,
               items: <Widget>[

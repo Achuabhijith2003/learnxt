@@ -43,7 +43,7 @@ class AI extends DataEmbedded {
 
         final prompt =
             "If the input indicates a friendly conversation or start hi or hey like not use keywords give a friendly conversation , respond as a teacher with an engaging and conversational tone. If it is a question, analyze the provided keywords: $keywords and answer the question using only the context provided by these keywords, maintaining the perspective of a teacher and provide answer with simple way to understand like an bot . Input message: $message.";
-        final chats = await model.startChat();
+        final chats = model.startChat();
         final response = await chats.sendMessage(Content.text(prompt));
 
         return response.text;

@@ -1,8 +1,5 @@
-import 'dart:io';
-
 import 'package:animate_do/animate_do.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -10,7 +7,6 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:learnxt/Screen/aichatadd.dart';
 import 'package:learnxt/Screen/compoments/material.dart';
 import 'package:learnxt/Screen/user_profile.dart';
-import 'package:learnxt/Services/AI/data_embedded.dart';
 import 'package:learnxt/Services/Chats/Chat_Operations.dart';
 import 'package:learnxt/Services/Hive/chat.dart';
 import 'package:learnxt/Services/Hive/chatid.dart';
@@ -49,8 +45,7 @@ class _HomeState extends State<Home> {
   BannerAdload() {
     _bannerAd = BannerAd(
         size: AdSize.banner,
-        // adUnitId: 'ca-app-pub-3940256099942544/9214589741',
-        adUnitId: "ca-app-pub-8568607330093795/5482884902",
+        adUnitId: "", //ca-app-pub-8568607330093795/5482884902
         listener: BannerAdListener(
           onAdLoaded: (ad) {
             setState(() {
@@ -70,7 +65,7 @@ class _HomeState extends State<Home> {
     _bannerAd2 = BannerAd(
         size: AdSize.banner,
         // adUnitId: 'ca-app-pub-3940256099942544/9214589741',
-        adUnitId: "ca-app-pub-8568607330093795/5482884902",
+        adUnitId: "", //ca-app-pub-8568607330093795/5482884902
         listener: BannerAdListener(
           onAdLoaded: (ad) {
             setState(() {
@@ -434,79 +429,4 @@ class _HomeState extends State<Home> {
 
 // here two times calling docId 1. passing the doc ID 2. Finding through firebase instance
 // in future try to remove Ok!
-
-// add pdfs
-  addpdfs(docid) async {
-    List<File> files = [];
-// pick files
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      allowMultiple: true,
-    );
-
-    if (result != null) {
-      files = result.paths.map((path) => File(path!)).toList();
-
-      return showDialog(
-        context: context,
-        barrierDismissible: false, // Disable user interaction while uploading
-        builder: (context) {
-          return AlertDialog(
-            title: const Text("Selected PDF Files"),
-            content: SizedBox(
-              width: double.maxFinite,
-              child: ListView.builder(
-                shrinkWrap: true, // Make the list view wrap its content
-                itemCount: files.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(files[index].path.split('/').last),
-                  );
-                },
-              ),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () async {
-                  ads.AppOpenAdload();
-                  showDialog(
-                    context: context,
-                    barrierDismissible:
-                        false, // Disable user interaction while uploading
-                    builder: (context) => const Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          CircularProgressIndicator(
-                            color: Colors.grey,
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                  CollectionReference insertfilename =
-                      FirebaseFirestore.instance.collection('bot');
-                  DataEmbedded dataEmbedded = DataEmbedded();
-                  final List<String> filenames = [];
-                  dataEmbedded.getDocId(docid);
-                  for (File file in files) {
-                    final fileName =
-                        file.path.split('/').last; // Extract file name
-                    filenames.add(fileName);
-                    await dataEmbedded.pdfextract(file);
-                  }
-                  await insertfilename.doc(docid).update({
-                    'pdfs_name': FieldValue.arrayUnion(filenames),
-                  });
-                  Navigator.of(context).pop(); // Close the dialog
-                  Navigator.of(context).pop();
-                  Navigator.of(context).pop();
-                },
-                child: const Text("ADD"),
-              ),
-            ],
-          );
-        },
-      );
-    }
-  }
 }
