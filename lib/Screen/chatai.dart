@@ -258,258 +258,267 @@ class _ChataiState extends State<Chatai> {
                         const Divider(),
                         const Divider(),
                         // menu button
-                        PopupMenuButton(
-                          iconColor: themeNotifier.isDark
-                              ? Colors.white
-                              : Colors.grey.shade900,
-                          color: themeNotifier.isDark
-                              ? Colors.grey.shade900
-                              : Colors.white,
-                          child: const Icon(Icons.more_vert),
-                          itemBuilder: (context) => [
-                            PopupMenuItem(
-                              value: 1,
-                              child: ListTile(
-                                title: Text(
-                                  "Add PDFs",
-                                  style: TextStyle(
-                                      color: themeNotifier.isDark
-                                          ? Colors.white
-                                          : Colors.grey.shade900),
-                                ),
-                                leading: Icon(Icons.add,
-                                    color: themeNotifier.isDark
-                                        ? Colors.white
-                                        : Colors.grey.shade900),
-                              ),
-                              onTap: () {
-                                addpdfs(widget.docId);
-                              },
-                            ),
-                            PopupMenuItem(
-                              value: 2,
-                              child: ListTile(
-                                title: Text(
-                                  "Clear Chats",
-                                  style: TextStyle(
-                                      color: themeNotifier.isDark
-                                          ? Colors.white
-                                          : Colors.grey.shade900),
-                                ),
-                                leading: Icon(Icons.clear_all_sharp,
-                                    color: themeNotifier.isDark
-                                        ? Colors.white
-                                        : Colors.grey.shade900),
-                              ),
-                              onTap: () async {
-                                return showDialog(
-                                  context: context,
-                                  barrierDismissible:
-                                      false, // Prevent dismissing while loading
-                                  builder: (context) => AlertDialog(
-                                    title: const Text("Clear chats"),
-                                    content: const Text(
-                                        "Are you sure you want to Clear Chats?"),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.of(context)
-                                              .pop(); // Close the dialog
-                                        },
-                                        child: const Text("Cancel"),
-                                      ),
-                                      TextButton(
-                                        onPressed: () async {
-                                          showDialog(
-                                            context: context,
-                                            builder: (context) => const Center(
-                                              child: CircularProgressIndicator(
-                                                color: Colors.grey,
-                                              ),
-                                            ),
-                                          );
-
-                                          final clearsucessfully =
-                                              chatstore.clearchat(widget.docId);
-                                          loadChatMessages();
-
-                                          if (clearsucessfully) {
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(
-                                              const SnackBar(
-                                                content: Text(
-                                                    'Chats cleared successfully!'),
-                                                backgroundColor: Colors.grey,
-                                              ),
-                                            );
-                                          } else {
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(
-                                              const SnackBar(
-                                                content: Text(
-                                                    'Chats cleared failed!'),
-                                                backgroundColor: Colors.grey,
-                                              ),
-                                            );
-                                          }
-                                          Navigator.of(context)
-                                              .pop(); // Close the dialog
-                                          Navigator.of(context)
-                                              .pop(); // Close the dialog
-                                          Navigator.of(context)
-                                              .pop(); // Close the dialog
-                                        },
-                                        child: const Text(
-                                          "clear",
-                                          style: TextStyle(color: Colors.red),
-                                        ),
-                                      ),
-                                    ],
+                        Consumer<ThemeModel>(
+                            builder: (context, themeNotifier, child) {
+                          return PopupMenuButton(
+                            iconColor: themeNotifier.isDark
+                                ? Colors.white
+                                : Colors.white,
+                            icon: const Icon(Icons.more_vert),
+                            color: themeNotifier.isDark
+                                ? Colors.grey.shade900
+                                : Colors.white,
+                            itemBuilder: (context) => [
+                              PopupMenuItem(
+                                value: 1,
+                                child: ListTile(
+                                  title: Text(
+                                    "Add PDFs",
+                                    style: TextStyle(
+                                        color: themeNotifier.isDark
+                                            ? Colors.white
+                                            : Colors.grey.shade900),
                                   ),
-                                );
-                              },
-                            ),
-                            PopupMenuItem(
-                              value: 3,
-                              child: ListTile(
-                                title: Text(
-                                  "Delete Notebook",
-                                  style: TextStyle(
+                                  leading: Icon(Icons.add,
                                       color: themeNotifier.isDark
                                           ? Colors.white
                                           : Colors.grey.shade900),
                                 ),
-                                leading: Icon(Icons.delete,
-                                    color: themeNotifier.isDark
-                                        ? Colors.white
-                                        : Colors.grey.shade900),
+                                onTap: () {
+                                  addpdfs(widget.docId);
+                                },
                               ),
-                              onTap: () async {
-                                return showDialog(
-                                  context: context,
-                                  barrierDismissible:
-                                      !isLoading, // Prevent dismissing while loading
-                                  builder: (context) => AlertDialog(
-                                    title: const Text("Delete Notebook"),
-                                    content: const Text(
-                                        "Are you sure you want to delete the Notebook?"),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.of(context)
-                                              .pop(); // Close the dialog
-                                        },
-                                        child: const Text("Cancel"),
-                                      ),
-                                      TextButton(
-                                        onPressed: () async {
-                                          showDialog(
-                                            context: context,
-                                            builder: (context) => const Center(
-                                              child: CircularProgressIndicator(
-                                                color: Colors.grey,
-                                              ),
-                                            ),
-                                          );
-
-                                          // setState(() {
-                                          //   isLoading = true; // Start loading
-                                          // });
-
-                                          final deletesuccessfully =
-                                              await chatop
-                                                  .deletebot(widget.docId);
-
-                                          // setState(() {
-                                          //   isLoading = false; // Stop loading
-                                          // });
-
-                                          if (deletesuccessfully) {
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(
-                                              const SnackBar(
-                                                content: Text(
-                                                    'Notebook deleted successfully!'),
-                                                backgroundColor: Colors.grey,
-                                              ),
-                                            );
-                                          } else {
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(
-                                              const SnackBar(
-                                                content: Text(
-                                                    'Notebook deletion failed!'),
-                                                backgroundColor: Colors.grey,
-                                              ),
-                                            );
-                                          }
-                                          Navigator.of(context)
-                                              .pop(); // Close the dialog
-                                          Navigator.of(context)
-                                              .pop(); // Close the dialog
-                                          Navigator.of(context)
-                                              .pop(); // Close the dialog
-                                        },
-                                        child: const Text(
-                                          "Delete",
-                                          style: TextStyle(color: Colors.red),
-                                        ),
-                                      ),
-                                    ],
+                              PopupMenuItem(
+                                value: 2,
+                                child: ListTile(
+                                  title: Text(
+                                    "Clear Chats",
+                                    style: TextStyle(
+                                        color: themeNotifier.isDark
+                                            ? Colors.white
+                                            : Colors.grey.shade900),
                                   ),
-                                );
-                              },
-                            ),
-                            PopupMenuItem(
-                              value: 4,
-                              child: ListTile(
-                                title: Text(
-                                  "Settings",
-                                  style: TextStyle(
+                                  leading: Icon(Icons.clear_all_sharp,
                                       color: themeNotifier.isDark
                                           ? Colors.white
                                           : Colors.grey.shade900),
                                 ),
-                                leading: Icon(Icons.settings,
-                                    color: themeNotifier.isDark
-                                        ? Colors.white
-                                        : Colors.grey.shade900),
+                                onTap: () async {
+                                  return showDialog(
+                                    context: context,
+                                    barrierDismissible:
+                                        false, // Prevent dismissing while loading
+                                    builder: (context) => AlertDialog(
+                                      title: const Text("Clear chats"),
+                                      content: const Text(
+                                          "Are you sure you want to Clear Chats?"),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context)
+                                                .pop(); // Close the dialog
+                                          },
+                                          child: const Text("Cancel"),
+                                        ),
+                                        TextButton(
+                                          onPressed: () async {
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) =>
+                                                  const Center(
+                                                child:
+                                                    CircularProgressIndicator(
+                                                  color: Colors.grey,
+                                                ),
+                                              ),
+                                            );
+
+                                            final clearsucessfully = chatstore
+                                                .clearchat(widget.docId);
+                                            loadChatMessages();
+
+                                            if (clearsucessfully) {
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                const SnackBar(
+                                                  content: Text(
+                                                      'Chats cleared successfully!'),
+                                                  backgroundColor: Colors.grey,
+                                                ),
+                                              );
+                                            } else {
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                const SnackBar(
+                                                  content: Text(
+                                                      'Chats cleared failed!'),
+                                                  backgroundColor: Colors.grey,
+                                                ),
+                                              );
+                                            }
+                                            Navigator.of(context)
+                                                .pop(); // Close the dialog
+                                            Navigator.of(context)
+                                                .pop(); // Close the dialog
+                                            Navigator.of(context)
+                                                .pop(); // Close the dialog
+                                          },
+                                          child: const Text(
+                                            "clear",
+                                            style: TextStyle(color: Colors.red),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
                               ),
-                              onTap: () {
-                                Navigator.push(
-                                    // ignore: use_build_context_synchronously
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => const UiSettings(),
-                                    ));
-                              },
-                            ),
-                            PopupMenuItem(
-                              value: 5,
-                              child: ListTile(
-                                title: Text(
-                                  "Go Premium",
-                                  style: TextStyle(
+                              PopupMenuItem(
+                                value: 3,
+                                child: ListTile(
+                                  title: Text(
+                                    "Delete Notebook",
+                                    style: TextStyle(
+                                        color: themeNotifier.isDark
+                                            ? Colors.white
+                                            : Colors.grey.shade900),
+                                  ),
+                                  leading: Icon(Icons.delete,
                                       color: themeNotifier.isDark
                                           ? Colors.white
                                           : Colors.grey.shade900),
                                 ),
-                                leading: Icon(Icons.workspace_premium_outlined,
-                                    color: themeNotifier.isDark
-                                        ? Colors.white
-                                        : Colors.grey.shade900),
+                                onTap: () async {
+                                  return showDialog(
+                                    context: context,
+                                    barrierDismissible:
+                                        !isLoading, // Prevent dismissing while loading
+                                    builder: (context) => AlertDialog(
+                                      title: const Text("Delete Notebook"),
+                                      content: const Text(
+                                          "Are you sure you want to delete the Notebook?"),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context)
+                                                .pop(); // Close the dialog
+                                          },
+                                          child: const Text("Cancel"),
+                                        ),
+                                        TextButton(
+                                          onPressed: () async {
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) =>
+                                                  const Center(
+                                                child:
+                                                    CircularProgressIndicator(
+                                                  color: Colors.grey,
+                                                ),
+                                              ),
+                                            );
+
+                                            // setState(() {
+                                            //   isLoading = true; // Start loading
+                                            // });
+
+                                            final deletesuccessfully =
+                                                await chatop
+                                                    .deletebot(widget.docId);
+
+                                            // setState(() {
+                                            //   isLoading = false; // Stop loading
+                                            // });
+
+                                            if (deletesuccessfully) {
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                const SnackBar(
+                                                  content: Text(
+                                                      'Notebook deleted successfully!'),
+                                                  backgroundColor: Colors.grey,
+                                                ),
+                                              );
+                                            } else {
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                const SnackBar(
+                                                  content: Text(
+                                                      'Notebook deletion failed!'),
+                                                  backgroundColor: Colors.grey,
+                                                ),
+                                              );
+                                            }
+                                            Navigator.of(context)
+                                                .pop(); // Close the dialog
+                                            Navigator.of(context)
+                                                .pop(); // Close the dialog
+                                            Navigator.of(context)
+                                                .pop(); // Close the dialog
+                                          },
+                                          child: const Text(
+                                            "Delete",
+                                            style: TextStyle(color: Colors.red),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
                               ),
-                              onTap: () {
-                                Navigator.push(
-                                    // ignore: use_build_context_synchronously
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => const Vip(),
-                                    ));
-                              },
-                            ),
-                          ],
-                        ),
+                              PopupMenuItem(
+                                value: 4,
+                                child: ListTile(
+                                  title: Text(
+                                    "Settings",
+                                    style: TextStyle(
+                                        color: themeNotifier.isDark
+                                            ? Colors.white
+                                            : Colors.grey.shade900),
+                                  ),
+                                  leading: Icon(Icons.settings,
+                                      color: themeNotifier.isDark
+                                          ? Colors.white
+                                          : Colors.grey.shade900),
+                                ),
+                                onTap: () {
+                                  Navigator.push(
+                                      // ignore: use_build_context_synchronously
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const UiSettings(),
+                                      ));
+                                },
+                              ),
+                              PopupMenuItem(
+                                value: 5,
+                                child: ListTile(
+                                  title: Text(
+                                    "Go Premium",
+                                    style: TextStyle(
+                                        color: themeNotifier.isDark
+                                            ? Colors.white
+                                            : Colors.grey.shade900),
+                                  ),
+                                  leading: Icon(
+                                      Icons.workspace_premium_outlined,
+                                      color: themeNotifier.isDark
+                                          ? Colors.white
+                                          : Colors.grey.shade900),
+                                ),
+                                onTap: () {
+                                  Navigator.push(
+                                      // ignore: use_build_context_synchronously
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => const Vip(),
+                                      ));
+                                },
+                              ),
+                            ],
+                          );
+                        })
                       ],
                     ),
                   ),

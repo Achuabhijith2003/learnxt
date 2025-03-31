@@ -42,7 +42,7 @@ class _ChatcreateState extends State<Chatcreate> {
   BannerAdload() {
     _bannerAd = BannerAd(
         size: AdSize.banner,
-        adUnitId: "ca-app-pub-8568607330093795/5482884902",
+        adUnitId: "", //ca-app-pub-8568607330093795/5482884902
         listener: BannerAdListener(
           onAdLoaded: (ad) {
             setState(() {
@@ -61,7 +61,7 @@ class _ChatcreateState extends State<Chatcreate> {
   // native_ads
   late NativeAd nativeAd;
   bool isNativeAdAdLoaded = false;
-  final String adUnitId = "ca-app-pub-8568607330093795/3077653778";
+  final String adUnitId = ""; //ca-app-pub-8568607330093795/3077653778
 
   // Native advanced
   nativeadvancedadloader() {
@@ -113,10 +113,10 @@ class _ChatcreateState extends State<Chatcreate> {
                         Padding(
                           padding: const EdgeInsets.only(top: 40, left: 15),
                           child: Text(
-                            "Create Chats",
+                            "Create Notebook",
                             style: GoogleFonts.dmSerifDisplay(
                                 fontSize: 40,
-                                letterSpacing: 3,
+                                letterSpacing: 2,
                                 color: themeNotifier.isDark
                                     ? Colors.white
                                     : Colors.grey.shade900),
@@ -134,9 +134,12 @@ class _ChatcreateState extends State<Chatcreate> {
                                       builder: (context) =>
                                           const UserProfile()));
                             },
-                            icon:  Icon(Icons.account_circle_rounded, color: themeNotifier.isDark
-                          ? Colors.white
-                          : Colors.grey.shade900,),
+                            icon: Icon(
+                              Icons.account_circle_rounded,
+                              color: themeNotifier.isDark
+                                  ? Colors.white
+                                  : Colors.grey.shade900,
+                            ),
                             iconSize: 30,
                           ),
                         )
@@ -168,44 +171,10 @@ class _ChatcreateState extends State<Chatcreate> {
                             duration: const Duration(milliseconds: 1600),
                             child: Padding(
                               padding: const EdgeInsets.only(
-                                  left: 20, top: 5, right: 20),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(23),
-                                    border: Border.all(color: Colors.white)),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      boxShadow: const <BoxShadow>[
-                                        BoxShadow(
-                                          offset: Offset(1.0, 1.0),
-                                          blurRadius: 2.0,
-                                          color:
-                                              Color.fromARGB(255, 14, 60, 13),
-                                        ),
-                                      ],
-                                      borderRadius: BorderRadius.circular(25),
-                                      color: Colors.white),
-                                  child: FadeInUp(
-                                    duration: const Duration(milliseconds: 550),
-                                    child: TextField(
-                                      controller: botnamecontroller,
-                                      decoration: const InputDecoration(
-                                        border: InputBorder.none,
-                                        hintStyle:
-                                            TextStyle(color: Colors.grey),
-                                        prefixIcon: Icon(
-                                          Icons.group_add_outlined,
-                                          color: Colors.grey,
-                                        ),
-                                        hintText: "Name of the bot",
-                                        // hintStyle: GoogleFonts.barlowSemiCondensed(
-                                        //   fontSize: 16,
-                                        // ),
-                                        enabled: true,
-                                      ),
-                                    ),
-                                  ),
-                                ),
+                                  left: 15, top: 5, right: 15),
+                              child: SearchBar(
+                                controller: botnamecontroller,
+                                hintText: 'Notebook Name',
                               ),
                             ),
                           ),
@@ -236,11 +205,11 @@ class _ChatcreateState extends State<Chatcreate> {
                                       child: Row(
                                         children: [
                                           Text(
-                                            "Upload PDFs",
+                                            "Upload PDFs ",
                                             style: TextStyle(
                                                 color: themeNotifier.isDark
                                                     ? Colors.white
-                                                    : Colors.grey.shade900,
+                                                    : Colors.white,
                                                 fontWeight: FontWeight.bold),
                                           ),
                                           const Icon(
@@ -267,15 +236,15 @@ class _ChatcreateState extends State<Chatcreate> {
                                             MainAxisAlignment.spaceAround,
                                         children: [
                                           Text(
-                                            "Create Bot",
+                                            "Create Notebook ",
                                             style: TextStyle(
                                                 color: themeNotifier.isDark
                                                     ? Colors.white
-                                                    : Colors.grey.shade900,
+                                                    : Colors.white,
                                                 fontWeight: FontWeight.bold),
                                           ),
                                           const Icon(
-                                            Icons.add_chart_outlined,
+                                            Icons.menu_book_rounded,
                                             color: Colors.white,
                                           )
                                         ],
@@ -297,7 +266,7 @@ class _ChatcreateState extends State<Chatcreate> {
                       : const SizedBox(),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 368),
+                  padding: const EdgeInsets.only(top: 290),
                   child: displaypdf(),
                 )
               ],
@@ -337,7 +306,7 @@ class _ChatcreateState extends State<Chatcreate> {
     String botName = botNameController.text.trim();
 
     if (botName.isEmpty) {
-      errormessage("Enter a Name to the Bot");
+      errormessage("Enter a Name to the Notebook!");
       return; // Handle empty bot name
     }
 
@@ -417,16 +386,16 @@ class _ChatcreateState extends State<Chatcreate> {
           MaterialPageRoute(builder: (context) => const RemastedHome()));
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Bot Created sucessfully'),
+          content: Text('Notebook Created sucessfully'),
         ),
       );
     } catch (error) {
       // ignore: use_build_context_synchronously
       Navigator.pop(context); // Dismiss loading screen even on error
-      print('Error creating bot: $error');
+      print('Error creating Notebook: $error');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Error creating bot: $error'),
+          content: Text('Error creating Notebook: $error'),
         ),
       );
       // Handle errors appropriately (e.g., show error message)

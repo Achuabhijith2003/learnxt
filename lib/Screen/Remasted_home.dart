@@ -63,7 +63,7 @@ class _RemastedHomeState extends State<RemastedHome> {
               index: 0,
               items: <Widget>[
                 Icon(
-                  Icons.chat,
+                  Icons.menu_book_rounded,
                   size: 30,
                   color: themeNotifier.isDark
                       ? Colors.grey.shade900
@@ -90,7 +90,7 @@ class _RemastedHomeState extends State<RemastedHome> {
               backgroundColor:
                   themeNotifier.isDark ? Colors.grey.shade900 : Colors.white,
               animationCurve: Curves.easeInOut,
-              animationDuration: const Duration(milliseconds: 600),
+              animationDuration: const Duration(milliseconds: 450),
               onTap: (index) {
                 setState(() {
                   _cureentindex = index;
