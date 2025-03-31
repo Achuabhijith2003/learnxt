@@ -225,7 +225,7 @@ class _HomeState extends State<Home> {
                                 value: 1,
                                 child: ListTile(
                                   title: Text(
-                                    "Delete All Chat Bot",
+                                    "Delete All Notebooks",
                                     style: TextStyle(
                                         color: themeNotifier.isDark
                                             ? Colors.white
@@ -243,14 +243,14 @@ class _HomeState extends State<Home> {
                                           ? Colors.grey.shade900
                                           : Colors.white,
                                       title: Text(
-                                        "Delete AI",
+                                        "Delete Notebooks",
                                         style: TextStyle(
                                             color: themeNotifier.isDark
                                                 ? Colors.white
                                                 : Colors.grey.shade900),
                                       ),
                                       content: Text(
-                                        "Are you sure you want to delete the AI Bot? (Watch An Ads)",
+                                        "Are you sure you want to delete the Notebooks? (Watch An Ads)",
                                         style: TextStyle(
                                             color: themeNotifier.isDark
                                                 ? Colors.white
@@ -284,7 +284,7 @@ class _HomeState extends State<Home> {
                                                   .showSnackBar(
                                                 const SnackBar(
                                                   content: Text(
-                                                      'All Bot deleted successfully!'),
+                                                      'All Notebooks deleted successfully!'),
                                                   backgroundColor: Colors.grey,
                                                 ),
                                               );
@@ -293,7 +293,7 @@ class _HomeState extends State<Home> {
                                                   .showSnackBar(
                                                 const SnackBar(
                                                   content: Text(
-                                                      'Bot deletion failed!'),
+                                                      'Notebooks deletion failed!'),
                                                   backgroundColor: Colors.grey,
                                                 ),
                                               );

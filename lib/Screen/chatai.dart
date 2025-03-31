@@ -373,7 +373,7 @@ class _ChataiState extends State<Chatai> {
                               value: 3,
                               child: ListTile(
                                 title: Text(
-                                  "Delete AI bot",
+                                  "Delete Notebook",
                                   style: TextStyle(
                                       color: themeNotifier.isDark
                                           ? Colors.white
@@ -390,9 +390,9 @@ class _ChataiState extends State<Chatai> {
                                   barrierDismissible:
                                       !isLoading, // Prevent dismissing while loading
                                   builder: (context) => AlertDialog(
-                                    title: const Text("Delete AI"),
+                                    title: const Text("Delete Notebook"),
                                     content: const Text(
-                                        "Are you sure you want to delete the AI Bot?"),
+                                        "Are you sure you want to delete the Notebook?"),
                                     actions: [
                                       TextButton(
                                         onPressed: () {
@@ -429,7 +429,7 @@ class _ChataiState extends State<Chatai> {
                                                 .showSnackBar(
                                               const SnackBar(
                                                 content: Text(
-                                                    'Bot deleted successfully!'),
+                                                    'Notebook deleted successfully!'),
                                                 backgroundColor: Colors.grey,
                                               ),
                                             );
@@ -438,7 +438,7 @@ class _ChataiState extends State<Chatai> {
                                                 .showSnackBar(
                                               const SnackBar(
                                                 content: Text(
-                                                    'Bot deletion failed!'),
+                                                    'Notebook deletion failed!'),
                                                 backgroundColor: Colors.grey,
                                               ),
                                             );

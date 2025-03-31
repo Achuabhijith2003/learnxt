@@ -80,7 +80,7 @@ class _MaterialcouresState extends State<Materialcoures> {
                       value: 2,
                       child: ListTile(
                         title: Text(
-                          "Delete AI bot",
+                          "Delete Notebook",
                           style: TextStyle(
                               color: themeNotifier.isDark
                                   ? Colors.white
@@ -103,14 +103,14 @@ class _MaterialcouresState extends State<Materialcoures> {
                                 ? Colors.grey.shade900
                                 : Colors.white,
                             title: Text(
-                              "Delete AI",
+                              "Delete Notebook",
                               style: TextStyle(
                                   color: themeNotifier.isDark
                                       ? Colors.white
                                       : Colors.grey.shade900),
                             ),
                             content: Text(
-                              "Are you sure you want to delete the AI Bot?",
+                              "Are you sure you want to delete the Notebook?",
                               style: TextStyle(
                                   color: themeNotifier.isDark
                                       ? Colors.white
@@ -139,21 +139,20 @@ class _MaterialcouresState extends State<Materialcoures> {
                                   if (deletesuccessfully) {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(
-                                        content:
-                                            Text('Bot deleted successfully!'),
+                                        content: Text(
+                                            'Notebook deleted successfully!'),
                                         backgroundColor: Colors.grey,
                                       ),
                                     );
                                   } else {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(
-                                        content: Text('Bot deletion failed!'),
+                                        content:
+                                            Text('Notebook deletion failed!'),
                                         backgroundColor: Colors.grey,
                                       ),
                                     );
                                   }
-                                  Navigator.of(context)
-                                      .pop(); // Close the dialog
                                   Navigator.of(context)
                                       .pop(); // Close the dialog
                                   Navigator.of(context)
@@ -294,7 +293,7 @@ class _MaterialcouresState extends State<Materialcoures> {
                   });
                   Navigator.of(context).pop(); // Close the dialog
                   Navigator.of(context).pop();
-                  Navigator.of(context).pop();
+                  // Navigator.of(context).pop();
                 },
                 child: const Text("ADD"),
               ),
