@@ -8,7 +8,7 @@ class ChatOperations {
 
   admob ads = admob();
   // ignore: non_constant_identifier_names
-  fetch_user_profile() async {
+  Future<List<Map<String, dynamic>>> fetch_user_profile() async {
     try {
       final user = FirebaseAuth.instance.currentUser;
       final firestore = FirebaseFirestore.instance;
@@ -21,15 +21,9 @@ class ChatOperations {
       final data = querySnapshot.docs.map((doc) => doc.data()).toList();
       return data;
     } catch (e) {
-      print("Fetch prrofile error : $e");
+      print("Fetch profile error : $e");
+      return [];
     }
-    // ... your existing fetchData logic ...
-
-    // Access data as a list of Maps
-    // print(data);
-    //
-    // Return the retrieved data list
-    return [];
   }
 
   Future<bool> deletebot(String docId) async {

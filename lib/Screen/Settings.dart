@@ -129,10 +129,9 @@ class _UiSettingsState extends State<UiSettings> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              const CircleAvatar(
-                                backgroundImage: AssetImage(
-                                  "assets/xt_logo.png",
-                                ),
+                              CircleAvatar(
+                                backgroundImage: NetworkImage(
+                                    "${profileData["Image_url"] ?? ""}"),
                                 maxRadius: 35,
                               ),
                               Text(

@@ -123,22 +123,80 @@ class _HomeState extends State<Home> {
                       // Profile
                       Padding(
                         padding: const EdgeInsets.only(top: 40, right: 10),
-                        child: IconButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const UserProfile()));
+                        child: FutureBuilder<List<Map<String, dynamic>>>(
+                          future: chatop.fetch_user_profile(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const CircleAvatar(
+                                child: CircularProgressIndicator(),
+                              );
+                            } else if (snapshot.hasError) {
+                              return const CircleAvatar(
+                                child: Text('Error'),
+                              );
+                            } else if (snapshot.hasData) {
+                              final userdataList = snapshot.data!;
+                              if (userdataList.isNotEmpty) {
+                                final userData = userdataList[0];
+                                final imageUrl = userData["Image_url"];
+                                return IconButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const UserProfile(),
+                                      ),
+                                    );
+                                  },
+                                  icon: CircleAvatar(
+                                    backgroundImage:
+                                        imageUrl != null && imageUrl.isNotEmpty
+                                            ? NetworkImage(imageUrl)
+                                            : null,
+                                    //  child: imageUrl == null || imageUrl.isEmpty
+                                    //     ? const Icon(Icons.person)
+                                    //     : null, //Removed const
+                                  ),
+                                  iconSize: 30,
+                                );
+                              } else {
+                                return IconButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const UserProfile(),
+                                      ),
+                                    );
+                                  },
+                                  icon: const CircleAvatar(
+                                    child: Icon(Icons.person),
+                                  ),
+                                  iconSize: 30,
+                                );
+                              }
+                            } else {
+                              return IconButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const UserProfile(),
+                                      ));
+                                },
+                                icon: const CircleAvatar(
+                                  child: Icon(Icons.person),
+                                ),
+                                iconSize: 30,
+                              );
+                            }
                           },
-                          icon: Icon(
-                            Icons.account_circle_rounded,
-                            color: themeNotifier.isDark
-                                ? Colors.white
-                                : Colors.grey.shade900,
-                          ),
-                          iconSize: 30,
                         ),
-                      )
+                      ),
                     ],
                   ),
                   Padding(
@@ -429,4 +487,25 @@ class _HomeState extends State<Home> {
 
 // here two times calling docId 1. passing the doc ID 2. Finding through firebase instance
 // in future try to remove Ok!
+
+  processUserData() async {
+    try {
+      Future<List<Map<String, dynamic>>> userdataFuture =
+          chatop.fetch_user_profile();
+      List<Map<String, dynamic>> userdata = await userdataFuture;
+
+      print("Retrieved user data: $userdata");
+
+      if (userdata.isNotEmpty) {
+        return userdata;
+      } else {
+        print("No user data found for this user.");
+        return []; // Or handle the empty case as needed
+      }
+    } catch (error) {
+      print("Error fetching user profile in processUserData: $error");
+      // Handle the error appropriately, e.g., show an error message to the user
+      return []; // Or return a specific error state
+    }
+  }
 }

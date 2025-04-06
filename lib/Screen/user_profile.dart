@@ -176,11 +176,11 @@ class _UserProfileState extends State<UserProfile> {
                                 children: [
                                   Row(
                                     children: [
-                                      const CircleAvatar(
+                                      CircleAvatar(
                                         backgroundColor: Colors.grey,
                                         maxRadius: 35,
-                                        backgroundImage:
-                                            AssetImage("assets/xt_logo.png"),
+                                        backgroundImage: NetworkImage(
+                                            "${profileData["Image_url"]?? ""}"),
                                       ),
                                       Column(
                                         children: [

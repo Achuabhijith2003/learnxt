@@ -10,6 +10,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:learnxt/Screen/Remasted_home.dart';
 import 'package:learnxt/Screen/user_profile.dart';
+import 'package:learnxt/Services/Chats/Chat_Operations.dart';
 import 'package:learnxt/Services/Hive/chatid.dart';
 import 'package:learnxt/Services/gadsmob.dart';
 import '../Services/AI/data_embedded.dart';
@@ -89,6 +90,8 @@ class _ChatcreateState extends State<Chatcreate> {
     nativeAd.load();
   }
 
+  ChatOperations chatop = ChatOperations();
+
   final GlobalKey<ScaffoldState> _globalKey = GlobalKey();
   @override
   Widget build(BuildContext context) {
@@ -126,23 +129,80 @@ class _ChatcreateState extends State<Chatcreate> {
                         // Profile
                         Padding(
                           padding: const EdgeInsets.only(top: 40, right: 10),
-                          child: IconButton(
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const UserProfile()));
+                          child: FutureBuilder<List<Map<String, dynamic>>>(
+                            future: chatop.fetch_user_profile(),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const CircleAvatar(
+                                  child: CircularProgressIndicator(),
+                                );
+                              } else if (snapshot.hasError) {
+                                return const CircleAvatar(
+                                  child: Text('Error'),
+                                );
+                              } else if (snapshot.hasData) {
+                                final userdataList = snapshot.data!;
+                                if (userdataList.isNotEmpty) {
+                                  final userData = userdataList[0];
+                                  final imageUrl = userData["Image_url"];
+                                  return IconButton(
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              const UserProfile(),
+                                        ),
+                                      );
+                                    },
+                                    icon: CircleAvatar(
+                                      backgroundImage: imageUrl != null &&
+                                              imageUrl.isNotEmpty
+                                          ? NetworkImage(imageUrl)
+                                          : null,
+                                      //  child: imageUrl == null || imageUrl.isEmpty
+                                      //     ? const Icon(Icons.person)
+                                      //     : null, //Removed const
+                                    ),
+                                    iconSize: 30,
+                                  );
+                                } else {
+                                  return IconButton(
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              const UserProfile(),
+                                        ),
+                                      );
+                                    },
+                                    icon: const CircleAvatar(
+                                      child: Icon(Icons.person),
+                                    ),
+                                    iconSize: 30,
+                                  );
+                                }
+                              } else {
+                                return IconButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              const UserProfile(),
+                                        ));
+                                  },
+                                  icon: const CircleAvatar(
+                                    child: Icon(Icons.person),
+                                  ),
+                                  iconSize: 30,
+                                );
+                              }
                             },
-                            icon: Icon(
-                              Icons.account_circle_rounded,
-                              color: themeNotifier.isDark
-                                  ? Colors.white
-                                  : Colors.grey.shade900,
-                            ),
-                            iconSize: 30,
                           ),
-                        )
+                        ),
                       ],
                     ),
                     const SizedBox(

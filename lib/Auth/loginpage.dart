@@ -42,8 +42,8 @@ class _LoginpageState extends State<Loginpage> {
       if (user != null) {
         // Handle successful sign-in
         print('Signed in with Google: ${user.uid}');
-        createdatabase(
-            user.email!, user.displayName ?? ''); // Use null-safe operators
+        createdatabase(user.email!, user.displayName ?? "",
+            user.photoURL ?? ""); // Use null-safe operators
         // init exiting hive chat
         chatmodif.initallchat();
         Navigator.pushReplacement(
@@ -221,7 +221,7 @@ class _LoginpageState extends State<Loginpage> {
                           const SizedBox(
                             height: 10,
                           ),
-                       
+
                           FadeInUp(
                               duration: const Duration(milliseconds: 1600),
                               child: MaterialButton(
@@ -421,7 +421,7 @@ class _LoginpageState extends State<Loginpage> {
     );
   }
 
-  void createdatabase(String email, String name) async {
+  void createdatabase(String email, String name, String? imageurl) async {
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User? user = auth.currentUser;
     // ignore: non_constant_identifier_names
@@ -430,6 +430,7 @@ class _LoginpageState extends State<Loginpage> {
       "UID": Uid,
       "Name": name,
       "Email": email,
+      "Image_url": imageurl
     };
     FirebaseFirestore.instance.collection("User").doc(Uid).set(newuserdata);
   }
