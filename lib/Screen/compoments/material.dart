@@ -39,7 +39,9 @@ class _MaterialcouresState extends State<Materialcoures> {
                   docId: widget.botData["docId"]),
             )),
         child: Container(
-          color: themeNotifier.isDark ? Colors.grey : Colors.grey.shade500,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(24),
+              color: themeNotifier.isDark ? Colors.grey : Colors.grey.shade500),
           height: 145,
           width: 500,
           child: Column(

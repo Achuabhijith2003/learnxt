@@ -103,10 +103,12 @@ class _UserProfileState extends State<UserProfile> {
                           onPressed: () {
                             Navigator.pop(context);
                           },
-                          icon: const Icon(
+                          icon: Icon(
                             Icons.arrow_back_ios_new,
-                            color: Colors.black,
-                            shadows: <Shadow>[
+                            color: themeNotifier.isDark
+                                ? Colors.white
+                                : Colors.grey.shade900,
+                            shadows: const <Shadow>[
                               Shadow(
                                 offset: Offset(1.0, 1.0),
                                 blurRadius: 2.0,
@@ -180,7 +182,7 @@ class _UserProfileState extends State<UserProfile> {
                                         backgroundColor: Colors.grey,
                                         maxRadius: 35,
                                         backgroundImage: NetworkImage(
-                                            "${profileData["Image_url"]?? ""}"),
+                                            "${profileData["Image_url"] ?? ""}"),
                                       ),
                                       Column(
                                         children: [
