@@ -134,8 +134,15 @@ class _ChatcreateState extends State<Chatcreate> {
                             builder: (context, snapshot) {
                               if (snapshot.connectionState ==
                                   ConnectionState.waiting) {
-                                return const CircleAvatar(
-                                  child: CircularProgressIndicator(),
+                                return CircleAvatar(
+                                  child: CircularProgressIndicator(
+                                    backgroundColor: themeNotifier.isDark
+                                        ? Colors.grey
+                                        : Colors.grey.shade900,
+                                    color: themeNotifier.isDark
+                                        ? Colors.white
+                                        : Colors.grey.shade900,
+                                  ),
                                 );
                               } else if (snapshot.hasError) {
                                 return const CircleAvatar(
@@ -157,13 +164,19 @@ class _ChatcreateState extends State<Chatcreate> {
                                       );
                                     },
                                     icon: CircleAvatar(
+                                      backgroundColor: themeNotifier.isDark
+                                          ? Colors.grey
+                                          : Colors.white,
                                       backgroundImage: imageUrl != null &&
                                               imageUrl.isNotEmpty
                                           ? NetworkImage(imageUrl)
                                           : null,
-                                      //  child: imageUrl == null || imageUrl.isEmpty
-                                      //     ? const Icon(Icons.person)
-                                      //     : null, //Removed const
+                                      child: Icon(
+                                        Icons.account_circle_rounded,
+                                        color: themeNotifier.isDark
+                                            ? Colors.grey.shade900
+                                            : Colors.grey.shade900,
+                                      ),
                                     ),
                                     iconSize: 30,
                                   );
