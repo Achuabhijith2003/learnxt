@@ -160,17 +160,18 @@ class _HomeState extends State<Home> {
                                   icon: CircleAvatar(
                                     backgroundColor: themeNotifier.isDark
                                         ? Colors.grey
-                                        : Colors.white,
-                                    backgroundImage:
-                                        imageUrl != null && imageUrl.isNotEmpty
-                                            ? NetworkImage(imageUrl)
-                                            : null,
-                                    child: Icon(
-                                      Icons.account_circle_rounded,
-                                      color: themeNotifier.isDark
-                                          ? Colors.grey.shade900
-                                          : Colors.grey.shade900,
-                                    ),
+                                        : Colors.grey,
+                                    backgroundImage: imageUrl != null &&
+                                            imageUrl.isNotEmpty
+                                        ? NetworkImage(imageUrl)
+                                        : const AssetImage("assets/xt_logo.png")
+                                            as ImageProvider<Object>,
+                                    // child: Icon(
+                                    //   Icons.account_circle_rounded,
+                                    //   color: themeNotifier.isDark
+                                    //       ? Colors.grey.shade900
+                                    //       : Colors.grey.shade900,
+                                    // ),
                                   ),
                                   iconSize: 30,
                                 );

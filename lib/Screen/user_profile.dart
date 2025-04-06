@@ -181,8 +181,15 @@ class _UserProfileState extends State<UserProfile> {
                                       CircleAvatar(
                                         backgroundColor: Colors.grey,
                                         maxRadius: 35,
-                                        backgroundImage: NetworkImage(
-                                            "${profileData["Image_url"] ?? ""}"),
+                                        backgroundImage:
+                                            profileData["Image_url"] != null &&
+                                                    profileData["Image_url"]
+                                                        .isNotEmpty
+                                                ? NetworkImage(
+                                                    profileData["Image_url"])
+                                                : const AssetImage(
+                                                        "assets/xt_logo.png")
+                                                    as ImageProvider<Object>,
                                       ),
                                       Column(
                                         children: [

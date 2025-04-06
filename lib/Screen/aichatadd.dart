@@ -170,13 +170,15 @@ class _ChatcreateState extends State<Chatcreate> {
                                       backgroundImage: imageUrl != null &&
                                               imageUrl.isNotEmpty
                                           ? NetworkImage(imageUrl)
-                                          : null,
-                                      child: Icon(
-                                        Icons.account_circle_rounded,
-                                        color: themeNotifier.isDark
-                                            ? Colors.grey.shade900
-                                            : Colors.grey.shade900,
-                                      ),
+                                          : const AssetImage(
+                                                  "assets/xt_logo.png")
+                                              as ImageProvider<Object>,
+                                      // child: Icon(
+                                      //   Icons.account_circle_rounded,
+                                      //   color: themeNotifier.isDark
+                                      //       ? Colors.grey.shade900
+                                      //       : Colors.grey.shade900,
+                                      // ),
                                     ),
                                     iconSize: 30,
                                   );
