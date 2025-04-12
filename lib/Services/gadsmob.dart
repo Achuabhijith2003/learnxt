@@ -62,6 +62,7 @@ class admob {
   //       ));
   // }
 
+  // ignore: non_constant_identifier_names
   void RewardedInterstitialAdload() {
     RewardedInterstitialAd.load(
       adUnitId:

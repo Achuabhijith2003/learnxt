@@ -3,7 +3,6 @@
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
-import 'package:learnxt/key.dart';
 
 /// Default [FirebaseOptions] for use with your Firebase apps.
 ///
@@ -18,29 +17,17 @@ import 'package:learnxt/key.dart';
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for ios - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -54,10 +41,58 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: Firebase_API_key,
-    appId: '1:425002886911:android:4d3b5f1c97b862e4698eca',
+    apiKey: 'AIzaSyAxs5A4ATRnvOgrIvUiOi6NJAwb6i1TIic',
+    appId: '1:425002886911:android:423f69d4402f1fc6698eca',
     messagingSenderId: '425002886911',
     projectId: 'learnxt-88200',
+    databaseURL: 'https://learnxt-88200-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'learnxt-88200.appspot.com',
   );
+
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyBNiebYgCg89T-pzniAkq93WamXS51K49A',
+    appId: '1:425002886911:web:09c9ffa807ad0358698eca',
+    messagingSenderId: '425002886911',
+    projectId: 'learnxt-88200',
+    authDomain: 'learnxt-88200.firebaseapp.com',
+    databaseURL: 'https://learnxt-88200-default-rtdb.asia-southeast1.firebasedatabase.app',
+    storageBucket: 'learnxt-88200.appspot.com',
+    measurementId: 'G-X88PGM7HP2',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyBRpOb2eC-jI8C72ffMnmfWOInJTm6l3AM',
+    appId: '1:425002886911:ios:26bdb4debcf9c41e698eca',
+    messagingSenderId: '425002886911',
+    projectId: 'learnxt-88200',
+    databaseURL: 'https://learnxt-88200-default-rtdb.asia-southeast1.firebasedatabase.app',
+    storageBucket: 'learnxt-88200.appspot.com',
+    androidClientId: '425002886911-7rc6t4v8s835a1e0khuncikf55epoojc.apps.googleusercontent.com',
+    iosClientId: '425002886911-77t6115qm42upnev8po3pp4qkae9o98d.apps.googleusercontent.com',
+    iosBundleId: 'com.example.learnxt',
+  );
+
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyBRpOb2eC-jI8C72ffMnmfWOInJTm6l3AM',
+    appId: '1:425002886911:ios:26bdb4debcf9c41e698eca',
+    messagingSenderId: '425002886911',
+    projectId: 'learnxt-88200',
+    databaseURL: 'https://learnxt-88200-default-rtdb.asia-southeast1.firebasedatabase.app',
+    storageBucket: 'learnxt-88200.appspot.com',
+    androidClientId: '425002886911-7rc6t4v8s835a1e0khuncikf55epoojc.apps.googleusercontent.com',
+    iosClientId: '425002886911-77t6115qm42upnev8po3pp4qkae9o98d.apps.googleusercontent.com',
+    iosBundleId: 'com.example.learnxt',
+  );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyBNiebYgCg89T-pzniAkq93WamXS51K49A',
+    appId: '1:425002886911:web:09c9ffa807ad0358698eca',
+    messagingSenderId: '425002886911',
+    projectId: 'learnxt-88200',
+    authDomain: 'learnxt-88200.firebaseapp.com',
+    databaseURL: 'https://learnxt-88200-default-rtdb.asia-southeast1.firebasedatabase.app',
+    storageBucket: 'learnxt-88200.appspot.com',
+    measurementId: 'G-X88PGM7HP2',
+  );
+
 }
