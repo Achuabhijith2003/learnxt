@@ -42,7 +42,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyAxs5A4ATRnvOgrIvUiOi6NJAwb6i1TIic',
-    appId: '1:425002886911:android:423f69d4402f1fc6698eca',
+    appId: '1:425002886911:android:6fa92e19a02ad1b0698eca',
     messagingSenderId: '425002886911',
     projectId: 'learnxt-88200',
     databaseURL: 'https://learnxt-88200-default-rtdb.asia-southeast1.firebasedatabase.app',
@@ -74,14 +74,14 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyBRpOb2eC-jI8C72ffMnmfWOInJTm6l3AM',
-    appId: '1:425002886911:ios:26bdb4debcf9c41e698eca',
+    appId: '1:425002886911:ios:e2463e5bb5d99805698eca',
     messagingSenderId: '425002886911',
     projectId: 'learnxt-88200',
     databaseURL: 'https://learnxt-88200-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'learnxt-88200.appspot.com',
     androidClientId: '425002886911-7rc6t4v8s835a1e0khuncikf55epoojc.apps.googleusercontent.com',
-    iosClientId: '425002886911-77t6115qm42upnev8po3pp4qkae9o98d.apps.googleusercontent.com',
-    iosBundleId: 'com.example.learnxt',
+    iosClientId: '425002886911-rko1bu3se0tbj3amlvpc908nn5jhkhri.apps.googleusercontent.com',
+    iosBundleId: 'com.gurudha.learnxt',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(

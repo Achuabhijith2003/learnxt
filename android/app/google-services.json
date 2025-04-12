@@ -8,7 +8,43 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:425002886911:android:423f69d4402f1fc6698eca",
+        "mobilesdk_app_id": "1:425002886911:android:5fc2aea3d0fa0db7698eca",
+        "android_client_info": {
+          "package_name": "com.example.learnxt"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "425002886911-j19b990h3d2052gat20ip0ltebn5n2nc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAxs5A4ATRnvOgrIvUiOi6NJAwb6i1TIic"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "425002886911-j19b990h3d2052gat20ip0ltebn5n2nc.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "425002886911-77t6115qm42upnev8po3pp4qkae9o98d.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.learnxt"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:425002886911:android:6fa92e19a02ad1b0698eca",
         "android_client_info": {
           "package_name": "com.gurudha.learnxt"
         }
