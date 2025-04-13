@@ -1,6 +1,15 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:learnxt/Screen/Preminum/vip.dart';
+import 'package:learnxt/Services/AI/data_embedded.dart';
+import 'package:learnxt/Services/Chats/Chat_Operations.dart';
+import 'package:learnxt/Services/Hive/chat.dart';
+import 'package:learnxt/Services/Hive/chatid.dart';
+import 'package:learnxt/Services/gadsmob.dart';
 
 import 'package:learnxt/theme/theme_model.dart';
 import 'package:provider/provider.dart';
@@ -15,6 +24,12 @@ class BotProfile extends StatefulWidget {
 
 class _BotProfileState extends State<BotProfile> {
   TextEditingController nameController = TextEditingController();
+
+  admob ads = admob();
+
+  Chatputandget chatstore = Chatputandget();
+  Chatidputandget chatid = Chatidputandget();
+  ChatOperations chatop = ChatOperations();
 
   bool istextfieldenabled = false;
   @override
@@ -154,6 +169,193 @@ class _BotProfileState extends State<BotProfile> {
                   endIndent: 20,
                   thickness: 2,
                 ),
+                Text("Options",
+                    style: GoogleFonts.poppins(
+                        fontSize: 20,
+                        color: themeNotifier.isDark
+                            ? Colors.white
+                            : Colors.black)),
+                const Divider(
+                  indent: 20,
+                  endIndent: 20,
+                  thickness: 2,
+                ),
+                ListTile(
+                  leading: Icon(
+                    Icons.upload_file,
+                    color: themeNotifier.isDark ? Colors.white : Colors.black,
+                  ),
+                  title: Text("Add PDFs",
+                      style: GoogleFonts.poppins(
+                          fontSize: 15,
+                          color: themeNotifier.isDark
+                              ? Colors.white
+                              : Colors.black)),
+                  onTap: () {
+                    addpdfs(widget.docId);
+                  },
+                ),
+                ListTile(
+                  leading: Icon(
+                    Icons.clear_all_sharp,
+                    color: themeNotifier.isDark ? Colors.white : Colors.black,
+                  ),
+                  title: Text("Clear Chats",
+                      style: GoogleFonts.poppins(
+                          fontSize: 15,
+                          color: themeNotifier.isDark
+                              ? Colors.white
+                              : Colors.black)),
+                  onTap: () async {
+                    return showDialog(
+                      context: context,
+                      barrierDismissible:
+                          false, // Prevent dismissing while loading
+                      builder: (context) => AlertDialog(
+                        title: const Text("Clear chats"),
+                        content:
+                            const Text("Are you sure you want to Clear Chats?"),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop(); // Close the dialog
+                            },
+                            child: const Text("Cancel"),
+                          ),
+                          TextButton(
+                            onPressed: () async {
+                              showDialog(
+                                context: context,
+                                builder: (context) => const Center(
+                                  child: CircularProgressIndicator(
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              );
+
+                              final clearsucessfully =
+                                  chatstore.clearchat(widget.docId);
+
+                              if (clearsucessfully) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content:
+                                        Text('Chats cleared successfully!'),
+                                    backgroundColor: Colors.grey,
+                                  ),
+                                );
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Chats cleared failed!'),
+                                    backgroundColor: Colors.grey,
+                                  ),
+                                );
+                              }
+                              Navigator.of(context).pop(); // Close the dialog
+                              Navigator.of(context).pop(); // Close the dialog
+                            },
+                            child: const Text(
+                              "clear",
+                              style: TextStyle(color: Colors.red),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+                ListTile(
+                  leading: Icon(
+                    Icons.delete,
+                    color: themeNotifier.isDark ? Colors.white : Colors.black,
+                  ),
+                  title: Text("Delete Notebook",
+                      style: GoogleFonts.poppins(
+                          fontSize: 15,
+                          color: themeNotifier.isDark
+                              ? Colors.white
+                              : Colors.black)),
+                  onTap: () async {
+                    return showDialog(
+                      context: context,
+                      barrierDismissible:
+                          true, // Prevent dismissing while loading
+                      builder: (context) => AlertDialog(
+                        title: const Text("Delete Notebook"),
+                        content: const Text(
+                            "Are you sure you want to delete the Notebook?"),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop(); // Close the dialog
+                            },
+                            child: const Text("Cancel"),
+                          ),
+                          TextButton(
+                            onPressed: () async {
+                              showDialog(
+                                context: context,
+                                builder: (context) => const Center(
+                                  child: CircularProgressIndicator(
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              );
+                              ads.AppOpenAdload();
+                              final deletesuccessfully =
+                                  await chatop.deletebot(widget.docId);
+
+                              if (deletesuccessfully) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content:
+                                        Text('Notebook deleted successfully!'),
+                                    backgroundColor: Colors.grey,
+                                  ),
+                                );
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Notebook deletion failed!'),
+                                    backgroundColor: Colors.grey,
+                                  ),
+                                );
+                              }
+                              Navigator.of(context).pop(); // Close the dialog
+                              Navigator.of(context).pop(); // Close the dialog
+                              Navigator.of(context).pop(); // Close the dialog
+                            },
+                            child: const Text(
+                              "Delete",
+                              style: TextStyle(color: Colors.red),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+                ListTile(
+                  leading: Icon(
+                    Icons.workspace_premium_outlined,
+                    color: themeNotifier.isDark ? Colors.white : Colors.black,
+                  ),
+                  title: Text("Go Premium",
+                      style: GoogleFonts.poppins(
+                          fontSize: 15,
+                          color: themeNotifier.isDark
+                              ? Colors.white
+                              : Colors.black)),
+                  onTap: () {
+                    Navigator.push(
+                        // ignore: use_build_context_synchronously
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const Vip(),
+                        ));
+                  },
+                )
               ]);
             }
           },
@@ -190,5 +392,82 @@ class _BotProfileState extends State<BotProfile> {
     }).catchError((error) {
       print("Failed to update name: $error");
     });
+  }
+
+  addpdfs(docid) async {
+    List<File> files = [];
+// pick files
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      allowMultiple: true,
+    );
+
+    if (result != null) {
+      files = result.paths.map((path) => File(path!)).toList();
+
+      return showDialog(
+        context: context,
+        barrierDismissible: false, // Disable user interaction while uploading
+        builder: (context) {
+          return AlertDialog(
+            title: const Text("Selected PDF Files"),
+            content: SizedBox(
+              width: double.maxFinite,
+              child: ListView.builder(
+                shrinkWrap: true, // Make the list view wrap its content
+                itemCount: files.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text(files[index].path.split('/').last),
+                  );
+                },
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () async {
+                  ads.AppOpenAdload();
+                  showDialog(
+                    context: context,
+                    barrierDismissible:
+                        false, // Disable user interaction while uploading
+                    builder: (context) => const Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CircularProgressIndicator(
+                            color: Colors.grey,
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                  CollectionReference insertfilename =
+                      FirebaseFirestore.instance.collection('bot');
+                  DataEmbedded dataEmbedded = DataEmbedded();
+                  final List<String> filenames = [];
+                  dataEmbedded.getDocId(docid);
+                  for (File file in files) {
+                    final fileName =
+                        file.path.split('/').last; // Extract file name
+                    filenames.add(fileName);
+                    await dataEmbedded.pdfextract(file);
+                  }
+                  await insertfilename.doc(docid).update({
+                    'pdfs_name': FieldValue.arrayUnion(filenames),
+                  });
+                  // ignore: use_build_context_synchronously
+                  Navigator.of(context).pop(); // Close the dialog
+                  // ignore: use_build_context_synchronously
+                  Navigator.of(context).pop();
+                  // ignore: use_build_context_synchronously
+                  Navigator.of(context).pop();
+                },
+                child: const Text("ADD"),
+              ),
+            ],
+          );
+        },
+      );
+    }
   }
 }
