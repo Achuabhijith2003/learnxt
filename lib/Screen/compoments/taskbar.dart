@@ -24,7 +24,7 @@ class Taskbar_chatState extends State<Taskbar_chat> {
     return Consumer<ThemeModel>(
         builder: (context, ThemeModel themeNotifier, child) {
       return DefaultTabController(
-        length: 3,
+        length: 2,
         initialIndex: 1,
         child: Scaffold(
             appBar: AppBar(
@@ -62,18 +62,20 @@ class Taskbar_chatState extends State<Taskbar_chat> {
                     color: themeNotifier.isDark ? Colors.white : Colors.black,
                   ),
                 ),
-                Tab(
-                  icon: Icon(
-                    Icons.menu_book_rounded,
-                    color: themeNotifier.isDark ? Colors.white : Colors.black,
-                  ),
-                ),
+                // Tab(
+                //   icon: Icon(
+                //     Icons.menu_book_rounded,
+                //     color: themeNotifier.isDark ? Colors.white : Colors.black,
+                //   ),
+                // ),
               ]),
             ),
             body: TabBarView(children: [
-              BotProfile(docId:  widget.docId,),
+              BotProfile(
+                docId: widget.docId,
+              ),
               Chatai(botname: widget.botname, docId: widget.docId),
-              const UiSettings(),
+              // const UiSettings(),
             ])),
       );
     });
