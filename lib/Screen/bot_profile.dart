@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -7,13 +6,17 @@ import 'package:learnxt/theme/theme_model.dart';
 import 'package:provider/provider.dart';
 
 class BotProfile extends StatefulWidget {
-  const BotProfile({super.key});
+  final String docId;
+  const BotProfile({super.key, required this.docId});
 
   @override
   State<BotProfile> createState() => _BotProfileState();
 }
 
 class _BotProfileState extends State<BotProfile> {
+  TextEditingController nameController = TextEditingController();
+
+  bool istextfieldenabled = false;
   @override
   Widget build(BuildContext context) {
     return Consumer<ThemeModel>(
@@ -21,176 +24,114 @@ class _BotProfileState extends State<BotProfile> {
       return Scaffold(
         backgroundColor:
             themeNotifier.isDark ? Colors.grey.shade900 : Colors.white,
-        body: Container(
-          width: double.infinity,
-          decoration: BoxDecoration(
-              gradient: LinearGradient(begin: Alignment.topCenter, colors: [
-            Colors.green.shade900,
-            Colors.green.shade800,
-            Colors.green.shade400
-          ])),
-          child: Stack(children: [
-            Column(
-              children: [
+        body: FutureBuilder(
+          future: fetch_bot_profile(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const  Center(
+                child: CircularProgressIndicator(),
+              );
+            } else if (snapshot.hasError) {
+              return Center(
+                child: Text("Error: ${snapshot.error}"),
+              );
+            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return const Center(
+                child: Text("No data found"),
+              );
+            } else {
+              final data = snapshot.data!;
+              nameController.text = data[0]['Bot Name'] ?? "No name found";
+              // Process and display the data as needed
+              return Column(children: [
+                Text("Notebook info",
+                    style: GoogleFonts.poppins(
+                        fontSize: 20,
+                        color: themeNotifier.isDark
+                            ? Colors.white
+                            : Colors.black)),
+                const Divider(
+                  indent: 20,
+                  endIndent: 20,
+                  thickness: 2,
+                ),
+                // Text("data"),
                 Padding(
-                  padding: const EdgeInsets.only(top: 36, left: 5, right: 5),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      IconButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          icon: const Icon(
-                            Icons.arrow_back_ios_new,
-                            color: Colors.white,
-                            shadows: <Shadow>[
-                              Shadow(
-                                offset: Offset(1.0, 1.0),
-                                blurRadius: 2.0,
-                                color: Color.fromARGB(255, 14, 60, 13),
-                              ),
-                            ],
-                          )),
-                      Text(
-                        "bot profile",
-                        style: GoogleFonts.ptSerif(
-                          color: Colors.white,
-                          fontSize: 29,
-                          fontWeight: FontWeight.bold,
-                          shadows: <Shadow>[
-                            const Shadow(
-                              offset: Offset(1.0, 1.0),
-                              blurRadius: 2.0,
-                              color: Color.fromARGB(255, 14, 60, 13),
-                            ),
-                          ],
-                        ),
-                        textAlign: TextAlign.center,
+                  padding: const EdgeInsets.all(20),
+                  child: Container(
+                    padding: const EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                        border: Border(
+                            right: BorderSide(color: Colors.grey.shade200),
+                            top: BorderSide(color: Colors.grey.shade200),
+                            left: BorderSide(color: Colors.grey.shade200),
+                            bottom: BorderSide(color: Colors.grey.shade200))),
+                    child: TextField(
+                      controller: nameController,
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: const InputDecoration(
+                          hintText: "Notebook name",
+                          hintStyle: TextStyle(color: Colors.grey),
+                          border: InputBorder.none),
+                      style: GoogleFonts.poppins(
+                        fontSize: 20,
+                        color:
+                            themeNotifier.isDark ? Colors.white : Colors.black,
                       ),
-                      const Divider(),
-                      const Divider()
-                    ],
+                      enabled: istextfieldenabled,
+                    ),
                   ),
                 ),
-              ],
-            ),
-            Positioned(
-                top: 100,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 15),
-                  decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(40),
-                        topRight: Radius.circular(40)),
-                    color: Color(0xFFEFFFFC),
-                  ),
-                  child: Stack(children: [
-                    FutureBuilder(
-                      future: fetch_bot_profile(),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasError) {
-                          return Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child:
-                                Center(child: Text('Error: ${snapshot.error}')),
-                          );
-                        }
-
-                        if (!snapshot.hasData) {
-                          return const Center(
-                            child: CircularProgressIndicator(
-                              color: Colors.green,
-                            ),
-                          ); // Show loading indicator
-                        }
-                        final data =
-                            snapshot.data as List<Map<String, dynamic>>;
-                        final profileData = data[0];
-                        return Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(left: 35),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      const CircleAvatar(
-                                        backgroundColor: Colors.green,
-                                        maxRadius: 35,
-                                        backgroundImage: AssetImage(
-                                            "assets/ai pro pic.jpeg"),
-                                      ),
-                                      Column(
-                                        children: [
-                                          Padding(
-                                            padding:
-                                                const EdgeInsets.only(left: 15),
-                                            child: Column(
-                                              children: [
-                                                Text(
-                                                  profileData["Name"],
-                                                  style: GoogleFonts.ptSerif(
-                                                    color: Colors.black,
-                                                    fontSize: 26,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                  textAlign: TextAlign.center,
-                                                ),
-                                                Text(profileData["Email"])
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                  const VerticalDivider(
-                                    color: Colors.green,
-                                    thickness: 3,
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Column(
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 50, right: 50, top: 15, bottom: 10),
-                                  child: Divider(
-                                    color: Colors.green,
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 15, right: 15),
-                                  child: Card(
-                                      color: Colors.green.shade400,
-                                      child: const ListTile(
-                                        title: Text(
-                                          "Logout",
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                        trailing: Icon(
-                                          Icons.logout_outlined,
-                                          color: Colors.white,
-                                        ),
-                                        // onTap: logout,
-                                      )),
-                                )
-                              ],
-                            )
-                          ],
-                        );
-                      },
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: MaterialButton(
+                    onPressed: () {
+                      setState(() {
+                        istextfieldenabled = !istextfieldenabled;
+                      });
+                      if (!istextfieldenabled) {
+                        edit_bot_profile();
+                      }
+                    },
+                    height: 50,
+                    // margin: EdgeInsets.symmetric(horizontal: 50),
+                    color: themeNotifier.isDark
+                        ? Colors.white54
+                        : Colors.grey.shade900,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50),
                     ),
-                  ]),
-                ))
-          ]),
+                    // decoration: BoxDecoration(
+                    // ),
+                    child: Center(
+                      child: istextfieldenabled
+                          ? Text(
+                              "Save",
+                              style: TextStyle(
+                                  color: themeNotifier.isDark
+                                      ? Colors.grey.shade900
+                                      : Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            )
+                          : Text(
+                              "Edit",
+                              style: TextStyle(
+                                  color: themeNotifier.isDark
+                                      ? Colors.grey.shade900
+                                      : Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                    ),
+                  ),
+                ),
+                const Divider(
+                  indent: 20,
+                  endIndent: 20,
+                  thickness: 2,
+                ),
+              ]);
+            }
+          },
         ),
       );
     });
@@ -199,12 +140,11 @@ class _BotProfileState extends State<BotProfile> {
   // ignore: non_constant_identifier_names
   Future<List<Map<String, dynamic>>> fetch_bot_profile() async {
     // ... your existing fetchData logic ...
-    final user = FirebaseAuth.instance.currentUser;
     final firestore = FirebaseFirestore.instance;
-    final collection = firestore.collection('Bot');
+    final collection = firestore.collection('bot');
 
     final query =
-        collection.where('UID', isEqualTo: user?.uid); // Example condition
+        collection.where('docId', isEqualTo: widget.docId); // Example condition
 
     final querySnapshot = await query.get();
     final data = querySnapshot.docs.map((doc) => doc.data()).toList();
@@ -212,5 +152,18 @@ class _BotProfileState extends State<BotProfile> {
     // print(data);
     //
     return data; // Return the retrieved data list
+  }
+
+  edit_bot_profile() {
+    // Save the updated name to Firestore
+    final firestore = FirebaseFirestore.instance;
+    final collection = firestore.collection('bot');
+    collection.doc(widget.docId).update({
+      'Bot Name': nameController.text,
+    }).then((_) {
+      print("Name updated successfully!");
+    }).catchError((error) {
+      print("Failed to update name: $error");
+    });
   }
 }

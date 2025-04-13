@@ -71,7 +71,7 @@ class Taskbar_chatState extends State<Taskbar_chat> {
               ]),
             ),
             body: TabBarView(children: [
-              const BotProfile(),
+              BotProfile(docId:  widget.docId,),
               Chatai(botname: widget.botname, docId: widget.docId),
               const UiSettings(),
             ])),
