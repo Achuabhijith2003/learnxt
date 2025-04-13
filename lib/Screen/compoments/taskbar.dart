@@ -25,6 +25,7 @@ class Taskbar_chatState extends State<Taskbar_chat> {
         builder: (context, ThemeModel themeNotifier, child) {
       return DefaultTabController(
         length: 3,
+        initialIndex: 1,
         child: Scaffold(
             appBar: AppBar(
               leading: IconButton(

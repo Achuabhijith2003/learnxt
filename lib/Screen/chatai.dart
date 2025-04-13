@@ -217,315 +217,315 @@ class _ChataiState extends State<Chatai> {
           width: double.infinity,
           child: Stack(
             children: [
-              Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 32, left: 5, right: 5),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        IconButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            icon: Icon(
-                              Icons.arrow_back_ios_new,
-                              color: themeNotifier.isDark
-                                  ? Colors.white
-                                  : Colors.grey.shade900,
-                              shadows: const <Shadow>[
-                                Shadow(
-                                  offset: Offset(1.0, 1.0),
-                                  blurRadius: 2.0,
-                                  color: Color.fromARGB(255, 14, 60, 13),
-                                ),
-                              ],
-                            )),
-                        const SizedBox(
-                          width: 0,
-                        ),
-                        Text(
-                          widget.botname,
-                          style: GoogleFonts.dmSerifDisplay(
-                            fontSize: 30,
-                            letterSpacing: 4,
-                            color: themeNotifier.isDark
-                                ? Colors.white
-                                : Colors.grey.shade900,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                        const Divider(),
-                        const Divider(),
-                        // menu button
-                        Consumer<ThemeModel>(
-                            builder: (context, themeNotifier, child) {
-                          return PopupMenuButton(
-                            iconColor: themeNotifier.isDark
-                                ? Colors.white
-                                : Colors.white,
-                            icon: const Icon(Icons.more_vert),
-                            color: themeNotifier.isDark
-                                ? Colors.grey.shade900
-                                : Colors.white,
-                            itemBuilder: (context) => [
-                              PopupMenuItem(
-                                value: 1,
-                                child: ListTile(
-                                  title: Text(
-                                    "Add PDFs",
-                                    style: TextStyle(
-                                        color: themeNotifier.isDark
-                                            ? Colors.white
-                                            : Colors.grey.shade900),
-                                  ),
-                                  leading: Icon(Icons.add,
-                                      color: themeNotifier.isDark
-                                          ? Colors.white
-                                          : Colors.grey.shade900),
-                                ),
-                                onTap: () {
-                                  addpdfs(widget.docId);
-                                },
-                              ),
-                              PopupMenuItem(
-                                value: 2,
-                                child: ListTile(
-                                  title: Text(
-                                    "Clear Chats",
-                                    style: TextStyle(
-                                        color: themeNotifier.isDark
-                                            ? Colors.white
-                                            : Colors.grey.shade900),
-                                  ),
-                                  leading: Icon(Icons.clear_all_sharp,
-                                      color: themeNotifier.isDark
-                                          ? Colors.white
-                                          : Colors.grey.shade900),
-                                ),
-                                onTap: () async {
-                                  return showDialog(
-                                    context: context,
-                                    barrierDismissible:
-                                        false, // Prevent dismissing while loading
-                                    builder: (context) => AlertDialog(
-                                      title: const Text("Clear chats"),
-                                      content: const Text(
-                                          "Are you sure you want to Clear Chats?"),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context)
-                                                .pop(); // Close the dialog
-                                          },
-                                          child: const Text("Cancel"),
-                                        ),
-                                        TextButton(
-                                          onPressed: () async {
-                                            showDialog(
-                                              context: context,
-                                              builder: (context) =>
-                                                  const Center(
-                                                child:
-                                                    CircularProgressIndicator(
-                                                  color: Colors.grey,
-                                                ),
-                                              ),
-                                            );
+              // Column(
+              //   children: [
+              //     Padding(
+              //       padding: const EdgeInsets.only(top: 32, left: 5, right: 5),
+              //       child: Row(
+              //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //         children: [
+              //           IconButton(
+              //               onPressed: () {
+              //                 Navigator.pop(context);
+              //               },
+              //               icon: Icon(
+              //                 Icons.arrow_back_ios_new,
+              //                 color: themeNotifier.isDark
+              //                     ? Colors.white
+              //                     : Colors.grey.shade900,
+              //                 shadows: const <Shadow>[
+              //                   Shadow(
+              //                     offset: Offset(1.0, 1.0),
+              //                     blurRadius: 2.0,
+              //                     color: Color.fromARGB(255, 14, 60, 13),
+              //                   ),
+              //                 ],
+              //               )),
+              //           const SizedBox(
+              //             width: 0,
+              //           ),
+              //           Text(
+              //             widget.botname,
+              //             style: GoogleFonts.dmSerifDisplay(
+              //               fontSize: 30,
+              //               letterSpacing: 4,
+              //               color: themeNotifier.isDark
+              //                   ? Colors.white
+              //                   : Colors.grey.shade900,
+              //             ),
+              //             textAlign: TextAlign.center,
+              //           ),
+              //           const Divider(),
+              //           const Divider(),
+              //           // menu button
+              //           // Consumer<ThemeModel>(
+              //           //     builder: (context, themeNotifier, child) {
+              //           //   // return PopupMenuButton(
+              //           //   //   iconColor: themeNotifier.isDark
+              //           //   //       ? Colors.white
+              //           //   //       : Colors.white,
+              //           //   //   icon: const Icon(Icons.more_vert),
+              //           //   //   color: themeNotifier.isDark
+              //           //   //       ? Colors.grey.shade900
+              //           //   //       : Colors.white,
+              //           //   //   itemBuilder: (context) => [
+              //           //   //     PopupMenuItem(
+              //           //   //       value: 1,
+              //           //   //       child: ListTile(
+              //           //   //         title: Text(
+              //           //   //           "Add PDFs",
+              //           //   //           style: TextStyle(
+              //           //   //               color: themeNotifier.isDark
+              //           //   //                   ? Colors.white
+              //           //   //                   : Colors.grey.shade900),
+              //           //   //         ),
+              //           //   //         leading: Icon(Icons.add,
+              //           //   //             color: themeNotifier.isDark
+              //           //   //                 ? Colors.white
+              //           //   //                 : Colors.grey.shade900),
+              //           //   //       ),
+              //           //   //       onTap: () {
+              //           //   //         addpdfs(widget.docId);
+              //           //   //       },
+              //           //   //     ),
+              //           //   //     PopupMenuItem(
+              //           //   //       value: 2,
+              //           //   //       child: ListTile(
+              //           //   //         title: Text(
+              //           //   //           "Clear Chats",
+              //           //   //           style: TextStyle(
+              //           //   //               color: themeNotifier.isDark
+              //           //   //                   ? Colors.white
+              //           //   //                   : Colors.grey.shade900),
+              //           //   //         ),
+              //           //   //         leading: Icon(Icons.clear_all_sharp,
+              //           //   //             color: themeNotifier.isDark
+              //           //   //                 ? Colors.white
+              //           //   //                 : Colors.grey.shade900),
+              //           //   //       ),
+              //           //   //       onTap: () async {
+              //           //   //         return showDialog(
+              //           //   //           context: context,
+              //           //   //           barrierDismissible:
+              //           //   //               false, // Prevent dismissing while loading
+              //           //   //           builder: (context) => AlertDialog(
+              //           //   //             title: const Text("Clear chats"),
+              //           //   //             content: const Text(
+              //           //   //                 "Are you sure you want to Clear Chats?"),
+              //           //   //             actions: [
+              //           //   //               TextButton(
+              //           //   //                 onPressed: () {
+              //           //   //                   Navigator.of(context)
+              //           //   //                       .pop(); // Close the dialog
+              //           //   //                 },
+              //           //   //                 child: const Text("Cancel"),
+              //           //   //               ),
+              //           //   //               TextButton(
+              //           //   //                 onPressed: () async {
+              //           //   //                   showDialog(
+              //           //   //                     context: context,
+              //           //   //                     builder: (context) =>
+              //           //   //                         const Center(
+              //           //   //                       child:
+              //           //   //                           CircularProgressIndicator(
+              //           //   //                         color: Colors.grey,
+              //           //   //                       ),
+              //           //   //                     ),
+              //           //   //                   );
 
-                                            final clearsucessfully = chatstore
-                                                .clearchat(widget.docId);
-                                            loadChatMessages();
+              //           //   //                   final clearsucessfully = chatstore
+              //           //   //                       .clearchat(widget.docId);
+              //           //   //                   loadChatMessages();
 
-                                            if (clearsucessfully) {
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
-                                                const SnackBar(
-                                                  content: Text(
-                                                      'Chats cleared successfully!'),
-                                                  backgroundColor: Colors.grey,
-                                                ),
-                                              );
-                                            } else {
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
-                                                const SnackBar(
-                                                  content: Text(
-                                                      'Chats cleared failed!'),
-                                                  backgroundColor: Colors.grey,
-                                                ),
-                                              );
-                                            }
-                                            Navigator.of(context)
-                                                .pop(); // Close the dialog
-                                            Navigator.of(context)
-                                                .pop(); // Close the dialog
-                                            Navigator.of(context)
-                                                .pop(); // Close the dialog
-                                          },
-                                          child: const Text(
-                                            "clear",
-                                            style: TextStyle(color: Colors.red),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                },
-                              ),
-                              PopupMenuItem(
-                                value: 3,
-                                child: ListTile(
-                                  title: Text(
-                                    "Delete Notebook",
-                                    style: TextStyle(
-                                        color: themeNotifier.isDark
-                                            ? Colors.white
-                                            : Colors.grey.shade900),
-                                  ),
-                                  leading: Icon(Icons.delete,
-                                      color: themeNotifier.isDark
-                                          ? Colors.white
-                                          : Colors.grey.shade900),
-                                ),
-                                onTap: () async {
-                                  return showDialog(
-                                    context: context,
-                                    barrierDismissible:
-                                        !isLoading, // Prevent dismissing while loading
-                                    builder: (context) => AlertDialog(
-                                      title: const Text("Delete Notebook"),
-                                      content: const Text(
-                                          "Are you sure you want to delete the Notebook?"),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context)
-                                                .pop(); // Close the dialog
-                                          },
-                                          child: const Text("Cancel"),
-                                        ),
-                                        TextButton(
-                                          onPressed: () async {
-                                            showDialog(
-                                              context: context,
-                                              builder: (context) =>
-                                                  const Center(
-                                                child:
-                                                    CircularProgressIndicator(
-                                                  color: Colors.grey,
-                                                ),
-                                              ),
-                                            );
+              //           //   //                   if (clearsucessfully) {
+              //           //   //                     ScaffoldMessenger.of(context)
+              //           //   //                         .showSnackBar(
+              //           //   //                       const SnackBar(
+              //           //   //                         content: Text(
+              //           //   //                             'Chats cleared successfully!'),
+              //           //   //                         backgroundColor: Colors.grey,
+              //           //   //                       ),
+              //           //   //                     );
+              //           //   //                   } else {
+              //           //   //                     ScaffoldMessenger.of(context)
+              //           //   //                         .showSnackBar(
+              //           //   //                       const SnackBar(
+              //           //   //                         content: Text(
+              //           //   //                             'Chats cleared failed!'),
+              //           //   //                         backgroundColor: Colors.grey,
+              //           //   //                       ),
+              //           //   //                     );
+              //           //   //                   }
+              //           //   //                   Navigator.of(context)
+              //           //   //                       .pop(); // Close the dialog
+              //           //   //                   Navigator.of(context)
+              //           //   //                       .pop(); // Close the dialog
+              //           //   //                   Navigator.of(context)
+              //           //   //                       .pop(); // Close the dialog
+              //           //   //                 },
+              //           //   //                 child: const Text(
+              //           //   //                   "clear",
+              //           //   //                   style: TextStyle(color: Colors.red),
+              //           //   //                 ),
+              //           //   //               ),
+              //           //   //             ],
+              //           //   //           ),
+              //           //   //         );
+              //           //   //       },
+              //           //   //     ),
+              //           //   //     PopupMenuItem(
+              //           //   //       value: 3,
+              //           //   //       child: ListTile(
+              //           //   //         title: Text(
+              //           //   //           "Delete Notebook",
+              //           //   //           style: TextStyle(
+              //           //   //               color: themeNotifier.isDark
+              //           //   //                   ? Colors.white
+              //           //   //                   : Colors.grey.shade900),
+              //           //   //         ),
+              //           //   //         leading: Icon(Icons.delete,
+              //           //   //             color: themeNotifier.isDark
+              //           //   //                 ? Colors.white
+              //           //   //                 : Colors.grey.shade900),
+              //           //   //       ),
+              //           //   //       onTap: () async {
+              //           //   //         return showDialog(
+              //           //   //           context: context,
+              //           //   //           barrierDismissible:
+              //           //   //               !isLoading, // Prevent dismissing while loading
+              //           //   //           builder: (context) => AlertDialog(
+              //           //   //             title: const Text("Delete Notebook"),
+              //           //   //             content: const Text(
+              //           //   //                 "Are you sure you want to delete the Notebook?"),
+              //           //   //             actions: [
+              //           //   //               TextButton(
+              //           //   //                 onPressed: () {
+              //           //   //                   Navigator.of(context)
+              //           //   //                       .pop(); // Close the dialog
+              //           //   //                 },
+              //           //   //                 child: const Text("Cancel"),
+              //           //   //               ),
+              //           //   //               TextButton(
+              //           //   //                 onPressed: () async {
+              //           //   //                   showDialog(
+              //           //   //                     context: context,
+              //           //   //                     builder: (context) =>
+              //           //   //                         const Center(
+              //           //   //                       child:
+              //           //   //                           CircularProgressIndicator(
+              //           //   //                         color: Colors.grey,
+              //           //   //                       ),
+              //           //   //                     ),
+              //           //   //                   );
 
-                                            // setState(() {
-                                            //   isLoading = true; // Start loading
-                                            // });
+              //           //   //                   // setState(() {
+              //           //   //                   //   isLoading = true; // Start loading
+              //           //   //                   // });
 
-                                            final deletesuccessfully =
-                                                await chatop
-                                                    .deletebot(widget.docId);
+              //           //   //                   final deletesuccessfully =
+              //           //   //                       await chatop
+              //           //   //                           .deletebot(widget.docId);
 
-                                            // setState(() {
-                                            //   isLoading = false; // Stop loading
-                                            // });
+              //           //   //                   // setState(() {
+              //           //   //                   //   isLoading = false; // Stop loading
+              //           //   //                   // });
 
-                                            if (deletesuccessfully) {
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
-                                                const SnackBar(
-                                                  content: Text(
-                                                      'Notebook deleted successfully!'),
-                                                  backgroundColor: Colors.grey,
-                                                ),
-                                              );
-                                            } else {
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
-                                                const SnackBar(
-                                                  content: Text(
-                                                      'Notebook deletion failed!'),
-                                                  backgroundColor: Colors.grey,
-                                                ),
-                                              );
-                                            }
-                                            Navigator.of(context)
-                                                .pop(); // Close the dialog
-                                            Navigator.of(context)
-                                                .pop(); // Close the dialog
-                                            Navigator.of(context)
-                                                .pop(); // Close the dialog
-                                          },
-                                          child: const Text(
-                                            "Delete",
-                                            style: TextStyle(color: Colors.red),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                },
-                              ),
-                              PopupMenuItem(
-                                value: 4,
-                                child: ListTile(
-                                  title: Text(
-                                    "Settings",
-                                    style: TextStyle(
-                                        color: themeNotifier.isDark
-                                            ? Colors.white
-                                            : Colors.grey.shade900),
-                                  ),
-                                  leading: Icon(Icons.settings,
-                                      color: themeNotifier.isDark
-                                          ? Colors.white
-                                          : Colors.grey.shade900),
-                                ),
-                                onTap: () {
-                                  Navigator.push(
-                                      // ignore: use_build_context_synchronously
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            const UiSettings(),
-                                      ));
-                                },
-                              ),
-                              PopupMenuItem(
-                                value: 5,
-                                child: ListTile(
-                                  title: Text(
-                                    "Go Premium",
-                                    style: TextStyle(
-                                        color: themeNotifier.isDark
-                                            ? Colors.white
-                                            : Colors.grey.shade900),
-                                  ),
-                                  leading: Icon(
-                                      Icons.workspace_premium_outlined,
-                                      color: themeNotifier.isDark
-                                          ? Colors.white
-                                          : Colors.grey.shade900),
-                                ),
-                                onTap: () {
-                                  Navigator.push(
-                                      // ignore: use_build_context_synchronously
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => const Vip(),
-                                      ));
-                                },
-                              ),
-                            ],
-                          );
-                        })
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+              //           //   //                   if (deletesuccessfully) {
+              //           //   //                     ScaffoldMessenger.of(context)
+              //           //   //                         .showSnackBar(
+              //           //   //                       const SnackBar(
+              //           //   //                         content: Text(
+              //           //   //                             'Notebook deleted successfully!'),
+              //           //   //                         backgroundColor: Colors.grey,
+              //           //   //                       ),
+              //           //   //                     );
+              //           //   //                   } else {
+              //           //   //                     ScaffoldMessenger.of(context)
+              //           //   //                         .showSnackBar(
+              //           //   //                       const SnackBar(
+              //           //   //                         content: Text(
+              //           //   //                             'Notebook deletion failed!'),
+              //           //   //                         backgroundColor: Colors.grey,
+              //           //   //                       ),
+              //           //   //                     );
+              //           //   //                   }
+              //           //   //                   Navigator.of(context)
+              //           //   //                       .pop(); // Close the dialog
+              //           //   //                   Navigator.of(context)
+              //           //   //                       .pop(); // Close the dialog
+              //           //   //                   Navigator.of(context)
+              //           //   //                       .pop(); // Close the dialog
+              //           //   //                 },
+              //           //   //                 child: const Text(
+              //           //   //                   "Delete",
+              //           //   //                   style: TextStyle(color: Colors.red),
+              //           //   //                 ),
+              //           //   //               ),
+              //           //   //             ],
+              //           //   //           ),
+              //           //   //         );
+              //           //   //       },
+              //           //   //     ),
+              //           //   //     PopupMenuItem(
+              //           //   //       value: 4,
+              //           //   //       child: ListTile(
+              //           //   //         title: Text(
+              //           //   //           "Settings",
+              //           //   //           style: TextStyle(
+              //           //   //               color: themeNotifier.isDark
+              //           //   //                   ? Colors.white
+              //           //   //                   : Colors.grey.shade900),
+              //           //   //         ),
+              //           //   //         leading: Icon(Icons.settings,
+              //           //   //             color: themeNotifier.isDark
+              //           //   //                 ? Colors.white
+              //           //   //                 : Colors.grey.shade900),
+              //           //   //       ),
+              //           //   //       onTap: () {
+              //           //   //         Navigator.push(
+              //           //   //             // ignore: use_build_context_synchronously
+              //           //   //             context,
+              //           //   //             MaterialPageRoute(
+              //           //   //               builder: (context) =>
+              //           //   //                   const UiSettings(),
+              //           //   //             ));
+              //           //   //       },
+              //           //   //     ),
+              //           //   //     PopupMenuItem(
+              //           //   //       value: 5,
+              //           //   //       child: ListTile(
+              //           //   //         title: Text(
+              //           //   //           "Go Premium",
+              //           //   //           style: TextStyle(
+              //           //   //               color: themeNotifier.isDark
+              //           //   //                   ? Colors.white
+              //           //   //                   : Colors.grey.shade900),
+              //           //   //         ),
+              //           //   //         leading: Icon(
+              //           //   //             Icons.workspace_premium_outlined,
+              //           //   //             color: themeNotifier.isDark
+              //           //   //                 ? Colors.white
+              //           //   //                 : Colors.grey.shade900),
+              //           //   //       ),
+              //           //   //       onTap: () {
+              //           //   //         Navigator.push(
+              //           //   //             // ignore: use_build_context_synchronously
+              //           //   //             context,
+              //           //   //             MaterialPageRoute(
+              //           //   //               builder: (context) => const Vip(),
+              //           //   //             ));
+              //           //   //       },
+              //           //   //     ),
+              //           //   //   ],
+              //           //   // );
+              //           // })
+              //         ],
+              //       ),
+              //     ),
+              //   ],
+              // ),
               Positioned(
-                  top: 85,
+                  top: 0,
                   left: 0,
                   right: 0,
                   bottom: 0,
