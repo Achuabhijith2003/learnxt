@@ -540,13 +540,12 @@ class _ChataiState extends State<Chatai> {
                           inputClearMode: InputClearMode.always,
                         ),
                         theme: DefaultChatTheme(
-                          backgroundColor: themeNotifier.isDark
-                              ? Colors.grey.shade900
-                              : Colors.white,
-                          inputBackgroundColor: Colors.grey,
+                          backgroundColor:
+                              themeNotifier.isDark ? Colors.grey : Colors.white,
+                          inputBackgroundColor: Colors.black,
                           inputTextDecoration:
                               const InputDecoration(labelText: "Enter prompt"),
-                          messageBorderRadius: 35,
+                          messageBorderRadius: 15,
                         ),
                         messages: _messages,
                         onSendPressed: (p0) async {

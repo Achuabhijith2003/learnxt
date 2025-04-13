@@ -5,7 +5,8 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:learnxt/Screen/Preminum/vip.dart';
-import 'package:learnxt/Screen/chatai.dart';
+// import 'package:learnxt/Screen/chatai.dart';
+import 'package:learnxt/Screen/compoments/taskbar.dart';
 import 'package:learnxt/Services/Chats/Chat_Operations.dart';
 import 'package:learnxt/Services/gadsmob.dart';
 import 'package:learnxt/theme/theme_model.dart';
@@ -30,14 +31,24 @@ class _MaterialcouresState extends State<Materialcoures> {
     return Consumer<ThemeModel>(
         builder: (context, ThemeModel themeNotifier, child) {
       return GestureDetector(
-        onTap: () => Navigator.push(
-            // ignore: use_build_context_synchronously
-            context,
-            MaterialPageRoute(
-              builder: (context) => Chatai(
-                  botname: widget.botData["Bot Name"],
-                  docId: widget.botData["docId"]),
-            )),
+        // onTap: () => Navigator.push(
+        //     // ignore: use_build_context_synchronously
+        //     context,
+        //     MaterialPageRoute(
+        //       builder: (context) => Chatai(
+        //           botname: widget.botData["Bot Name"],
+        //           docId: widget.botData["docId"]),
+        //     )),
+        onTap: () {
+          // ads.AppOpenAdload();
+          ads.AppOpenAdload();
+          Navigator.push(
+              // ignore: use_build_context_synchronously
+              context,
+              MaterialPageRoute(
+                builder: (context) =>  Taskbar_chat( botname: widget.botData["Bot Name"], docId: widget.botData["docId"]),
+              ));
+        },
         child: Container(
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(24),
