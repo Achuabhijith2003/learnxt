@@ -28,7 +28,7 @@ class _BotProfileState extends State<BotProfile> {
           future: fetch_bot_profile(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const  Center(
+              return const Center(
                 child: CircularProgressIndicator(),
               );
             } else if (snapshot.hasError) {
@@ -123,6 +123,31 @@ class _BotProfileState extends State<BotProfile> {
                             ),
                     ),
                   ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("Sources",
+                        style: GoogleFonts.poppins(
+                            fontSize: 20,
+                            color: themeNotifier.isDark
+                                ? Colors.white
+                                : Colors.black)),
+                    ...(data[0]['pdfs_name'] as List<dynamic>?)
+                            ?.map((pdfName) => Text(
+                                  "📁 $pdfName",
+                                  style: GoogleFonts.poppins(
+                                      fontSize: 16,
+                                      color: themeNotifier.isDark
+                                          ? Colors.white70
+                                          : Colors.black87),
+                                ))
+                            .toList() ??
+                        [const Text("No sources found")],
+                  ],
                 ),
                 const Divider(
                   indent: 20,
