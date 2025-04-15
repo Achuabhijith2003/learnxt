@@ -123,7 +123,6 @@ class DataEmbedded extends Chatputandget {
     return result.embedding.values;
   }
 
-// Generate Ans
   Future<String> searchAndAnswer(String query, String parentdocid) async {
     try {
       final queryEmbedding = await Generate_promptEmbedded(query);
@@ -133,8 +132,10 @@ class DataEmbedded extends Chatputandget {
           .doc(parentdocid)
           .collection('dataEmbedded');
 
-      final querySnapshot =
-          await subcollectionRef.orderBy('embeddings', descending: true).get();
+      final querySnapshot = await subcollectionRef
+          .orderBy('embeddings', descending: true)
+          .limit(20)
+          .get();
 
       if (querySnapshot.docs.isEmpty) {
         return "No results found.";
@@ -156,7 +157,16 @@ class DataEmbedded extends Chatputandget {
           }
         }).toList();
 
-        final similarity = calculateCosineSimilarity(queryEmbedding, embedding);
+        // Make sure both embeddings are the same length
+        final trimmedQueryEmbedding =
+            trimToMinLength(queryEmbedding, embedding);
+        final trimmedDocEmbedding = trimToMinLength(embedding, queryEmbedding);
+
+        final similarity = calculateCosineSimilarity(
+          trimmedQueryEmbedding,
+          trimmedDocEmbedding,
+        );
+
         return {'similarity': similarity, 'docId': doc.id};
       }).toList();
 
@@ -169,61 +179,41 @@ class DataEmbedded extends Chatputandget {
       if (rankedResults.isEmpty) {
         return "No results after ranking.";
       }
-
-// Find the index of the top result
-      int topResultIndex = 0; // Default to the first result
-      final topResult = rankedResults[topResultIndex];
+      const top = 0;
+      final topResult = rankedResults[top];
       final topDocId = topResult['docId'] as String;
-
-// Get the previous and next document IDs if available
-      String? previousDocId;
-      String? nextDocId;
-
-      // if (topResultIndex > 0) {
-      previousDocId = rankedResults[topResultIndex + 2]['docId'] as String?;
-      // }
-
-      if (topResultIndex < rankedResults.length - 1) {
-        nextDocId = rankedResults[topResultIndex + 1]['docId'] as String?;
-      }
+      final topResult1 = rankedResults[top + 1];
+      final topDocId1 = topResult1['docId'] as String;
+      final topResult2 = rankedResults[top + 2];
+      final topDocId2 = topResult2['docId'] as String;
 
       final topDoc = await subcollectionRef.doc(topDocId).get();
-      final prevdoc = await subcollectionRef.doc(previousDocId).get();
-      final nextdoc = await subcollectionRef.doc(nextDocId).get();
 
       if (!topDoc.exists) {
         return "Top document not found.";
       }
-      final originalTextbefore = prevdoc.data()?['pdf_text'] as String?;
-      final originalTextnow = topDoc.data()?['pdf_text'] as String?;
-      final originalTextafter = nextdoc.data()?['pdf_text'] as String?;
-      final originalText =
-          "$originalTextbefore $originalTextnow $originalTextafter";
-      print("Searched anw from firebase :$originalText");
-      if (originalText == "") {
+      final topDoc1 = await subcollectionRef.doc(topDocId1).get();
+      final topDoc2 = await subcollectionRef.doc(topDocId2).get();
+
+      final originalText = topDoc.data()?['pdf_text'] as String?;
+      if (originalText == null) {
         return "No text found in the document.";
       }
+      final originalText1 = topDoc1.data()?['pdf_text'] as String?;
+      final originalText2 = topDoc2.data()?['pdf_text'] as String?;
 
-// Log or return the surrounding document IDs for additional context
-      print('Previous Document ID: $previousDocId');
-      print('Next Document ID: $nextDocId');
-
-// You can include this information in the response if needed
-      // return "Top Document Text: $originalText\nPrevious Document ID: $previousDocId\nNext Document ID: $nextDocId";
-      return originalText;
-
-      // final originalText = topDoc.data()?['pdf_text'] as String?;
-      // if (originalText == null) {
-      //   return "No text found in the document.";
-      // }
-
-      // // final generatedAnswer = generateAnswer(originalText);
-
-      // return originalText;
+      // final generatedAnswer = generateAnswer(originalText);
+      return "$originalText $originalText1 $originalText2";
     } catch (e) {
       print('Error in searchAndAnswer: $e');
       return "An error occurred.";
     }
+  }
+
+// Helper method to trim vectors to the same length
+  List<double> trimToMinLength(List<double> a, List<double> b) {
+    final minLength = a.length < b.length ? a.length : b.length;
+    return a.sublist(0, minLength);
   }
 
   double calculateCosineSimilarity(List<double> vector1, List<double> vector2) {

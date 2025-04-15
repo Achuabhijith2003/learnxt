@@ -1,7 +1,5 @@
-// import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:learnxt/Screen/Settings.dart';
 import 'package:learnxt/Screen/bot_profile.dart';
 import 'package:learnxt/Screen/chatai.dart';
 import 'package:learnxt/theme/theme_model.dart';
