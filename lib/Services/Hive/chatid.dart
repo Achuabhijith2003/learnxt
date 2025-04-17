@@ -22,8 +22,15 @@ class Chatidputandget {
   }
 
   getid(String docid) {
-    final id = box.get(docid) as Chatid;
-    print("Chatid get: ${id.totalchat}");
-    return id.totalchat;
+    final id = box.get(docid) as Chatid?;
+    if (id == null) {
+      // Use a logging framework instead of print
+      print("Chatid get: 0");
+      return 0;
+    } else {
+      // Use a logging framework instead of print
+      print("Chatid get: ${id.totalchat}");
+      return id.totalchat;
+    }
   }
 }
