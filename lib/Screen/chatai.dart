@@ -5,6 +5,7 @@ import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:learnxt/Services/AI/data_embedded.dart';
 import 'package:learnxt/Services/AI/gemini.dart';
 import 'package:learnxt/Services/Chats/Chat_Operations.dart';
+import 'package:learnxt/Services/Chats/add_notes.dart';
 import 'package:learnxt/Services/Hive/chat.dart';
 import 'package:learnxt/Services/Hive/chatid.dart';
 import 'package:learnxt/Services/gadsmob.dart';
@@ -28,6 +29,7 @@ class _ChataiState extends State<Chatai> {
   Chatputandget chatstore = Chatputandget();
   Chatidputandget chatid = Chatidputandget();
   ChatOperations chatop = ChatOperations();
+  AddNotes addnotes = AddNotes();
   bool isLoading = false;
   @override
   void initState() {
@@ -123,6 +125,59 @@ class _ChataiState extends State<Chatai> {
     }
   }
 
+  Future<void> getmessage(int messageId) async {
+    try {
+      print("MessageID:$messageId");
+
+      if ((messageId - 1) != 0) {
+        // Get the question and answer messages
+        final questionMessage =
+            chatstore.getsinglechat(widget.docId, "${messageId - 1}") ??
+                "Question not Found";
+
+        final answerMessage =
+            chatstore.getsinglechat(widget.docId, "$messageId") ??
+                "Answer not found";
+        print("Question: $questionMessage");
+        print("Answer: $answerMessage");
+
+        bool isnoteadded =
+            await addnotes.addnote(questionMessage, answerMessage);
+        if (isnoteadded) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Notes added successfully!'),
+              backgroundColor: Colors.grey,
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Failed to add notes.'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+                'First Question cannot added to the notes select the answer'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      print("Error in adding notes ingetmessage: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Failed to add notes.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<ThemeModel>(
@@ -195,6 +250,29 @@ class _ChataiState extends State<Chatai> {
                               actions: [
                                 Column(
                                   children: [
+                                    Center(
+                                      child: TextButton(
+                                        onPressed: () async {
+                                          // Convert id to integer and handle any errors
+                                          var newId = int.tryParse(p1.id);
+                                          if (newId == null) {
+                                            print("Invalid ID: ${p1.id}");
+                                            return;
+                                          } else {
+                                            print(
+                                                "Parsed ID successfully: $newId");
+                                          }
+
+                                          addnotes.parentdocid = widget.docId;
+                                          getmessage(newId);
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text(
+                                          "Add Notes ➡️",
+                                          style: TextStyle(color: Colors.green),
+                                        ),
+                                      ),
+                                    ),
                                     Center(
                                       child: TextButton(
                                         onPressed: () async {

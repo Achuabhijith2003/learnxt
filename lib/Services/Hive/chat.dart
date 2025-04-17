@@ -91,47 +91,47 @@ class Chatputandget extends Chatidputandget {
     print("MEssage INserted");
   }
 
-  Future<String> fetchChatuser(String docId) async {
-    try {
-      final chatCount = getid(docId);
-      print("Chat count for docId $docId: ${chatCount - 3}");
+  // Future<String> fetchChatuser(String docId) async {
+  //   try {
+  //     final chatCount = getid(docId);
+  //     print("Chat count for docId $docId: ${chatCount - 3}");
 
-      CHathive chatData = box.get("$docId/${chatCount - 3}");
-      final text = chatData.text; // Use null-aware operator
+  //     CHathive chatData = box.get("$docId/${chatCount - 3}");
+  //     final text = chatData.text; // Use null-aware operator
 
-      final chats = types.TextMessage(
-        createdAt: chatData.createdAt,
-        text: text,
-        author: types.User(id: chatData.userid, imageUrl: chatData.profileimg),
-        id: chatData.id,
-      );
-      return chats.text;
-    } catch (e) {
-      print("Error fetching chat: $e");
-      return "null"; // Or provide a more informative error message
-    }
-  }
+  //     final chats = types.TextMessage(
+  //       createdAt: chatData.createdAt,
+  //       text: text,
+  //       author: types.User(id: chatData.userid, imageUrl: chatData.profileimg),
+  //       id: chatData.id,
+  //     );
+  //     return chats.text;
+  //   } catch (e) {
+  //     print("Error fetching chat: $e");
+  //     return "null"; // Or provide a more informative error message
+  //   }
+  // }
 
-  Future<String> fetchChatai(String docId) async {
-    try {
-      final chatCount = getid(docId);
-      print("Chat count for docId $docId: ${chatCount - 2}");
+  // Future<String> fetchChatai(String docId) async {
+  //   try {
+  //     final chatCount = getid(docId);
+  //     print("Chat count for docId $docId: ${chatCount - 2}");
 
-      CHathive chatData = box.get("$docId/${chatCount - 2}");
-      final text = chatData.text; // Use null-aware operator
+  //     CHathive chatData = box.get("$docId/${chatCount - 2}");
+  //     final text = chatData.text; // Use null-aware operator
 
-      final chats = types.TextMessage(
-        createdAt: chatData.createdAt,
-        text: text,
-        author: types.User(id: chatData.userid, imageUrl: chatData.profileimg),
-        id: chatData.id,
-      );
-      return chats.text;
-    } catch (e) {
-      print("Error fetching chat: $e");
-      return "null"; // Or provide a more informative error message
-    }
-  }
+  //     final chats = types.TextMessage(
+  //       createdAt: chatData.createdAt,
+  //       text: text,
+  //       author: types.User(id: chatData.userid, imageUrl: chatData.profileimg),
+  //       id: chatData.id,
+  //     );
+  //     return chats.text;
+  //   } catch (e) {
+  //     print("Error fetching chat: $e");
+  //     return "null"; // Or provide a more informative error message
+  //   }
+  // }
 
   initallchat() async {
     // ... your existing fetchData logic ...
@@ -183,6 +183,15 @@ class Chatputandget extends Chatidputandget {
       return true;
     } catch (e) {
       return false;
+    }
+  }
+
+  getsinglechat(docid, chatid) {
+    try {
+      CHathive chatText = box.get("$docid/$chatid") as CHathive;
+      return chatText.text;
+    } catch (e) {
+      print("Error in geting single message: $e");
     }
   }
 }

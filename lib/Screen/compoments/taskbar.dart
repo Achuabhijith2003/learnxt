@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:learnxt/Screen/bot_profile.dart';
 import 'package:learnxt/Screen/chatai.dart';
+import 'package:learnxt/Screen/note_add.dart';
 import 'package:learnxt/theme/theme_model.dart';
 import 'package:provider/provider.dart';
 
@@ -22,7 +23,7 @@ class Taskbar_chatState extends State<Taskbar_chat> {
     return Consumer<ThemeModel>(
         builder: (context, ThemeModel themeNotifier, child) {
       return DefaultTabController(
-        length: 2,
+        length: 3,
         initialIndex: 1,
         child: Scaffold(
             appBar: AppBar(
@@ -60,12 +61,12 @@ class Taskbar_chatState extends State<Taskbar_chat> {
                     color: themeNotifier.isDark ? Colors.white : Colors.black,
                   ),
                 ),
-                // Tab(
-                //   icon: Icon(
-                //     Icons.menu_book_rounded,
-                //     color: themeNotifier.isDark ? Colors.white : Colors.black,
-                //   ),
-                // ),
+                Tab(
+                  icon: Icon(
+                    Icons.menu_book_rounded,
+                    color: themeNotifier.isDark ? Colors.white : Colors.black,
+                  ),
+                ),
               ]),
             ),
             body: TabBarView(children: [
@@ -73,7 +74,7 @@ class Taskbar_chatState extends State<Taskbar_chat> {
                 docId: widget.docId,
               ),
               Chatai(botname: widget.botname, docId: widget.docId),
-              // const UiSettings(),
+              const NoteAdd()
             ])),
       );
     });
