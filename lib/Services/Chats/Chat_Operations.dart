@@ -68,7 +68,7 @@ class ChatOperations {
   }
 
   Future<bool> deleteAllBot() async {
-    ads.RewardedAdload();
+    // ads.RewardedAdload();
     String uid = _authservices.getuserID(); // Get the current user's UID
     try {
       // Query the 'Bot' collection where the UID matches

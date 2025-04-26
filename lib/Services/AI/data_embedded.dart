@@ -115,8 +115,8 @@ class DataEmbedded extends Chatputandget {
 
   // ignore: non_constant_identifier_names
   Generate_promptEmbedded(String text) async {
-    final model =
-        GenerativeModel(model: 'text-embedding-004', apiKey: GEMINI_API_KEY);
+    final model = GenerativeModel(
+        model: 'gemini-embedding-exp-03-07', apiKey: GEMINI_API_KEY);
     final content = Content.text(text);
     final result = await model.embedContent(content);
     print(result.embedding.values);
