@@ -302,7 +302,7 @@ class _BotProfileState extends State<BotProfile> {
                                   ),
                                 ),
                               );
-                              ads.AppOpenAdload();
+                              // ads.AppOpenAdload();
                               final deletesuccessfully =
                                   await chatop.deletebot(widget.docId);
 
@@ -425,7 +425,7 @@ class _BotProfileState extends State<BotProfile> {
             actions: [
               TextButton(
                 onPressed: () async {
-                  ads.AppOpenAdload();
+                  // ads.AppOpenAdload();
                   showDialog(
                     context: context,
                     barrierDismissible:
