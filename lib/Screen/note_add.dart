@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:learnxt/Screen/compoments/note_view.dart';
 import 'package:learnxt/theme/theme_model.dart';
 import 'package:provider/provider.dart';
 
 class NoteAdd extends StatefulWidget {
-  const NoteAdd({super.key});
+  final String? parentdocid;
+  const NoteAdd({super.key, required this.parentdocid});
 
   @override
   State<NoteAdd> createState() => _NoteAddState();
@@ -14,25 +16,24 @@ class _NoteAddState extends State<NoteAdd> {
   Widget build(BuildContext context) {
     return Consumer<ThemeModel>(
         builder: (context, ThemeModel themeNotifier, child) {
-      return const Scaffold(
-        body: Padding(
-          padding: EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              TextField(
-                decoration: InputDecoration(
-                  labelText: 'Title',
+      return Scaffold(
+        backgroundColor:
+            themeNotifier.isDark ? Colors.grey.shade900 : Colors.white,
+        body: Column(
+          children: [
+            Center(
+              child: Text(
+                'Notes',
+                style: TextStyle(
+                  fontSize: 24,
+                  color: themeNotifier.isDark
+                      ? Colors.white
+                      : Colors.grey.shade900,
                 ),
               ),
-              SizedBox(height: 16),
-              TextField(
-                maxLines: 10,
-                decoration: InputDecoration(
-                  labelText: 'Content',
-                ),
-              ),
-            ],
-          ),
+            ),
+            NoteView(parentdocid: widget.parentdocid,)
+          ],
         ),
       );
     });

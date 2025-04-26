@@ -74,7 +74,9 @@ class Taskbar_chatState extends State<Taskbar_chat> {
                 docId: widget.docId,
               ),
               Chatai(botname: widget.botname, docId: widget.docId),
-              const NoteAdd()
+              NoteAdd(
+                parentdocid: widget.docId,
+              )
             ])),
       );
     });

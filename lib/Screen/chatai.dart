@@ -5,7 +5,7 @@ import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:learnxt/Services/AI/data_embedded.dart';
 import 'package:learnxt/Services/AI/gemini.dart';
 import 'package:learnxt/Services/Chats/Chat_Operations.dart';
-import 'package:learnxt/Services/Chats/add_notes.dart';
+import 'package:learnxt/Services/Chats/notes.dart';
 import 'package:learnxt/Services/Hive/chat.dart';
 import 'package:learnxt/Services/Hive/chatid.dart';
 import 'package:learnxt/Services/gadsmob.dart';
@@ -29,7 +29,7 @@ class _ChataiState extends State<Chatai> {
   Chatputandget chatstore = Chatputandget();
   Chatidputandget chatid = Chatidputandget();
   ChatOperations chatop = ChatOperations();
-  AddNotes addnotes = AddNotes();
+  Notes addnotes = Notes();
   bool isLoading = false;
   @override
   void initState() {

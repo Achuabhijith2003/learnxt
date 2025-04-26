@@ -41,7 +41,7 @@ class _MaterialcouresState extends State<Materialcoures> {
         //     )),
         onTap: () {
           // ads.AppOpenAdload();
-          ads.AppOpenAdload();
+          // ads.AppOpenAdload();
           Navigator.push(
               // ignore: use_build_context_synchronously
               context,
