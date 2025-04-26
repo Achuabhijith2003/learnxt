@@ -30,23 +30,39 @@ class ChatOperations {
     ads.AppOpenAdload();
     try {
       final docRef = FirebaseFirestore.instance.collection('bot').doc(docId);
-      final subcollection = docRef.collection("dataEmbedded");
+
+      // Delete the 'dataEmbedded' subcollection
+      final dataEmbeddedSubcollection = docRef.collection("dataEmbedded");
       try {
-        await subcollection.get().then((querySnapshot) {
+        await dataEmbeddedSubcollection.get().then((querySnapshot) {
           for (var doc in querySnapshot.docs) {
             doc.reference.delete();
           }
         });
-        await docRef.delete();
-
-        print('Subcollection deleted successfully');
-        return true; // Deletion successful
+        print('dataEmbedded subcollection deleted successfully');
       } catch (e) {
-        print('Error deleting subcollection: $e');
+        print('Error deleting dataEmbedded subcollection: $e');
       }
 
+      // Delete the 'notes' subcollection
+      final notesSubcollection = docRef.collection("notes");
+      try {
+        await notesSubcollection.get().then((querySnapshot) {
+          for (var doc in querySnapshot.docs) {
+            doc.reference.delete();
+          }
+        });
+        print('notes subcollection deleted successfully');
+      } catch (e) {
+        print('Error deleting notes subcollection: $e');
+      }
+
+      // Delete the main document
+      await docRef.delete();
+      print('Main document deleted successfully');
       return true; // Deletion successful
     } catch (error) {
+      print('Error deleting document: $error');
       return false; // Deletion failed
     }
   }
@@ -73,17 +89,32 @@ class ChatOperations {
       for (var doc in querySnapshot.docs) {
         print("Deleting Document ID: ${doc.id}");
 
-        // Check and delete the subcollection ('embeded') if it exists
-        final subcollectionRef = FirebaseFirestore.instance
+        // Check and delete the 'dataEmbedded' subcollection if it exists
+        final dataEmbeddedRef = FirebaseFirestore.instance
             .collection('bot')
             .doc(doc.id)
             .collection('dataEmbedded');
-        final subcollectionSnapshot = await subcollectionRef.get();
+        final dataEmbeddedSnapshot = await dataEmbeddedRef.get();
 
-        if (subcollectionSnapshot.docs.isNotEmpty) {
-          for (var subDoc in subcollectionSnapshot.docs) {
-            await subcollectionRef.doc(subDoc.id).delete();
-            print("Deleted Subcollection Document ID: ${subDoc.id}");
+        if (dataEmbeddedSnapshot.docs.isNotEmpty) {
+          for (var subDoc in dataEmbeddedSnapshot.docs) {
+            await dataEmbeddedRef.doc(subDoc.id).delete();
+            print(
+                "Deleted dataEmbedded Subcollection Document ID: ${subDoc.id}");
+          }
+        }
+
+        // Check and delete the 'note' subcollection if it exists
+        final noteRef = FirebaseFirestore.instance
+            .collection('bot')
+            .doc(doc.id)
+            .collection('notes');
+        final noteSnapshot = await noteRef.get();
+
+        if (noteSnapshot.docs.isNotEmpty) {
+          for (var subDoc in noteSnapshot.docs) {
+            await noteRef.doc(subDoc.id).delete();
+            print("Deleted note Subcollection Document ID: ${subDoc.id}");
           }
         }
 
