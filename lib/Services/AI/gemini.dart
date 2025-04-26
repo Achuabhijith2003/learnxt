@@ -18,16 +18,19 @@ class AI extends DataEmbedded {
           responseMimeType: 'text/plain',
         ),
       );
-        model.startChat(history: []);
-        var message = promt;
-        // final content = Content.text(
-        //     "If the input indicates a friendly conversation, respond as a teacher with an engaging and conversational tone. If it is a question, analyze the provided keywords: $keywords and answer the question using only the context provided by these keywords, maintaining the perspective of a teacher. Input message: $message.");
+      model.startChat(history: []);
+      var message = promt;
+      // final content = Content.text(
+      //     "If the input indicates a friendly conversation, respond as a teacher with an engaging and conversational tone. If it is a question, analyze the provided keywords: $keywords and answer the question using only the context provided by these keywords, maintaining the perspective of a teacher. Input message: $message.");
 
-        final prompt =
-            "If the input indicates a friendly conversation or start hi or hey like not use keywords give a friendly conversation , respond with an engaging and conversational tone. If it is a question, analyze the provided sentence: $keywords and answer the question using only the context provided by these keywords, provide answer with simple way to understand for students. Input message: $message.";
-        final response = await model.generateContent([Content.text(prompt)]);
-        return response.text;
-     
+      final prompt = '''
+    You are an AI Agent name LearnXT Your task is to help students learn and understand concepts.
+    If the input indicates a friendly conversation, respond  with an engaging and conversational tone. If it is a question, analyze the provided paragrah: $keywords and answer the question using paragrah you can take the source outside but remember anwers must be a minimalist and easy to understand and not mention like 
+    "this text is taken from ". like,
+    Input message: $message.
+''';
+      final response = await model.generateContent([Content.text(prompt)]);
+      return response.text;
     } catch (e) {
       print("Gemini Error: $e");
     }
