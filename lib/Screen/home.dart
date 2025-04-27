@@ -351,7 +351,9 @@ class _HomeState extends State<Home> {
                                             final deletesuccessfully =
                                                 await chatop.deleteAllBot();
                                             if (deletesuccessfully) {
-                                              fetchData();
+                                              setState(() {
+                                                fetchData();
+                                              });
                                               ScaffoldMessenger.of(context)
                                                   .showSnackBar(
                                                 const SnackBar(

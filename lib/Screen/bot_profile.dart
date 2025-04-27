@@ -307,6 +307,7 @@ class _BotProfileState extends State<BotProfile> {
                                   await chatop.deletebot(widget.docId);
 
                               if (deletesuccessfully) {
+                                setState(() {});
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
                                     content:

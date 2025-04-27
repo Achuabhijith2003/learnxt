@@ -198,15 +198,12 @@ class _ChataiState extends State<Chatai> {
                   child: Container(
                       padding: const EdgeInsets.symmetric(vertical: 0),
                       child: Chat(
-                   onBackgroundTap: () {
-                     
-                   },
                         inputOptions: const InputOptions(
                           autocorrect: true,
                           enableSuggestions: true,
                           sendButtonVisibilityMode:
                               SendButtonVisibilityMode.always,
-                          inputClearMode: InputClearMode.always, 
+                          inputClearMode: InputClearMode.always,
                         ),
                         theme: DefaultChatTheme(
                           backgroundColor: themeNotifier.isDark
