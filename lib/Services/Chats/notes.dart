@@ -40,4 +40,27 @@ class Notes {
       rethrow;
     }
   }
+
+  Future<bool> deleteNotes(notedocid) async {
+    try {
+      final notes = await FirebaseFirestore.instance
+          .collection('bot')
+          .doc(parentdocid)
+          .collection('notes')
+          .where('notedocid', isEqualTo: notedocid)
+          .get();
+      if (notes.docs.isNotEmpty) {
+        for (var doc in notes.docs) {
+          await doc.reference.delete();
+        }
+        return true;
+      } else {
+        print('No notes found with the given notedocid.');
+        return false;
+      }
+    } catch (e) {
+      print('Error fetching notes: $e');
+      return false;
+    }
+  }
 }
