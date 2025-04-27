@@ -10,10 +10,14 @@ class Notes {
           .collection('bot')
           .doc(parentdocid)
           .collection('notes');
-      parentDocRef.add({
+      final newNoteRef = await parentDocRef.add({
         'Question': question,
         'Answer': answer,
         'created_at': DateTime.now(),
+      });
+
+      await newNoteRef.update({
+        'notedocid': newNoteRef.id,
       });
 
       return true;

@@ -24,9 +24,11 @@ class AI extends DataEmbedded {
       //     "If the input indicates a friendly conversation, respond as a teacher with an engaging and conversational tone. If it is a question, analyze the provided keywords: $keywords and answer the question using only the context provided by these keywords, maintaining the perspective of a teacher. Input message: $message.");
 
       final prompt = '''
-    You are an AI Agent name LearnXT Your task is to help students learn and understand concepts.
-    If the input indicates a friendly conversation, respond  with an engaging and conversational tone. If it is a question, analyze the provided paragrah: $keywords and answer the question using paragrah you can take the source outside but remember anwers must be a minimalist and easy to understand and not mention like 
-    "this text is taken from ". like,
+    You are an AI Agent name LearnXT Your task is to help students learn and notes creation.
+    If the input indicates a friendly conversation, respond  with an engaging and conversational tone. 
+    If it is a question, analyze the provided paragrah: $keywords and answer the question
+     using paragrah you can take the source outside but remember anwers must be a minimalist and 
+     easy to understand .
     Input message: $message.
 ''';
       final response = await model.generateContent([Content.text(prompt)]);

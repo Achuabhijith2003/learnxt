@@ -206,7 +206,7 @@ class _ChataiState extends State<Chatai> {
                           enableSuggestions: true,
                           sendButtonVisibilityMode:
                               SendButtonVisibilityMode.always,
-                          inputClearMode: InputClearMode.always,
+                          inputClearMode: InputClearMode.always, 
                         ),
                         theme: DefaultChatTheme(
                           backgroundColor: themeNotifier.isDark
