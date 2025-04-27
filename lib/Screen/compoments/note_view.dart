@@ -25,9 +25,31 @@ class _NoteViewState extends State<NoteView> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return const Center(child: Text('Error loading notes'));
+            return Center(
+                child: Text(
+              'Error loading notes',
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
+                color:
+                    themeNotifier.isDark ? Colors.white : Colors.grey.shade900,
+              ),
+            ));
           } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return const Center(child: Text('No notes available'));
+            return Column(
+              children: [
+                Text(
+                  'No notes available',
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: themeNotifier.isDark
+                        ? Colors.white
+                        : Colors.grey.shade900,
+                  ),
+                ),
+              ],
+            );
           } else {
             final notes = snapshot.data!.docs;
             return Expanded(

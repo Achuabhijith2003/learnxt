@@ -378,7 +378,7 @@ class _HomeState extends State<Home> {
                                                 .pop(); // Close the dialog
                                           },
                                           child: const Text(
-                                            "Delete, Watch an ads",
+                                            "Delete All",
                                             style: TextStyle(color: Colors.red),
                                           ),
                                         ),
