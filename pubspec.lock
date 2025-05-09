@@ -829,6 +829,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.9.0"
+  langchain_core:
+    dependency: "direct main"
+    description:
+      name: langchain_core
+      sha256: "89ae8945acfc21434e6374324a4592e7cfe49a3af28a6d9780f8c9cf5028fe31"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.6+1"
+  langchain_pinecone:
+    dependency: "direct main"
+    description:
+      name: langchain_pinecone
+      sha256: "92199436bf40b8f4ab08c292e337c5929e1e66d9583f2b1b79a1fa6191900e1d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.0+11"
   leak_tracker:
     dependency: transitive
     description:
@@ -1021,6 +1037,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.15.0"
+  pinecone:
+    dependency: transitive
+    description:
+      name: pinecone
+      sha256: a550434ea1bc0d9e0762c0dbf40b864837326f35230126d3d1e0780961d71e54
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.7.2"
   platform:
     dependency: transitive
     description:
@@ -1085,6 +1109,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.2"
+  rxdart:
+    dependency: transitive
+    description:
+      name: rxdart
+      sha256: "5c3004a4a8dbb94bd4bf5412a4def4acdaa12e12f269737a5751369e12d1a962"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.28.0"
   scroll_to_index:
     dependency: transitive
     description:

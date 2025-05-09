@@ -248,7 +248,7 @@ class _UiSettingsState extends State<UiSettings> {
                         ),
                         ListTile(
                           title: Text(
-                            'V0.8.6',
+                            'V0.9.0',
                             style: TextStyle(
                                 color: themeNotifier.isDark
                                     ? Colors.white
