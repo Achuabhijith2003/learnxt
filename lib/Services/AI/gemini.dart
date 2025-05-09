@@ -18,23 +18,31 @@ class AI extends DataEmbedded {
           responseMimeType: 'text/plain',
         ),
       );
-      model.startChat(history: []);
-      var message = promt;
-      // final content = Content.text(
-      //     "If the input indicates a friendly conversation, respond as a teacher with an engaging and conversational tone. If it is a question, analyze the provided keywords: $keywords and answer the question using only the context provided by these keywords, maintaining the perspective of a teacher. Input message: $message.");
 
-      final prompt = '''
-    You are an AI Agent name LearnXT Your task is to help students learn and notes creation.
-    If the input indicates a friendly conversation, respond  with an engaging and conversational tone. 
-    If it is a question, analyze the provided paragrah: $keywords and answer the question
-     using paragrah you can take the source outside but remember anwers must be a minimalist and 
-     easy to understand .
-    Input message: $message.
+      // Refined system instruction to avoid conversational tone
+      const systemInstruction = '''
+You are an AI Agent named LearnXT. Your primary task is to assist students in creating concise and accurate notes.
+Provide direct, well-structured, and actionable answers without any conversational phrases, introductions, or explanations.
+Focus on delivering key points in a format that can be directly saved as notes. Avoid phrases like "Here's what I found" or
+"Based on the provided text." Instead, provide the information directly in bullet points or short sentences.
 ''';
+
+      model.startChat(history: [Content.text(systemInstruction)]);
+
+      var message = promt;
+
+      // Refined prompt to ensure concise and note-friendly output
+      final prompt = '''
+      Analyze the following input and provide a response in a concise, note-friendly format:
+      Paragraph: $keywords
+      Input message: $message
+      ''';
+
       final response = await model.generateContent([Content.text(prompt)]);
       return response.text;
     } catch (e) {
       print("Gemini Error: $e");
+      return null;
     }
   }
 }
