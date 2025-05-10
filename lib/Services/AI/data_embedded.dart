@@ -5,7 +5,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:learnxt/Services/Hive/chat.dart'; // Ensure this import is correct and necessary.  It seems this class isn't used.
 import 'package:learnxt/key.dart'; // Make sure this key is secure.  Do not commit API keys to public repositories.
-import 'package:flutter_pdf_text/flutter_pdf_text.dart';
+// import 'package:flutter_pdf_text/flutter_pdf_text.dart';
+import 'package:syncfusion_flutter_pdf/pdf.dart';
 
 class DataEmbedded extends Chatputandget {
   //  Inheritance from Chatputandget is not used.  Consider removing it.
@@ -13,16 +14,19 @@ class DataEmbedded extends Chatputandget {
 
   Future<void> pdfextract(File pdfFile) async {
     try {
-      final pdfDoc = await PDFDoc.fromFile(pdfFile);
+      // Load the PDF document
+      final PdfDocument document =
+          PdfDocument(inputBytes: pdfFile.readAsBytesSync());
 
-      // Limit the number of concurrent embedding requests.  Consider making this configurable.
+      // Limit the number of concurrent embedding requests
       const int maxConcurrentRequests = 3;
       final List<Future<void>> processingTasks = [];
-      // final semaphore = StreamController<int>.broadcast(); // Not used, so remove.
 
-      for (int i = 1; i <= pdfDoc.length; i++) {
-        final page = pdfDoc.pageAt(i);
-        final pageText = await page.text;
+      // Iterate through all pages in the PDF
+      for (int i = 0; i < document.pages.count; i++) {
+        // Extract text from the current page
+        final String pageText = PdfTextExtractor(document)
+            .extractText(startPageIndex: i, endPageIndex: i);
 
         // Split text into smaller chunks
         final chunks = splitTextIntoChunks(pageText, 100);
@@ -30,22 +34,21 @@ class DataEmbedded extends Chatputandget {
         // Process each chunk with limited concurrency
         for (final chunk in chunks) {
           if (processingTasks.length >= maxConcurrentRequests) {
-            // Wait for any task to complete before starting a new one.  This ensures the limit.
+            // Wait for any task to complete before starting a new one
             await Future.any(processingTasks);
           }
           processingTasks.add(processChunk(chunk));
         }
-
-        // Dispose of the page after processing.  Good practice to free resources.
-        // page.dispose();
       }
 
       // Wait for all tasks to complete
       await Future.wait(processingTasks);
-      // semaphore.close(); // Not used, remove.
+
+      // Dispose of the PDF document to free resources
+      document.dispose();
     } catch (e) {
       print('Error processing PDF: $e');
-      rethrow; // Good practice: rethrow the error to allow for higher-level handling.
+      rethrow; // Rethrow the error for higher-level handling
     }
   }
 
@@ -105,7 +108,7 @@ class DataEmbedded extends Chatputandget {
 
     int start = 0;
     while (start < words.length) {
-      final int end = min(start + chunkSize, words.length);
+      final end = min(start + chunkSize, words.length);
       chunks.add(words.sublist(start, end).join(' '));
       start = end;
     }
@@ -125,81 +128,82 @@ class DataEmbedded extends Chatputandget {
 //     print(result.embedding.values);
 //     return result.embedding.values;
 //   }
-Future<String> searchAndAnswer(String query, String parentdocid) async {
-  try {
-    // Step 1: Embed the query
-    final queryEmbedding = await Generate_dataEmbedded(query);
+  Future<String> searchAndAnswer(String query, String parentdocid) async {
+    try {
+      // Step 1: Embed the query
+      final queryEmbedding = await Generate_dataEmbedded(query);
 
-    // Step 2: Retrieve all documents in the collection
-    final subcollectionRef = FirebaseFirestore.instance
-        .collection('bot')
-        .doc(parentdocid)
-        .collection('dataEmbedded');
+      // Step 2: Retrieve all documents in the collection
+      final subcollectionRef = FirebaseFirestore.instance
+          .collection('bot')
+          .doc(parentdocid)
+          .collection('dataEmbedded');
 
-    final querySnapshot = await subcollectionRef.get();
+      final querySnapshot = await subcollectionRef.get();
 
-    if (querySnapshot.docs.isEmpty) {
-      return "No results found.";
-    }
-
-    // Step 3: Compare embeddings and rank documents
-    final rankedResults = querySnapshot.docs.map((doc) {
-      final embeddingList = doc.data()['embeddings'] as List<dynamic>?;
-
-      if (embeddingList == null) {
-        throw Exception('Embedding list is null');
+      if (querySnapshot.docs.isEmpty) {
+        return "No results found.";
       }
 
-      // Convert List<dynamic> to List<double>
-      final embedding = embeddingList.map((item) {
-        if (item is num) {
-          return item.toDouble();
-        } else {
-          throw Exception('Invalid type in embedding list');
+      // Step 3: Compare embeddings and rank documents
+      final rankedResults = querySnapshot.docs.map((doc) {
+        final embeddingList = doc.data()['embeddings'] as List<dynamic>?;
+
+        if (embeddingList == null) {
+          throw Exception('Embedding list is null');
         }
+
+        // Convert List<dynamic> to List<double>
+        final embedding = embeddingList.map((item) {
+          if (item is num) {
+            return item.toDouble();
+          } else {
+            throw Exception('Invalid type in embedding list');
+          }
+        }).toList();
+
+        // Ensure both embeddings are the same length
+        final trimmedQueryEmbedding =
+            trimToMinLength(queryEmbedding, embedding);
+        final trimmedDocEmbedding = trimToMinLength(embedding, queryEmbedding);
+
+        // Calculate cosine similarity
+        final similarity = calculateCosineSimilarity(
+          trimmedQueryEmbedding,
+          trimmedDocEmbedding,
+        );
+
+        return {
+          'similarity': similarity,
+          'docId': doc.id,
+          'text': doc.data()['pdf_text']
+        };
       }).toList();
 
-      // Ensure both embeddings are the same length
-      final trimmedQueryEmbedding = trimToMinLength(queryEmbedding, embedding);
-      final trimmedDocEmbedding = trimToMinLength(embedding, queryEmbedding);
+      // Sort documents by similarity in descending order
+      rankedResults.sort((a, b) {
+        final similarityA = a['similarity'] as double?;
+        final similarityB = b['similarity'] as double?;
+        return (similarityB ?? 0).compareTo(similarityA ?? 0);
+      });
 
-      // Calculate cosine similarity
-      final similarity = calculateCosineSimilarity(
-        trimmedQueryEmbedding,
-        trimmedDocEmbedding,
-      );
+      // Step 4: Take the top 6 documents
+      final topResults = rankedResults.take(6).toList();
 
-      return {
-        'similarity': similarity,
-        'docId': doc.id,
-        'text': doc.data()['pdf_text']
-      };
-    }).toList();
+      // Step 5: Concatenate the text from the top documents
+      final concatenatedText = topResults.map((result) {
+        return result['text'] as String? ?? '';
+      }).join(' ');
 
-    // Sort documents by similarity in descending order
-    rankedResults.sort((a, b) {
-      final similarityA = a['similarity'] as double?;
-      final similarityB = b['similarity'] as double?;
-      return (similarityB ?? 0).compareTo(similarityA ?? 0);
-    });
-
-    // Step 4: Take the top 6 documents
-    final topResults = rankedResults.take(6).toList();
-
-    // Step 5: Concatenate the text from the top documents
-    final concatenatedText = topResults.map((result) {
-      return result['text'] as String? ?? '';
-    }).join(' ');
-
-    // Return the concatenated text
-    return concatenatedText.trim().isNotEmpty
-        ? concatenatedText
-        : "No relevant text found.";
-  } catch (e) {
-    print('Error in searchAndAnswer: $e');
-    return "An error occurred.";
+      // Return the concatenated text
+      return concatenatedText.trim().isNotEmpty
+          ? concatenatedText
+          : "No relevant text found.";
+    } catch (e) {
+      print('Error in searchAndAnswer: $e');
+      return "An error occurred.";
+    }
   }
-}
 
 // Helper method to trim vectors to the same length
   List<double> trimToMinLength(List<double> a, List<double> b) {
